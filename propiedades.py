@@ -3,6 +3,7 @@ import datetime
 import conexion
 import conexionserver
 import eventos
+import facturas
 import var
 import re
 from PyQt6 import QtWidgets, QtGui, QtCore
@@ -196,9 +197,9 @@ class Propiedades():
             fila = var.ui.tablaProp.selectedItems()
             datos = [dato.text() for dato in fila]
             registro = var.claseConexion.datosOnePropiedad(str(datos[0]))
-
+            print(registro)
             listado = [var.ui.lblProp,var.ui.txtAltaprop, var.ui.txtBajaprop, var.ui.txtDirprop,var.ui.cmbProvprop,var.ui.cmbMuniprop,var.ui.cmbTipoprop,var.ui.spinHabprop, var.ui.spinBanosprop, var.ui.txtSuperprop,var.ui.txtPrecioAlquilerprop,var.ui.txtPrecioVentaprop,var.ui.txtCpprop,var.ui.areatxtDescriprop, var.ui.rbtDisponprop, var.ui.rbtAlquilprop,var.ui.rbtVentaprop,var.ui.chkInterprop,var.ui.chkAlquilprop,var.ui.chkVentaprop,var.ui.txtNomeprop,var.ui.txtMovilprop]
-
+            listadoVentas = []
             for i in range(len(listado)):
                 if i in (4,5,6):
                     listado[i].setCurrentText(registro[i])
@@ -216,12 +217,29 @@ class Propiedades():
                     listado[17].setChecked("Intercambio" in registro[14])
                     listado[18].setChecked("Alquiler" in registro[14])
                     listado[19].setChecked("Venta" in registro[14])
+                    if "Venta" in registro[14] and "Venta" not in listadoVentas:
+                        listadoVentas.append("Venta")
                 elif i == 20:
                     listado[i].setText(registro[16])
                 elif i == 21:
                     listado[i].setText(registro[17])
                 else:
                     listado[i].setText(registro[i])
+
+            listadoVentas.append(registro[0])
+            listadoVentas.append(registro[6])
+            listadoVentas.append(registro[11])
+            listadoVentas.append(registro[3])
+            listadoVentas.append(registro[5])
+            if "Disponible" in registro and "Disponible" not in listadoVentas:
+                listadoVentas.append("Disponible")
+            if "Alquilado" in registro and "Alquilado" not in listadoVentas:
+                listadoVentas.append("Alquilado")
+            if "Vendido" in registro and "Vendido" not in listadoVentas:
+                listadoVentas.append("Vendido")
+            if listadoVentas[0] == "Venta" and listadoVentas[6] == "Disponible":
+                facturas.Facturas.cargarPropiedadVenta(listadoVentas)
+
 
         except Exception as e:
             print("Error cargando UNA propiedad en propiedades.", e)

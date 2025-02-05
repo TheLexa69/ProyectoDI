@@ -5196,7 +5196,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit">
+                   <widget class="QLineEdit" name="txtDirProp">
                     <property name="minimumSize">
                      <size>
                       <width>250</width>
@@ -5238,7 +5238,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="txtCliApel_2">
+                   <widget class="QLineEdit" name="txtCodProp">
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(254, 255, 210);</string>
                     </property>
@@ -5271,7 +5271,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="txtCliApel_3">
+                   <widget class="QLineEdit" name="txtTipoProp">
                     <property name="minimumSize">
                      <size>
                       <width>250</width>
@@ -5301,7 +5301,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="txtCliApel_4">
+                   <widget class="QLineEdit" name="txtPrecioProp">
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(254, 255, 210);</string>
                     </property>
@@ -5358,7 +5358,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="txtCliNom_2">
+                   <widget class="QLineEdit" name="txtLocProp">
                     <property name="minimumSize">
                      <size>
                       <width>250</width>

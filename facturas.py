@@ -90,3 +90,21 @@ class Facturas:
             var.ui.lblNumFactura.setText(datos[0])
         except Exception as e:
             print("Error cargaVendedores en cargaOneVendedor", e)
+
+    @staticmethod
+    def cargarPropiedadVenta(propiedad):
+        try:
+            print(propiedad)
+            if str(propiedad[6]).lower() == "disponible":
+                var.ui.txtCodProp.setText(str(propiedad[1]))
+                var.ui.txtTipoProp.setText(str(propiedad[2]))
+                var.ui.txtPrecioProp.setText(str(propiedad[3]) + " €")
+                var.ui.txtDirProp.setText(str(propiedad[4]).title())
+                var.ui.txtLocProp.setText(str(propiedad[5]))
+                return True
+            else:
+                mbox = eventos.Eventos.crearMensajeError("Error","La propiedad seleccionada no está disponible")
+                mbox.exec()
+                return False
+        except Exception as e:
+            print("Error en cargarPropiedadVenta", e)
