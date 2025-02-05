@@ -81,3 +81,12 @@ class Facturas:
                 eventos.Eventos.crearMensajeError("Error", "No se ha podido eliminar la factura")
         except Exception as e:
             print("Error en bajaFactura", e)
+
+    @staticmethod
+    def cargaOneFactura():
+        try:
+            fila = var.ui.tablaFacturas.selectedItems()
+            datos = [dato.text() for dato in fila]
+            var.ui.lblNumFactura.setText(datos[0])
+        except Exception as e:
+            print("Error cargaVendedores en cargaOneVendedor", e)

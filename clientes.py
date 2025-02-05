@@ -170,6 +170,7 @@ class Clientes:
             registro = [x if x != 'None' else "" for x in registro]
             listado = [var.ui.txtDnicli, var.ui.txtAltacli, var.ui.txtApelcli, var.ui.txtNomcli,
                        var.ui.txtEmailcli, var.ui.txtMovilcli, var.ui.txtDircli, var.ui.cmbProvcli,var.ui.cmbMunicli,var.ui.txtBajacli]
+            print(registro)
             for i in range(len(listado)):
                 if i in (7,8):
                     listado[i].setCurrentText(registro[i])
@@ -178,6 +179,8 @@ class Clientes:
                     if i == 0:
                         var.ui.lblTickcli.clear()
             var.ui.txtdniclifac.setText(registro[0])
+            var.ui.txtCliApel.setText(registro[2])
+            var.ui.txtCliNom.setText(registro[3])
             #Clientes.cargarCliente(registro)
 
         except Exception as e:

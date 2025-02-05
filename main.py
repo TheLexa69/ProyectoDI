@@ -98,6 +98,7 @@ class Main(QtWidgets.QMainWindow):
         facturas.Facturas.cargaTablaFacturas()
         eventos.Eventos.resizeTablaFacturas()
 
+        var.ui.tablaFacturas.clicked.connect(facturas.Facturas.cargaOneFactura)
         eventos.Eventos.resizeTablaVentas_3()
 
         '''

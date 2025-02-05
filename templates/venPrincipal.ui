@@ -5503,7 +5503,7 @@
                    </layout>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="txtCliApel_5">
+                   <widget class="QLineEdit" name="txtIdVendedor">
                     <property name="maximumSize">
                      <size>
                       <width>100</width>
@@ -5714,11 +5714,21 @@
                      <height>20</height>
                     </size>
                    </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(254, 255, 210);</string>
                    </property>
                    <property name="text">
                     <string/>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
                    </property>
                   </widget>
                  </item>
