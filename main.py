@@ -1,3 +1,5 @@
+from xmlrpc.client import DateTime
+
 from PyQt6.QtCore import QLocale, QRegularExpression, QDate, Qt
 from PyQt6.QtGui import QIcon, QDoubleValidator, QIntValidator, QRegularExpressionValidator
 
@@ -5,8 +7,11 @@ import clientes
 import conexion
 import conexionserver
 import eventos
+import facturas
+import informes
 import propiedades
 import styles
+import vendedores
 from venAux import *
 from venPrincipal import *
 import sys
@@ -28,11 +33,17 @@ class Main(QtWidgets.QMainWindow):
             conexion.Conexion.db_conexion()
 
 
-
         var.uicalendar = Calendar()
         var.dlgAbrir = FileDialogAbrir()
         var.dlggestion = dlg_Tipo_prop()
         var.dlgabout = Dlg_About()
+        var.dlgInformeProp = Dlg_InformeProp()
+
+        var.ui.cmbMuniprop.setEditable(True)
+        var.ui.cmbProvprop.setEditable(True)
+        var.ui.cmbMunicli.setEditable(True)
+        var.ui.cmbProvcli.setEditable(True)
+        var.ui.cmbDeleVen.setEditable(True)
 
 
         self.setStyleSheet(styles.load_stylesheet())
@@ -42,6 +53,8 @@ class Main(QtWidgets.QMainWindow):
         propiedades.Propiedades.cargarTipoprop()
         var.ui.rbtAlquilprop.setEnabled(False)
         var.ui.rbtVentaprop.setEnabled(False)
+
+        var.ui.txtFechaFactura.setText(datetime.today().strftime('%d/%m/%Y'))
 
         '''
         validadores
@@ -66,6 +79,7 @@ class Main(QtWidgets.QMainWindow):
         '''
         var.ui.tablaClientes.setAlternatingRowColors(True)
         var.ui.tablaProp.setAlternatingRowColors(True)
+        var.ui.tablaFacturas.setAlternatingRowColors(True)
 
         var.paginaActualCli = 0
         var.paginaActualProp = 0
@@ -76,6 +90,16 @@ class Main(QtWidgets.QMainWindow):
         propiedades.Propiedades.cargarTablaPropiedades()
         eventos.Eventos.resizeTablaPropiedades()
         var.ui.tablaProp.clicked.connect(propiedades.Propiedades.cargaOnePropiedad)
+
+        vendedores.Vendedores.cargaTablaVendedores()
+        eventos.Eventos.resizeTablaVendedores()
+        var.ui.tablaVendedores.clicked.connect(vendedores.Vendedores.cargaOneVendedor)
+
+        facturas.Facturas.cargaTablaFacturas()
+        eventos.Eventos.resizeTablaFacturas()
+
+        eventos.Eventos.resizeTablaVentas_3()
+
         '''
         zona de eventos del menubar
         '''
@@ -85,15 +109,21 @@ class Main(QtWidgets.QMainWindow):
         var.ui.actionTipo_propiedades.triggered.connect(eventos.Eventos.abrirTipoprop)
         var.ui.actionExportar_Propiedades_CSV.triggered.connect(eventos.Eventos.exportCSVprop)
         var.ui.actionExportar_Propiedades_JSON.triggered.connect(eventos.Eventos.exportJSONprop)
+        var.ui.actionExportar_Vendedores_JSON.triggered.connect(eventos.Eventos.exportJSONven)
         var.ui.actionAbout.triggered.connect(eventos.Eventos.abrir_about)
+        var.ui.actionListado_clientes.triggered.connect(informes.Informes.reportClientes)
+        var.ui.actionListado_propiedades.triggered.connect(eventos.Eventos.abrir_informeProp)
         '''
         zona de eventos de botones
         '''
         var.ui.btnGrabarcli.clicked.connect(clientes.Clientes.altaCliente)
         var.ui.btnAltacli.clicked.connect(lambda: eventos.Eventos.abrirCalendar(0,0))
         var.ui.btnAltaprop.clicked.connect(lambda: eventos.Eventos.abrirCalendar(1,0))
+        var.ui.btnAltaVen.clicked.connect(lambda: eventos.Eventos.abrirCalendar(2,0))
         var.ui.btnBajacli.clicked.connect(lambda: eventos.Eventos.abrirCalendar(0,1))
         var.ui.btnBajaprop.clicked.connect(lambda: eventos.Eventos.abrirCalendar(1,1))
+        var.ui.btnBajaVen.clicked.connect(lambda: eventos.Eventos.abrirCalendar(2,1))
+        var.ui.btnFechaFactura.clicked.connect(lambda: eventos.Eventos.abrirCalendar(3,0))
         var.ui.btnModifcli.clicked.connect(clientes.Clientes.modifCliente)
         var.ui.btnDelcli.clicked.connect(clientes.Clientes.bajaCliente)
         var.ui.btnBuscarDni.clicked.connect(clientes.Clientes.buscaOneCliente)
@@ -105,6 +135,11 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnAnterior.clicked.connect(eventos.Eventos.anteriorCli)
         var.ui.btnSiguienteProp.clicked.connect(eventos.Eventos.siguienteProp)
         var.ui.btnAnteriorProp.clicked.connect(eventos.Eventos.anteriorProp)
+        var.ui.btnGrabarVen.clicked.connect(vendedores.Vendedores.altaVendedor)
+        var.ui.btnDelVen.clicked.connect(vendedores.Vendedores.bajaVendedor)
+        var.ui.btnModifVen.clicked.connect(vendedores.Vendedores.modifVendedor)
+        var.ui.btnBuscaMovil.clicked.connect(vendedores.Vendedores.buscaOneVendedor)
+        var.ui.btnGrabarFactura.clicked.connect(facturas.Facturas.altaFactura)
 
 
         '''
@@ -117,16 +152,14 @@ class Main(QtWidgets.QMainWindow):
         var.ui.txtBajaprop.textChanged.connect(propiedades.Propiedades.cambiarAvailableRbt)
         var.ui.txtPrecioVentaprop.textChanged.connect(propiedades.Propiedades.activarCheckPrecios)
         var.ui.txtPrecioAlquilerprop.textChanged.connect(propiedades.Propiedades.activarCheckPrecios)
+        var.ui.txtDniVen.editingFinished.connect(lambda: vendedores.Vendedores.checkDniVen(var.ui.txtDniVen.text()))
+        var.ui.txtMovilVen.editingFinished.connect(lambda : vendedores.Vendedores.checkMovilVen(var.ui.txtMovilVen.text()))
+        var.ui.txtEmailVen.editingFinished.connect(lambda : vendedores.Vendedores.checkEmailVen(var.ui.txtEmailVen.text()))
         '''
         zona eventos comboBox
         '''
         var.ui.cmbProvcli.currentIndexChanged.connect(eventos.Eventos.cargaMunicli)
         var.ui.cmbProvprop.currentIndexChanged.connect(eventos.Eventos.cargaMuniprop)
-
-        var.ui.cmbMuniprop.setEditable(True)
-        var.ui.cmbProvprop.setEditable(True)
-        var.ui.cmbMunicli.setEditable(True)
-        var.ui.cmbProvcli.setEditable(True)
 
         completer = QtWidgets.QCompleter(var.provincias, var.ui.cmbProvprop)
         completer.setCaseSensitivity(QtCore.Qt.CaseSensitivity.CaseInsensitive)
@@ -138,10 +171,16 @@ class Main(QtWidgets.QMainWindow):
         completer.setFilterMode(QtCore.Qt.MatchFlag.MatchContains)
         var.ui.cmbProvcli.setCompleter(completer)
 
+        completer = QtWidgets.QCompleter(var.provincias, var.ui.cmbDeleVen)
+        completer.setCaseSensitivity(QtCore.Qt.CaseSensitivity.CaseInsensitive)
+        completer.setFilterMode(QtCore.Qt.MatchFlag.MatchContains)
+        var.ui.cmbDeleVen.setCompleter(completer)
+
         var.ui.cmbProvprop.lineEdit().editingFinished.connect(eventos.Eventos.checkProvinciaProp)
         var.ui.cmbMuniprop.lineEdit().editingFinished.connect(eventos.Eventos.checkMunicipioProp)
         var.ui.cmbProvcli.lineEdit().editingFinished.connect(eventos.Eventos.checkProvinciaCli)
         var.ui.cmbMunicli.lineEdit().editingFinished.connect(eventos.Eventos.checkMunicipioCli)
+        var.ui.cmbDeleVen.lineEdit().editingFinished.connect(eventos.Eventos.checkProvinciaVen)
 
 
 
@@ -161,6 +200,7 @@ class Main(QtWidgets.QMainWindow):
         '''
         var.ui.chkHistoriacli.stateChanged.connect(clientes.Clientes.historicoCli)
         var.ui.chkHistoriaprop.stateChanged.connect(propiedades.Propiedades.historicoProp)
+        var.ui.chkHistoriaVen.stateChanged.connect(vendedores.Vendedores.historicoVendedores)
         '''
         zona eventos spinbox
         '''
@@ -176,5 +216,5 @@ class Main(QtWidgets.QMainWindow):
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     window = Main()
-    window.show()
+    window.showMaximized()
     sys.exit(app.exec())

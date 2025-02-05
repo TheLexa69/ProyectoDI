@@ -21,6 +21,8 @@ from PyQt6 import QtWidgets, QtGui, QtCore
 import zipfile
 import shutil
 
+import vendedores
+
 #Establecer configuracion regional
 
 locale.setlocale(locale.LC_TIME,'es_ES.UTF-8')
@@ -77,11 +79,14 @@ class Eventos():
     def cargarProv():
         var.ui.cmbProvcli.clear()
         var.ui.cmbProvprop.clear()
+        var.ui.cmbDeleVen.clear()
         listado = var.claseConexion.listaProv()
         var.provincias = listado
 
         var.ui.cmbProvcli.addItems(listado)
         var.ui.cmbProvprop.addItems(listado)
+        var.ui.cmbDeleVen.addItems(listado)
+
 
     @staticmethod
     def cargaMunicli():
@@ -130,6 +135,11 @@ class Eventos():
     def checkProvinciaProp():
         if var.ui.cmbProvprop.currentText() not in var.provincias:
             var.ui.cmbProvprop.setCurrentIndex(0)
+
+    @staticmethod
+    def checkProvinciaVen():
+        if var.ui.cmbDeleVen.currentText() not in var.provincias:
+            var.ui.cmbDeleVen.setCurrentIndex(0)
 
     @staticmethod
     def isDniValido(dni):
@@ -186,10 +196,16 @@ class Eventos():
                 var.ui.txtAltacli.setText(str(data))
             elif var.panel == 1 and var.btn == 0:
                 var.ui.txtAltaprop.setText(str(data))
+            elif var.panel == 2 and var.btn == 0:
+                var.ui.txtAltaVen.setText(str(data))
             elif var.panel == 0 and var.btn == 1:
                 var.ui.txtBajacli.setText(str(data))
             elif var.panel == 1 and var.btn == 1:
                 var.ui.txtBajaprop.setText(str(data))
+            elif var.panel == 2 and var.btn == 1:
+                var.ui.txtBajaVen.setText(str(data))
+            elif var.panel == 3 and var.btn == 0:
+                var.ui.txtFechaFactura.setText(str(data))
             time.sleep(0.5)
             var.uicalendar.hide()
             return data
@@ -241,6 +257,58 @@ class Eventos():
 
         except Exception as e:
             print("error en resize tabla clientes ", e)
+
+    @staticmethod
+    def resizeTablaVendedores():
+        try:
+            header = var.ui.tablaVendedores.horizontalHeader()
+            for i in range(header.count()):
+                if i not in (0,2,4):
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
+                else:
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+
+                header_items = var.ui.tablaVendedores.horizontalHeaderItem(i)
+                font = header_items.font()
+                font.setBold(True)
+                header_items.setFont(font)
+
+        except Exception as e:
+            print("error en resize tabla clientes ", e)
+
+    @staticmethod
+    def resizeTablaFacturas():
+        try:
+            header = var.ui.tablaFacturas.horizontalHeader()
+            for i in range(header.count()):
+                if i != 0:
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
+                else:
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+
+                header_items = var.ui.tablaVendedores.horizontalHeaderItem(i)
+                font = header_items.font()
+                font.setBold(True)
+                header_items.setFont(font)
+
+        except Exception as e:
+            print("error en resize tabla clientes ", e)
+
+    @staticmethod
+    def resizeTablaVentas_3():
+        try:
+            header = var.ui.tablaVentas_3.horizontalHeader()
+            for i in range(header.count()):
+                if i != 0:
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
+                else:
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+                header_items = var.ui.tablaVentas_3.horizontalHeaderItem(i)
+                font = header_items.font()
+                font.setBold(True)
+                header_items.setFont(font)
+        except Exception as e:
+            print("error en resize tabla ventas3 ", e)
 
     @staticmethod
     def crearBackup():
@@ -318,9 +386,22 @@ class Eventos():
             else:
                 dato.setText("")
 
-        eventos.Eventos.cargarProv()
         var.ui.btnBuscaTipoProp.setChecked(False)
         propiedades.Propiedades.cargarTablaPropiedades()
+
+        objetosPanelVendedores = [var.ui.lblIdVen,var.ui.txtDniVen, var.ui.txtNomVen, var.ui.txtAltaVen, var.ui.txtBajaVen,
+                   var.ui.txtMovilVen, var.ui.txtEmailVen, var.ui.cmbDeleVen]
+        for i,dato in enumerate(objetosPanelVendedores):
+            if i == 7:
+                pass
+            else:
+                dato.setText("")
+
+        eventos.Eventos.cargarProv()
+        var.ui.chkHistoriaVen.setChecked(False)
+        vendedores.Vendedores.cargaTablaVendedores()
+
+
 
 
     @staticmethod
@@ -365,9 +446,17 @@ class Eventos():
                     json.dump(lista_propiedades, jsonFile, ensure_ascii=False, indent=4)
                 shutil.move(fichero, directorio)
             else:
-                eventos.Eventos.crearMensajeError("Error","Se ha producido un error al exportar los datos en formato CSV.")
+                eventos.Eventos.crearMensajeError("Error","Se ha producido un error al exportar los datos en formato JSON.")
         except Exception as e:
             print("error en exportar cvs tipo prop: ", e)
+
+    @staticmethod
+    def abrir_informeProp():
+        try:
+            var.dlgInformeProp.show()
+        except Exception as e:
+            print("error en abrir informe propiedades: ", e)
+
 
     @staticmethod
     def abrir_about():
@@ -417,3 +506,23 @@ class Eventos():
         if var.maxPropPagina > 10:
             var.maxPropPagina = 10
         propiedades.Propiedades.cargarTablaPropiedades()
+
+
+    @staticmethod
+    def exportJSONven():
+        try:
+            fecha = datetime.today()
+            fecha = fecha.strftime('%Y_%m_%d_%H_%M_%S')
+            file = str(fecha)+'_DatosVendedores.json'
+            directorio, fichero = var.dlgAbrir.getSaveFileName(None, "Exporta Datos a JSON", file, '.json')
+            if fichero:
+                keys = ["Id","Dni","Nombre","Alta","Baja","Movil","Email","Delegacion"]
+                registros = var.claseConexion.cargarAllVendedoresBD()
+                lista_propiedades = [dict(zip(keys, registro)) for registro in registros]
+                with open(fichero, 'w', newline='', encoding='utf-8') as jsonFile:
+                    json.dump(lista_propiedades, jsonFile, ensure_ascii=False, indent=4)
+                shutil.move(fichero, directorio)
+            else:
+                eventos.Eventos.crearMensajeError("Error","Se ha producido un error al exportar los datos en formato JSON.")
+        except Exception as e:
+            print("error en exportar cvs tipo prop: ", e)
