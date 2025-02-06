@@ -297,13 +297,13 @@ class Eventos():
     @staticmethod
     def resizeTablaVentas_3():
         try:
-            header = var.ui.tablaVentas_3.horizontalHeader()
+            header = var.ui.tablaVentas.horizontalHeader()
             for i in range(header.count()):
                 if i != 0:
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
                 else:
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
-                header_items = var.ui.tablaVentas_3.horizontalHeaderItem(i)
+                header_items = var.ui.tablaVentas.horizontalHeaderItem(i)
                 font = header_items.font()
                 font.setBold(True)
                 header_items.setFont(font)

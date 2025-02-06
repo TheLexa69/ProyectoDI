@@ -81,6 +81,9 @@ class Main(QtWidgets.QMainWindow):
         var.ui.tablaProp.setAlternatingRowColors(True)
         var.ui.tablaFacturas.setAlternatingRowColors(True)
 
+        facturas.Facturas.cargaTablaFacturas()
+        facturas.Facturas.cargaTablaVentas()
+
         var.paginaActualCli = 0
         var.paginaActualProp = 0
         clientes.Clientes.cargaTablaClientes()
@@ -141,7 +144,7 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnModifVen.clicked.connect(vendedores.Vendedores.modifVendedor)
         var.ui.btnBuscaMovil.clicked.connect(vendedores.Vendedores.buscaOneVendedor)
         var.ui.btnGrabarFactura.clicked.connect(facturas.Facturas.altaFactura)
-
+        var.ui.btnGrabarventa.clicked.connect(facturas.Facturas.grabarVenta)
 
         '''
         zona de eventos de cajas de texto

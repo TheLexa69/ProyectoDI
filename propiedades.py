@@ -197,7 +197,6 @@ class Propiedades():
             fila = var.ui.tablaProp.selectedItems()
             datos = [dato.text() for dato in fila]
             registro = var.claseConexion.datosOnePropiedad(str(datos[0]))
-            print(registro)
             listado = [var.ui.lblProp,var.ui.txtAltaprop, var.ui.txtBajaprop, var.ui.txtDirprop,var.ui.cmbProvprop,var.ui.cmbMuniprop,var.ui.cmbTipoprop,var.ui.spinHabprop, var.ui.spinBanosprop, var.ui.txtSuperprop,var.ui.txtPrecioAlquilerprop,var.ui.txtPrecioVentaprop,var.ui.txtCpprop,var.ui.areatxtDescriprop, var.ui.rbtDisponprop, var.ui.rbtAlquilprop,var.ui.rbtVentaprop,var.ui.chkInterprop,var.ui.chkAlquilprop,var.ui.chkVentaprop,var.ui.txtNomeprop,var.ui.txtMovilprop]
             listadoVentas = []
             for i in range(len(listado)):

@@ -827,3 +827,67 @@ class Conexion:
         except Exception as e:
             print("Error al eliminar factura en conexion.", e)
             return False
+
+    @staticmethod
+    def altaVenta(registro):
+        try:
+            query = QtSql.QSqlQuery()
+            query.prepare("INSERT INTO ventas (facventa, codprop, agente) VALUES (:facventa, :codprop, :agente)")
+            query.bindValue(":facventa", str(registro[0]))
+            query.bindValue(":codprop", registro[1])
+            query.bindValue(":agente", str(registro[2]))
+            if query.exec():
+                return True
+            else:
+                print("Error en la ejecución de la consulta:", query.lastError().text())
+                return False
+        except Exception as e:
+            print("Error al dar de alta factura en conexion:", e)
+            return False
+
+    @staticmethod
+    def listadoVentas(idFactura):
+        try:
+            listado = []
+            query = QtSql.QSqlQuery()
+            query.prepare(
+                "SELECT v.idventa, v.codprop, p.dirprop, p.muniprop, p.tipoprop, "
+                "p.prevenprop FROM ventas AS v INNER JOIN propiedades as p on v.codprop = p.codigo WHERE v.facventa = :facventa")
+            query.bindValue(":facventa", str(idFactura))
+            if query.exec():
+                while query.next():
+                    fila = [query.value(i) for i in range(query.record().count())]
+                    listado.append(fila)
+            return listado
+        except Exception as e:
+            print("Error listando facturas en listadoFacturas - conexión", e)
+
+    @staticmethod
+    def bajaVenta(idVenta):
+        try:
+            query = QtSql.QSqlQuery()
+            query.prepare("DELETE FROM ventas WHERE idventa = :idventa")
+            query.bindValue(":idventa", str(idVenta))
+            if query.exec():
+                return True
+            else:
+                return False
+        except Exception as e:
+            print("Error al eliminar una venta en conexion.", e)
+            return False
+
+
+    @staticmethod
+    def altaPropiedadVenta(codigoPropiedad):
+        try:
+            query = QtSql.QSqlQuery()
+            query.prepare(
+                "UPDATE propiedades SET estado = 'Disponible', baja = :fechaBaja WHERE codigo = :codigo")
+            query.bindValue(":codigo", str(codigoPropiedad))
+            query.bindValue(":fechaBaja", QtCore.QVariant())
+            if query.exec():
+                return True
+            else:
+                return False
+        except Exception as e:
+            print("Error al vender una Propiedad en conexion.", e)

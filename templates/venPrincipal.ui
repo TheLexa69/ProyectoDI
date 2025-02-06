@@ -5097,32 +5097,6 @@
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_14">
-              <item row="2" column="0">
-               <spacer name="horizontalSpacer_60">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="2" column="2">
-               <spacer name="horizontalSpacer_62">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
               <item row="3" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_42">
                 <item>
@@ -5139,7 +5113,7 @@
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="btnGrabarventa">
                   <property name="minimumSize">
                    <size>
                     <width>80</width>
@@ -5171,6 +5145,32 @@
                  </spacer>
                 </item>
                </layout>
+              </item>
+              <item row="2" column="0">
+               <spacer name="horizontalSpacer_60">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="2">
+               <spacer name="horizontalSpacer_62">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item row="2" column="1">
                <layout class="QGridLayout" name="gridLayout_11">
@@ -5607,54 +5607,160 @@
             <property name="lineWidth">
              <number>1</number>
             </property>
-            <layout class="QGridLayout" name="gridLayout_15">
+            <layout class="QGridLayout" name="gridLayout_16">
              <item row="0" column="0">
-              <widget class="QTableWidget" name="tablaVentas_3">
-               <property name="editTriggers">
-                <set>QAbstractItemView::NoEditTriggers</set>
-               </property>
-               <property name="selectionMode">
-                <enum>QAbstractItemView::SingleSelection</enum>
-               </property>
-               <property name="selectionBehavior">
-                <enum>QAbstractItemView::SelectRows</enum>
-               </property>
-               <column>
-                <property name="text">
-                 <string>ID VENTA</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>ID PROPIEDAD</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>DIRECCION</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>LOCALIDAD</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>TIPO</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>PRECIO</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>QUITAR</string>
-                </property>
-               </column>
-              </widget>
+              <layout class="QGridLayout" name="gridLayout_15">
+               <item row="0" column="0" colspan="4">
+                <widget class="QTableWidget" name="tablaVentas">
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                 <column>
+                  <property name="text">
+                   <string>ID VENTA</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>ID PROPIEDAD</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>DIRECCION</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>LOCALIDAD</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>TIPO</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>PRECIO</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>QUITAR</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <spacer name="horizontalSpacer_65">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="3" column="3">
+                <widget class="QLabel" name="lblTotal">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLabel" name="lblSubTotal">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLabel" name="label_19">
+                 <property name="text">
+                  <string>Subtotal:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLabel" name="label_15">
+                 <property name="text">
+                  <string>Total:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QLabel" name="label_18">
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>IVA:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="3">
+                <widget class="QLabel" name="lblIVA">
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <spacer name="horizontalSpacer_63">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>37</width>
+                   <height>17</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="3" column="0" colspan="2">
+                <spacer name="horizontalSpacer_64">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
