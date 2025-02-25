@@ -526,3 +526,37 @@ class Eventos():
                 eventos.Eventos.crearMensajeError("Error","Se ha producido un error al exportar los datos en formato JSON.")
         except Exception as e:
             print("error en exportar cvs tipo prop: ", e)
+
+    @classmethod
+    def resizeTablaAlquileresGestion(cls):
+        try:
+            header = var.ui.pnlGestionAlquileres.horizontalHeader()
+            for i in range(header.count()):
+                if i not in (0, 2):
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
+                else:
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+
+                header_items = var.ui.pnlGestionAlquileres.horizontalHeaderItem(i)
+                font = header_items.font()
+                font.setBold(True)
+                header_items.setFont(font)
+        except Exception as e:
+            print("error en resize tabla clientes ", e)
+
+    @staticmethod
+    def pnlVisualizacionAlquileres():
+        try:
+            header = var.ui.pnlVisualizacionAlquileres.horizontalHeader()
+            for i in range(header.count()):
+                if i not in (0, 1, 2):
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
+                else:
+                    header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+
+                header_items = var.ui.pnlVisualizacionAlquileres.horizontalHeaderItem(i)
+                font = header_items.font()
+                font.setBold(True)
+                header_items.setFont(font)
+        except Exception as e:
+            print("error en resize tabla clientes ", e)

@@ -1,5 +1,8 @@
 import datetime
 
+from pandas.core.interchange.from_dataframe import primitive_column_to_ndarray
+from reportlab.lib.testutils import setOutDir
+
 import conexion
 import conexionserver
 import eventos
@@ -199,6 +202,7 @@ class Propiedades():
             registro = var.claseConexion.datosOnePropiedad(str(datos[0]))
             listado = [var.ui.lblProp,var.ui.txtAltaprop, var.ui.txtBajaprop, var.ui.txtDirprop,var.ui.cmbProvprop,var.ui.cmbMuniprop,var.ui.cmbTipoprop,var.ui.spinHabprop, var.ui.spinBanosprop, var.ui.txtSuperprop,var.ui.txtPrecioAlquilerprop,var.ui.txtPrecioVentaprop,var.ui.txtCpprop,var.ui.areatxtDescriprop, var.ui.rbtDisponprop, var.ui.rbtAlquilprop,var.ui.rbtVentaprop,var.ui.chkInterprop,var.ui.chkAlquilprop,var.ui.chkVentaprop,var.ui.txtNomeprop,var.ui.txtMovilprop]
             listadoVentas = []
+            listadoAlquileres = []
             for i in range(len(listado)):
                 if i in (4,5,6):
                     listado[i].setCurrentText(registro[i])
@@ -218,6 +222,9 @@ class Propiedades():
                     listado[19].setChecked("Venta" in registro[14])
                     if "Venta" in registro[14] and "Venta" not in listadoVentas:
                         listadoVentas.append("Venta")
+
+                    if "Alquiler" in registro[14] and "Alquiler" not in listadoAlquileres:
+                        listadoAlquileres.append("Alquiler")
                 elif i == 20:
                     listado[i].setText(registro[16])
                 elif i == 21:
@@ -225,20 +232,40 @@ class Propiedades():
                 else:
                     listado[i].setText(registro[i])
 
+
             listadoVentas.append(registro[0])
             listadoVentas.append(registro[6])
-            listadoVentas.append(registro[11])
+            listadoVentas.append(registro[11]) #PRECIO VENTA
             listadoVentas.append(registro[3])
             listadoVentas.append(registro[5])
+
+            listadoAlquileres.append(registro[0])
+            listadoAlquileres.append(registro[6])
+            listadoAlquileres.append(registro[10]) #PRECIO ALQUILER
+            listadoAlquileres.append(registro[3])
+            listadoAlquileres.append(registro[5])
+
             if "Disponible" in registro and "Disponible" not in listadoVentas:
                 listadoVentas.append("Disponible")
-            if "Alquilado" in registro and "Alquilado" not in listadoVentas:
-                listadoVentas.append("Alquilado")
+
+            # if "Alquilado" in registro and "Alquilado" not in listadoVentas:
+            #     listadoVentas.append("Alquilado")
+
+
             if "Vendido" in registro and "Vendido" not in listadoVentas:
                 listadoVentas.append("Vendido")
+
+            if "Disponible" in registro and "Disponible" not in listadoAlquileres:
+                listadoAlquileres.append("Disponible")
+
+            if "Alquilado" in registro and "Alquilado" not in listadoAlquileres:
+                listadoAlquileres.append("Alquilado")
+
             if listadoVentas[0] == "Venta" and listadoVentas[6] == "Disponible":
                 facturas.Facturas.cargarPropiedadVenta(listadoVentas)
 
+            if listadoAlquileres[0] == "Alquiler" and listadoAlquileres[6] == "Disponible":
+                facturas.Facturas.cargarPropiedadAlquiler(listadoAlquileres)
 
         except Exception as e:
             print("Error cargando UNA propiedad en propiedades.", e)

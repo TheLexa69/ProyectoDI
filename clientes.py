@@ -166,24 +166,31 @@ class Clientes:
         try:
             fila = var.ui.tablaClientes.selectedItems()
             datos = [dato.text() for dato in fila]
+
             registro = var.claseConexion.datosOneCliente(str(datos[0]))
+
             registro = [x if x != 'None' else "" for x in registro]
             listado = [var.ui.txtDnicli, var.ui.txtAltacli, var.ui.txtApelcli, var.ui.txtNomcli,
-                       var.ui.txtEmailcli, var.ui.txtMovilcli, var.ui.txtDircli, var.ui.cmbProvcli,var.ui.cmbMunicli,var.ui.txtBajacli]
+                       var.ui.txtEmailcli, var.ui.txtMovilcli, var.ui.txtDircli, var.ui.cmbProvcli, var.ui.cmbMunicli,
+                       var.ui.txtBajacli]
+
             for i in range(len(listado)):
-                if i in (7,8):
+                if i in (7, 8):
                     listado[i].setCurrentText(registro[i])
                 else:
                     listado[i].setText(registro[i])
                     if i == 0:
                         var.ui.lblTickcli.clear()
+
             var.ui.txtdniclifac.setText(registro[0])
+            ##CARGA DNI EN ALQUILERES
+            var.ui.txtDniClienteAlquiler.setText(registro[0])
+
             var.ui.txtCliApel.setText(registro[2])
             var.ui.txtCliNom.setText(registro[3])
-            #Clientes.cargarCliente(registro)
 
         except Exception as e:
-            print("Error cargaClientes en cargaOneCliente", e)
+            print("Error en cargaOneCliente:", e)
 
 
     @staticmethod

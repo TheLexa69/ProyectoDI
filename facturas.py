@@ -1,7 +1,7 @@
 from mailbox import mboxMessage
 
 from PyQt6.QtWidgets import QHBoxLayout, QWidget
-from PyQt6.uic.Compiler.qtproxies import QtGui
+from PyQt6 import QtGui
 from PyQt6.QtGui import QIcon
 from reportlab.lib.testutils import setOutDir
 
@@ -76,64 +76,61 @@ class Facturas:
             print("Error carga factura en cargaTablaFacturas", e)
 
     @staticmethod
-    def cargaTablaVentas():
-        idFactura = var.ui.lblNumFactura.text()
-        listado = conexion.Conexion.listadoVentas(idFactura)
-        var.ui.tablaVentas.setRowCount(len(listado))
-        index = 0
-        subtotal = 0
-        for registro in listado:
-            var.ui.tablaVentas.setItem(index, 0, QtWidgets.QTableWidgetItem(str(registro[0])))
-            var.ui.tablaVentas.setItem(index, 1, QtWidgets.QTableWidgetItem(str(registro[1])))
-            var.ui.tablaVentas.setItem(index, 2, QtWidgets.QTableWidgetItem(str(registro[2])))
-            var.ui.tablaVentas.setItem(index, 3, QtWidgets.QTableWidgetItem(str(registro[3])))
-            var.ui.tablaVentas.setItem(index, 4, QtWidgets.QTableWidgetItem(str(registro[4])))
-            var.ui.tablaVentas.setItem(index, 5, QtWidgets.QTableWidgetItem(str(registro[5]) + " € "))
+    def cargaTablaVentas(idVenta=None):
+        try:
+            if not idVenta:
+                idVenta = var.ui.lblNumFactura.text()
 
-            botondelfac = QtWidgets.QPushButton()
-            botondelfac.setFixedSize(30, 24)
-            botondelfac.setIcon(QtGui.QIcon('img/papelera.ico'))
-            botondelfac.setProperty("row", index)
-            botondelfac.clicked.connect(
-                lambda checked, idVenta=str(registro[0]), idpropiedad=str(registro[1]): Facturas.eliminarVenta(idVenta,
-                                                                                                               idpropiedad))
-            contenedor = QtWidgets.QWidget()
-            layout = QtWidgets.QHBoxLayout()
-            layout.addWidget(botondelfac)
-            layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-            layout.setContentsMargins(0, 0, 0, 0)
-            contenedor.setLayout(layout)
-            var.ui.tablaVentas.setCellWidget(index, 6, contenedor)
-            if var.ui.tablaVentas.item(index, 0):
-                var.ui.tablaVentas.item(index, 0).setTextAlignment(
-                    QtCore.Qt.AlignmentFlag.AlignLeft | QtCore.Qt.AlignmentFlag.AlignVCenter)
-            if var.ui.tablaVentas.item(index, 1):
-                var.ui.tablaVentas.item(index, 1).setTextAlignment(
-                    QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
-            if var.ui.tablaVentas.item(index, 2):
-                var.ui.tablaVentas.item(index, 2).setTextAlignment(
-                    QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
-            if var.ui.tablaVentas.item(index, 3):
-                var.ui.tablaVentas.item(index, 3).setTextAlignment(
-                    QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
-            if var.ui.tablaVentas.item(index, 4):
-                var.ui.tablaVentas.item(index, 4).setTextAlignment(
-                    QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
-            if var.ui.tablaVentas.item(index, 5):
-                var.ui.tablaVentas.item(index, 5).setTextAlignment(
-                    QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
-            subtotal += registro[5]
+            if idVenta == "" or idVenta is None:
+                var.ui.tablaVentas.setRowCount(1)
+                for col in range(7):
+                    var.ui.tablaVentas.setItem(0, col, QtWidgets.QTableWidgetItem(""))
+                var.ui.lblSubTotal.setText("0.00 €")
+                var.ui.lblIVA.setText("0.00 €")
+                var.ui.lblTotal.setText("0.00 €")
+                return
 
-            index += 1
+            listado = conexion.Conexion.listadoVentas(idVenta)
+            var.ui.tablaVentas.setRowCount(len(listado))
 
-        iva = subtotal * 0.21
-        total = subtotal + iva
-        subTotalStr = f"{subtotal:,.1f} €"
-        ivaStr = f"{iva:,.1f} €"
-        totalStr = f"{total:,.1f} €"
-        var.ui.lblSubTotal.setText(subTotalStr)
-        var.ui.lblIVA.setText(ivaStr)
-        var.ui.lblTotal.setText(totalStr)
+            subtotal = 0
+
+            for index, registro in enumerate(listado):
+                for col, value in enumerate(registro[:6]):
+                    item = QtWidgets.QTableWidgetItem(str(value))
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+                    var.ui.tablaVentas.setItem(index, col, item)
+
+                # Botón de eliminar
+                botondelfac = QtWidgets.QPushButton()
+                botondelfac.setFixedSize(25, 25)
+                botondelfac.setIconSize(QtCore.QSize(25, 25))
+                botondelfac.setIcon(QIcon("./img/basura.ico"))
+                botondelfac.setStyleSheet("background: transparent; border: none;")
+                botondelfac.setProperty("row", index)
+                botondelfac.clicked.connect(
+                    lambda _, idV=registro[0], idP=registro[1]: Facturas.eliminarVenta(idV, idP))
+
+                contenedor = QtWidgets.QWidget()
+                layout = QtWidgets.QHBoxLayout()
+                layout.addWidget(botondelfac)
+                layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+                layout.setContentsMargins(0, 0, 0, 0)
+                contenedor.setLayout(layout)
+
+                var.ui.tablaVentas.setCellWidget(index, 6, contenedor)
+
+                subtotal += float(registro[5])
+
+            iva = subtotal * 0.10
+            total = subtotal + iva
+
+            var.ui.lblSubTotal.setText(f"{subtotal:,.2f} €")
+            var.ui.lblIVA.setText(f"{iva:,.2f} €")
+            var.ui.lblTotal.setText(f"{total:,.2f} €")
+
+        except Exception as e:
+            print("Error en cargaTablaVentas:", e)
 
     @classmethod
     def bajaFactura(cls, id):
@@ -151,9 +148,28 @@ class Facturas:
         try:
             fila = var.ui.tablaFacturas.selectedItems()
             datos = [dato.text() for dato in fila]
-            var.ui.lblNumFactura.setText(datos[0])
+            idVentaFactura = datos[0]
+            var.ui.lblNumFactura.setText(idVentaFactura)  # HASTA AQUI CARGA EL ID DE LA FACTURA EN NUM FACTURA
+
+            try:
+                ventas = conexion.Conexion.cargaVenta(idVentaFactura)
+                if ventas:
+                    codProp = ventas[0][2]  # Guardar el codProp en la variable codProp
+                    idFactura = ventas[0][1]
+                    idVenta = ventas[0][0]
+
+                    propiedad = conexion.Conexion.cargaPropiedadVenta( codProp)  # Recupera la propiedad a partir de su código
+
+                    Facturas.cargaTablaVentas(idFactura)
+
+                else :
+                    Facturas.cargaTablaVentas()
+
+            except Exception as e:
+                print("Error en carga Factura", e)
+
         except Exception as e:
-            print("Error cargaVendedores en cargaOneVendedor", e)
+            print("Error cargaOneFactura en Facturas", e)
 
     @staticmethod
     def cargarPropiedadVenta(propiedad):
@@ -164,6 +180,7 @@ class Facturas:
                 var.ui.txtPrecioProp.setText(str(propiedad[3]) + " €")
                 var.ui.txtDirProp.setText(str(propiedad[4]).title())
                 var.ui.txtLocProp.setText(str(propiedad[5]))
+
                 return True
             else:
                 mbox = eventos.Eventos.crearMensajeError("Error", "La propiedad seleccionada no está disponible")
@@ -199,15 +216,33 @@ class Facturas:
         except Exception as e:
             print("venta", e)
 
-    def eliminarVenta(idVenta, idpropiedad):
+    def eliminarVenta(idventa, idpropiedad):
         try:
-            if conexion.Conexion.bajaVenta(idVenta) and conexion.Conexion.altaPropiedadVenta(str(idpropiedad)):
-                mbox = eventos.Eventos.crearMensajeInfo("Venta eliminada","Se ha eliminado la venta")
-                mbox.exec()
+            if conexion.Conexion.bajaVenta(idventa) and conexion.Conexion.altaPropiedadVenta(str(idpropiedad)):
+                eventos.Eventos.crearMensajeInfo("Venta eliminada", "Se ha eliminado la venta")
                 Facturas.cargaTablaVentas()
                 propiedades.Propiedades.cargarTablaPropiedades()
             else:
-                mbox = eventos.Eventos.crearMensajeError("Error","No se ha podido eliminar la venta")
-                mbox.exec()
+                eventos.Eventos.crearMensajeError("Error", "No se ha podido eliminar la venta")
         except Exception as e:
-            print("Error en eliminarVenta",e)
+            print("Error en eliminarVenta", e)
+
+    @staticmethod
+    def cargarPropiedadAlquiler(listadoAlquileres):
+        try:
+            if str(listadoAlquileres[6]).lower() == "disponible":
+                # var.ui.txtCodProp.setText(str(listadoAlquileres[1]))
+                # var.ui.txtTipoProp.setText(str(listadoAlquileres[2]))
+                var.ui.txtPrecioAlquiler.setText(str(listadoAlquileres[3]) + " €")
+                # var.ui.txtDirProp.setText(str(listadoAlquileres[4]).title())
+                # var.ui.txtLocProp.setText(str(listadoAlquileres[5]))
+
+                # ALQUILERES
+                var.ui.txtIdPropiedadAlquiler.setText(str(listadoAlquileres[1]))
+                return True
+            else:
+                mbox = eventos.Eventos.crearMensajeError("Error", "La propiedad seleccionada no está disponible")
+                mbox.exec()
+                return False
+        except Exception as e:
+            print("Error en cargarPropiedadVenta", e)

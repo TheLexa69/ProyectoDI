@@ -11,7 +11,6 @@ from facturas import Facturas
 
 
 class Conexion:
-
     '''
     @staticmethod
     método de una clase que no depende de una instancia específica de esa clase.
@@ -32,7 +31,7 @@ class Conexion:
         """
         # Verifica si el archivo de base de datos existe
         if not os.path.isfile('bbdd.sqlite'):
-            eventos.Eventos.crearMensajeError("Error",'El archivo de la base de datos no existe.')
+            eventos.Eventos.crearMensajeError("Error", 'El archivo de la base de datos no existe.')
             return False
 
         # Crear la conexión con la base de datos SQLite
@@ -45,15 +44,15 @@ class Conexion:
             query.exec("SELECT name FROM sqlite_master WHERE type='table';")
 
             if not query.next():  # Si no hay tablas
-                eventos.Eventos.crearMensajeError("Error","Base de datos vacía o no válida.")
+                eventos.Eventos.crearMensajeError("Error", "Base de datos vacía o no válida.")
                 return False
 
             else:
-                eventos.Eventos.crearMensajeInfo("Aviso","Conexión a la Base de Datos realizada")
+                eventos.Eventos.crearMensajeInfo("Aviso", "Conexión a la Base de Datos realizada")
                 return True
 
         else:
-            eventos.Eventos.crearMensajeError("Error","No se pudo abrir la base de datos.")
+            eventos.Eventos.crearMensajeError("Error", "No se pudo abrir la base de datos.")
             return False
 
     '''
@@ -93,7 +92,8 @@ class Conexion:
         try:
             listamunicipio = []
             query = QtSql.QSqlQuery()
-            query.prepare("SELECT * FROM municipios WHERE idprov = (SELECT idprov FROM provincias WHERE provincia = :provincia)")
+            query.prepare(
+                "SELECT * FROM municipios WHERE idprov = (SELECT idprov FROM provincias WHERE provincia = :provincia)")
             query.bindValue(":provincia", provincia)
             if query.exec():
                 while query.next():
@@ -116,7 +116,8 @@ class Conexion:
         """
         try:
             query = QtSql.QSqlQuery()
-            query.prepare("INSERT into clientes (dnicli, altacli, apelcli, nomecli, emailcli, movilcli, dircli, provcli, municli) values (:dnicli, :altacli, :apelcli, :nomecli, :emailcli, :movilcli, :dircli, :provcli, :municli)")
+            query.prepare(
+                "INSERT into clientes (dnicli, altacli, apelcli, nomecli, emailcli, movilcli, dircli, provcli, municli) values (:dnicli, :altacli, :apelcli, :nomecli, :emailcli, :movilcli, :dircli, :provcli, :municli)")
             query.bindValue(":dnicli", str(nuevocli[0]))
             query.bindValue(":altacli", str(nuevocli[1]))
             query.bindValue(":apelcli", str(nuevocli[2]))
@@ -167,7 +168,6 @@ class Conexion:
         except Exception as e:
             print("Error al listar clientes")
 
-
     @staticmethod
     def datosOneCliente(dni):
         """
@@ -193,7 +193,6 @@ class Conexion:
         except Exception as e:
             print("Error al cargar UN cliente en la tabla.", e)
 
-
     @staticmethod
     def modifCliente(registro):
         """
@@ -212,9 +211,10 @@ class Conexion:
             query.bindValue(":dni", str(registro[0]))
             if query.exec() and query.next():
                 count = query.value(0)
-                if count == 1: #verificamos que solo nos devuelve un resultado, la fila para el dni que buscamos
+                if count == 1:  # verificamos que solo nos devuelve un resultado, la fila para el dni que buscamos
 
-                    query.prepare("UPDATE clientes set altacli= :altacli, apelcli = :apelcli, nomecli= :nomecli, emailcli = :emailcli, movilcli = :movilcli, dircli = :dircli, provcli=:provcli, municli=:municli, bajacli = :bajacli WHERE dnicli = :dni")
+                    query.prepare(
+                        "UPDATE clientes set altacli= :altacli, apelcli = :apelcli, nomecli= :nomecli, emailcli = :emailcli, movilcli = :movilcli, dircli = :dircli, provcli=:provcli, municli=:municli, bajacli = :bajacli WHERE dnicli = :dni")
                     query.bindValue(":dni", str(registro[0]))
                     query.bindValue(":altacli", str(registro[1]))
                     query.bindValue(":apelcli", str(registro[2]))
@@ -225,7 +225,7 @@ class Conexion:
                     query.bindValue(":provcli", str(registro[7]))
                     query.bindValue(":municli", str(registro[8]))
                     if registro[9] == "":
-                        query.bindValue(":bajacli",QtCore.QVariant()) #QVariant añade un null a la BD
+                        query.bindValue(":bajacli", QtCore.QVariant())  # QVariant añade un null a la BD
                     else:
                         query.bindValue(":bajacli", str(registro[9]))
 
@@ -237,7 +237,6 @@ class Conexion:
                 return False
         except Exception as e:
             print("Error al modificar un cliente en conexion.", e)
-
 
     @staticmethod
     def bajaCliente(dni):
@@ -275,6 +274,7 @@ class Conexion:
     '''
     GESTION DE PROPIEDADES
     '''
+
     @staticmethod
     def cargarMunicipios():
         try:
@@ -287,8 +287,6 @@ class Conexion:
                 return listaMuni
         except Exception as e:
             print('Error cargando municipios')
-
-
 
     @staticmethod
     def cargarTipoprop():
@@ -373,23 +371,24 @@ class Conexion:
         """
         try:
             query = QtSql.QSqlQuery()
-            query.prepare("INSERT into propiedades (alta,direccion,provincia,municipio,tipo_propiedad,num_habitaciones,num_banos,superficie,precio_alquiler,precio_venta,codigo_postal,descripcion,tipo_operacion,estado,nombre_propietario,movil) values (:alta,:direccion,:provincia,:municipio,:tipo_propiedad,:num_habitaciones,:num_banos,:superficie,:precio_alquiler,:precio_venta,:codigo_postal,:descripcion,:tipo_operacion,:estado,:nombre_propietario,:movil) ")
-            query.bindValue(":alta",str(propiedad[0]))
-            query.bindValue(":direccion",str(propiedad[1]))
-            query.bindValue(":provincia",str(propiedad[2]))
-            query.bindValue(":municipio",str(propiedad[3]))
-            query.bindValue(":tipo_propiedad",str(propiedad[4]))
-            query.bindValue(":num_habitaciones",str(propiedad[5]))
-            query.bindValue(":num_banos",str(propiedad[6]))
-            query.bindValue(":superficie",str(propiedad[7]))
-            query.bindValue(":precio_alquiler",str(propiedad[8]))
-            query.bindValue(":precio_venta",str(propiedad[9]))
-            query.bindValue(":codigo_postal",str(propiedad[10]))
-            query.bindValue(":descripcion",str(propiedad[11]))
-            query.bindValue(":tipo_operacion",str(propiedad[12]))
-            query.bindValue(":estado",str(propiedad[13]))
-            query.bindValue(":nombre_propietario",str(propiedad[14]))
-            query.bindValue(":movil",str(propiedad[15]))
+            query.prepare(
+                "INSERT into propiedades (alta,direccion,provincia,municipio,tipo_propiedad,num_habitaciones,num_banos,superficie,precio_alquiler,precio_venta,codigo_postal,descripcion,tipo_operacion,estado,nombre_propietario,movil) values (:alta,:direccion,:provincia,:municipio,:tipo_propiedad,:num_habitaciones,:num_banos,:superficie,:precio_alquiler,:precio_venta,:codigo_postal,:descripcion,:tipo_operacion,:estado,:nombre_propietario,:movil) ")
+            query.bindValue(":alta", str(propiedad[0]))
+            query.bindValue(":direccion", str(propiedad[1]))
+            query.bindValue(":provincia", str(propiedad[2]))
+            query.bindValue(":municipio", str(propiedad[3]))
+            query.bindValue(":tipo_propiedad", str(propiedad[4]))
+            query.bindValue(":num_habitaciones", str(propiedad[5]))
+            query.bindValue(":num_banos", str(propiedad[6]))
+            query.bindValue(":superficie", str(propiedad[7]))
+            query.bindValue(":precio_alquiler", str(propiedad[8]))
+            query.bindValue(":precio_venta", str(propiedad[9]))
+            query.bindValue(":codigo_postal", str(propiedad[10]))
+            query.bindValue(":descripcion", str(propiedad[11]))
+            query.bindValue(":tipo_operacion", str(propiedad[12]))
+            query.bindValue(":estado", str(propiedad[13]))
+            query.bindValue(":nombre_propietario", str(propiedad[14]))
+            query.bindValue(":movil", str(propiedad[15]))
 
             if query.exec():
                 return True
@@ -398,7 +397,7 @@ class Conexion:
 
 
         except Exception as e:
-            print("Error al dar de alta propiedad en conexion",e)
+            print("Error al dar de alta propiedad en conexion", e)
 
     @staticmethod
     def modifProp(propiedad):
@@ -418,30 +417,31 @@ class Conexion:
             query.bindValue(":codigo", propiedad[0])
             if query.exec() and query.next():
                 count = query.value(0)
-                if count == 1: #verificamos que solo nos devuelve un resultado, la fila para el codigo que buscamos
+                if count == 1:  # verificamos que solo nos devuelve un resultado, la fila para el codigo que buscamos
 
-                    query.prepare("UPDATE propiedades set alta = :alta, baja = :baja, direccion = :direccion, municipio = :municipio, provincia = :provincia, tipo_propiedad = :tipo_propiedad, num_habitaciones=:num_habitaciones, num_banos = :num_banos, superficie = :superficie, precio_alquiler = :precio_alquiler, precio_venta = :precio_venta, codigo_postal = :codigo_postal, descripcion = :descripcion, tipo_operacion = :tipo_operacion, estado=:estado, nombre_propietario =:nombre_propietario, movil =:movil WHERE codigo = :codigo")
-                    query.bindValue(":codigo",str(propiedad[0]))
-                    query.bindValue(":alta",str(propiedad[1]))
-                    query.bindValue(":direccion",str(propiedad[3]))
-                    query.bindValue(":provincia",str(propiedad[4]))
-                    query.bindValue(":municipio",str(propiedad[5]))
-                    query.bindValue(":tipo_propiedad",str(propiedad[6]))
-                    query.bindValue(":num_habitaciones",str(propiedad[7]))
-                    query.bindValue(":num_banos",str(propiedad[8]))
-                    query.bindValue(":superficie",str(propiedad[9]))
-                    query.bindValue(":precio_alquiler",str(propiedad[10]))
-                    query.bindValue(":precio_venta",str(propiedad[11]))
-                    query.bindValue(":codigo_postal",str(propiedad[12]))
-                    query.bindValue(":descripcion",str(propiedad[13]))
-                    query.bindValue(":tipo_operacion",str(propiedad[14]))
-                    query.bindValue(":estado",str(propiedad[15]))
-                    query.bindValue(":nombre_propietario",str(propiedad[16]))
-                    query.bindValue(":movil",str(propiedad[17]))
+                    query.prepare(
+                        "UPDATE propiedades set alta = :alta, baja = :baja, direccion = :direccion, municipio = :municipio, provincia = :provincia, tipo_propiedad = :tipo_propiedad, num_habitaciones=:num_habitaciones, num_banos = :num_banos, superficie = :superficie, precio_alquiler = :precio_alquiler, precio_venta = :precio_venta, codigo_postal = :codigo_postal, descripcion = :descripcion, tipo_operacion = :tipo_operacion, estado=:estado, nombre_propietario =:nombre_propietario, movil =:movil WHERE codigo = :codigo")
+                    query.bindValue(":codigo", str(propiedad[0]))
+                    query.bindValue(":alta", str(propiedad[1]))
+                    query.bindValue(":direccion", str(propiedad[3]))
+                    query.bindValue(":provincia", str(propiedad[4]))
+                    query.bindValue(":municipio", str(propiedad[5]))
+                    query.bindValue(":tipo_propiedad", str(propiedad[6]))
+                    query.bindValue(":num_habitaciones", str(propiedad[7]))
+                    query.bindValue(":num_banos", str(propiedad[8]))
+                    query.bindValue(":superficie", str(propiedad[9]))
+                    query.bindValue(":precio_alquiler", str(propiedad[10]))
+                    query.bindValue(":precio_venta", str(propiedad[11]))
+                    query.bindValue(":codigo_postal", str(propiedad[12]))
+                    query.bindValue(":descripcion", str(propiedad[13]))
+                    query.bindValue(":tipo_operacion", str(propiedad[14]))
+                    query.bindValue(":estado", str(propiedad[15]))
+                    query.bindValue(":nombre_propietario", str(propiedad[16]))
+                    query.bindValue(":movil", str(propiedad[17]))
                     if propiedad[2] == "":
-                        query.bindValue(":baja",QtCore.QVariant()) #QVariant añade un null a la BD
+                        query.bindValue(":baja", QtCore.QVariant())  # QVariant añade un null a la BD
                     else:
-                        query.bindValue(":baja",str(propiedad[2]))
+                        query.bindValue(":baja", str(propiedad[2]))
 
                     if query.exec():
                         return True
@@ -453,7 +453,7 @@ class Conexion:
                 return False
 
         except Exception as e:
-            print("Error al modificar propiedad en conexión.",e)
+            print("Error al modificar propiedad en conexión.", e)
 
     @staticmethod
     def bajaProp(propiedad):
@@ -470,11 +470,12 @@ class Conexion:
             query.bindValue(":codigo", propiedad[0])
             if query.exec() and query.next():
                 count = query.value(0)
-                if count == 1: #verificamos que solo nos devuelve un resultado a consulta, por tanto la propiedad existe.
+                if count == 1:  # verificamos que solo nos devuelve un resultado a consulta, por tanto la propiedad existe.
                     query.prepare("update propiedades set baja =:baja, estado =:estado where codigo = :codigo ")
-                    query.bindValue(":codigo",str(propiedad[0]))
-                    query.bindValue(":baja",str(propiedad[2])) #dejamos el segundo espacio del array para fecha de alta, y comprobar mas tarde que no sea posterior a fecha de baja
-                    query.bindValue(":estado",str(propiedad[3]))
+                    query.bindValue(":codigo", str(propiedad[0]))
+                    query.bindValue(":baja", str(propiedad[
+                                                     2]))  # dejamos el segundo espacio del array para fecha de alta, y comprobar mas tarde que no sea posterior a fecha de baja
+                    query.bindValue(":estado", str(propiedad[3]))
                     if query.exec():
                         return True
                     else:
@@ -485,7 +486,7 @@ class Conexion:
                 return False
 
         except Exception as e:
-            print("Error al dar de baja propiedad en conexión.",e)
+            print("Error al dar de baja propiedad en conexión.", e)
 
     @staticmethod
     def listadoPropiedades():
@@ -602,7 +603,8 @@ class Conexion:
         """
         try:
             query = QtSql.QSqlQuery()
-            query.prepare("INSERT into vendedores (dniVendedor,nombreVendedor,altaVendedor,movilVendedor,mailVendedor,delegacionVendedor) values (:dniVendedor, :nombreVendedor, :altaVendedor, :movilVendedor, :mailVendedor, :delegacionVendedor)")
+            query.prepare(
+                "INSERT into vendedores (dniVendedor,nombreVendedor,altaVendedor,movilVendedor,mailVendedor,delegacionVendedor) values (:dniVendedor, :nombreVendedor, :altaVendedor, :movilVendedor, :mailVendedor, :delegacionVendedor)")
             query.bindValue(":dniVendedor", str(nuevoVendedor[0]))
             query.bindValue(":nombreVendedor", str(nuevoVendedor[1]))
             query.bindValue(":altaVendedor", str(nuevoVendedor[2]))
@@ -619,7 +621,7 @@ class Conexion:
             print("Error alta vendedor en conexion", e)
 
     @staticmethod
-    def datosOneVendedor(valor, tipo_busqueda = "idVendedor"):
+    def datosOneVendedor(valor, tipo_busqueda="idVendedor"):
         """
 
         :param valor: valor del tipo de búsqueda que se introduzca introducida
@@ -635,7 +637,7 @@ class Conexion:
         try:
             registro = []
             query = QtSql.QSqlQuery()
-            query.prepare("SELECT * FROM vendedores WHERE "+tipo_busqueda+" = :valor")
+            query.prepare("SELECT * FROM vendedores WHERE " + tipo_busqueda + " = :valor")
             query.bindValue(":valor", str(valor))
             if query.exec():
                 while query.next():
@@ -742,9 +744,10 @@ class Conexion:
             query.bindValue(":id", str(registro[0]))
             if query.exec() and query.next():
                 count = query.value(0)
-                if count == 1: #verificamos que solo nos devuelve un resultado, la fila para el dni que buscamos
+                if count == 1:  # verificamos que solo nos devuelve un resultado, la fila para el dni que buscamos
 
-                    query.prepare("UPDATE vendedores set nombreVendedor= :nombreVendedor, altaVendedor = :altaVendedor, bajaVendedor= :bajaVendedor, movilVendedor = :movilVendedor, mailVendedor = :mailVendedor, delegacionVendedor = :delegacionVendedor WHERE idVendedor = :id")
+                    query.prepare(
+                        "UPDATE vendedores set nombreVendedor= :nombreVendedor, altaVendedor = :altaVendedor, bajaVendedor= :bajaVendedor, movilVendedor = :movilVendedor, mailVendedor = :mailVendedor, delegacionVendedor = :delegacionVendedor WHERE idVendedor = :id")
                     query.bindValue(":id", str(registro[0]))
                     query.bindValue(":nombreVendedor", str(registro[1]))
                     query.bindValue(":altaVendedor", str(registro[2]))
@@ -752,7 +755,7 @@ class Conexion:
                     query.bindValue(":mailVendedor", str(registro[4]))
                     query.bindValue(":delegacionVendedor", str(registro[5]))
                     if registro[6] == "":
-                        query.bindValue(":bajaVendedor",QtCore.QVariant()) #QVariant añade un null a la BD
+                        query.bindValue(":bajaVendedor", QtCore.QVariant())  # QVariant añade un null a la BD
                     else:
                         query.bindValue(":bajaVendedor", str(registro[6]))
 
@@ -792,7 +795,6 @@ class Conexion:
 
         except Exception as e:
             print("Error al listar vendedores en cargarAllpropiedades", e)
-
 
     '''
     GESTION DE FACTURAS
@@ -851,16 +853,21 @@ class Conexion:
             listado = []
             query = QtSql.QSqlQuery()
             query.prepare(
-                "SELECT v.idventa, v.codprop, p.dirprop, p.muniprop, p.tipoprop, "
-                "p.prevenprop FROM ventas AS v INNER JOIN propiedades as p on v.codprop = p.codigo WHERE v.facventa = :facventa")
+                "SELECT v.idventa, v.codprop, p.direccion, p.municipio, p.tipo_propiedad, "
+                "p.precio_venta FROM ventas AS v INNER JOIN propiedades as p on v.codprop = p.codigo WHERE v.facventa = :facventa")
             query.bindValue(":facventa", str(idFactura))
+
             if query.exec():
                 while query.next():
                     fila = [query.value(i) for i in range(query.record().count())]
                     listado.append(fila)
+            else:
+                print("Error en la ejecución de la consulta:", query.lastError().text())
+
             return listado
         except Exception as e:
             print("Error listando facturas en listadoFacturas - conexión", e)
+            return []
 
     @staticmethod
     def bajaVenta(idVenta):
@@ -876,7 +883,6 @@ class Conexion:
             print("Error al eliminar una venta en conexion.", e)
             return False
 
-
     @staticmethod
     def altaPropiedadVenta(codigoPropiedad):
         try:
@@ -891,3 +897,45 @@ class Conexion:
                 return False
         except Exception as e:
             print("Error al vender una Propiedad en conexion.", e)
+
+    @staticmethod
+    def cargaVenta(codigoVenta):
+        try:
+            listado = []
+            base_query = "SELECT * FROM ventas WHERE facventa = :codigoVenta"
+            query = QtSql.QSqlQuery()
+            query.prepare(base_query)
+            query.bindValue(":codigoVenta", str(codigoVenta))
+
+            if query.exec():
+                while query.next():
+                    fila = [query.value(i) for i in range(query.record().count())]
+                    listado.append(fila)
+            else:
+                print("Error en la ejecución de la consulta:", query.lastError().text())
+
+            return listado
+        except Exception as e:
+            print("Error al cargar ventas en conexion:", e)
+            return []
+
+    @staticmethod
+    def cargaPropiedadVenta(codigoPropiedad):
+        try:
+            query = QtSql.QSqlQuery()
+            query.prepare("SELECT * FROM propiedades WHERE codigo = :id")
+            query.bindValue(":id", codigoPropiedad)
+
+            if query.exec():
+                if query.next():
+                    result = [query.value(i) for i in range(query.record().count())]
+                    return result
+                else:
+                    print("No record found with the given id.")
+                    return None
+            else:
+                print("Error in query execution:", query.lastError().text())
+                return None
+        except Exception as e:
+            print("Error in selectById:", e)
+            return None
