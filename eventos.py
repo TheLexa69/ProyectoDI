@@ -23,15 +23,16 @@ import shutil
 
 import vendedores
 
-#Establecer configuracion regional
+# Establecer configuracion regional
 
-locale.setlocale(locale.LC_TIME,'es_ES.UTF-8')
-locale.setlocale(locale.LC_MONETARY,'es_ES.UTF-8')
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+locale.setlocale(locale.LC_MONETARY, 'es_ES.UTF-8')
+
 
 class Eventos():
     @staticmethod
     def mensajeSalir():
-        mbox = Eventos.crearMensajeSalida('Salir',"¿Desea salir?")
+        mbox = Eventos.crearMensajeSalida('Salir', "¿Desea salir?")
 
         if mbox.exec() == QtWidgets.QMessageBox.StandardButton.Yes:
             sys.exit()
@@ -86,7 +87,6 @@ class Eventos():
         var.ui.cmbProvcli.addItems(listado)
         var.ui.cmbProvprop.addItems(listado)
         var.ui.cmbDeleVen.addItems(listado)
-
 
     @staticmethod
     def cargaMunicli():
@@ -206,6 +206,36 @@ class Eventos():
                 var.ui.txtBajaVen.setText(str(data))
             elif var.panel == 3 and var.btn == 0:
                 var.ui.txtFechaFactura.setText(str(data))
+            elif var.panel == 4 and var.btn == 0:
+                fecha_fin_text = var.ui.txtFinAlquiler.text()
+                if fecha_fin_text:
+                    fecha_fin = datetime.strptime(fecha_fin_text, '%d/%m/%Y')
+                    fecha_inicio = datetime.strptime(data, '%d/%m/%Y')
+                    if fecha_inicio > fecha_fin:
+                        var.ui.txtInicioAlquiler.setStyleSheet('color: red;')
+                        var.ui.txtInicioAlquiler.setStyleSheet('background-color: rgb(254, 255, 210);')
+                        mbox = Eventos.crearMensajeError('Fecha Incorrecta',
+                                                         "La fecha de inicio de alquiler no puede ser mayor a la de fin.")
+                        mbox.exec()
+                    else:
+                        var.ui.txtInicioAlquiler.setStyleSheet('')
+                        var.ui.txtInicioAlquiler.setStyleSheet('background-color: rgb(254, 255, 210);')
+                var.ui.txtInicioAlquiler.setText(str(data))
+            elif var.panel == 4 and var.btn == 1:
+                fecha_inicio_text = var.ui.txtInicioAlquiler.text()
+                if fecha_inicio_text:
+                    fecha_inicio = datetime.strptime(fecha_inicio_text, '%d/%m/%Y')
+                    fecha_fin = datetime.strptime(data, '%d/%m/%Y')
+                    if fecha_fin < fecha_inicio:
+                        var.ui.txtFinAlquiler.setStyleSheet('color: red;')
+                        var.ui.txtFinAlquiler.setStyleSheet('background-color: rgb(254, 255, 210);')
+                        mbox = Eventos.crearMensajeError('Fecha Incorrecta',
+                                                         "La fecha de fin de alquiler no puede ser anterior a la de inicio.")
+                        mbox.exec()
+                    else:
+                        var.ui.txtFinAlquiler.setStyleSheet('')
+                        var.ui.txtFinAlquiler.setStyleSheet('background-color: rgb(254, 255, 210);')
+                var.ui.txtFinAlquiler.setText(str(data))
             time.sleep(0.5)
             var.uicalendar.hide()
             return data
@@ -226,7 +256,7 @@ class Eventos():
         try:
             header = var.ui.tablaClientes.horizontalHeader()
             for i in range(header.count()):
-                if i not in (0,3,6):
+                if i not in (0, 3, 6):
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
                 else:
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
@@ -239,13 +269,12 @@ class Eventos():
         except Exception as e:
             print("error en resize tabla clientes ", e)
 
-
     @staticmethod
     def resizeTablaPropiedades():
         try:
             header = var.ui.tablaProp.horizontalHeader()
             for i in range(header.count()):
-                if i in (1,2,7):
+                if i in (1, 2, 7):
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
                 else:
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
@@ -263,7 +292,7 @@ class Eventos():
         try:
             header = var.ui.tablaVendedores.horizontalHeader()
             for i in range(header.count()):
-                if i not in (0,2,4):
+                if i not in (0, 2, 4):
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
                 else:
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
@@ -314,32 +343,30 @@ class Eventos():
     def crearBackup():
         try:
             fecha = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-            copia = str(fecha)+'_backup.zip'
+            copia = str(fecha) + '_backup.zip'
             directorio, fichero = var.dlgAbrir.getSaveFileName(None, "Guardar Copia Seguridad", copia, '.zip')
             if var.dlgAbrir.accept and fichero:
                 fichzip = zipfile.ZipFile(fichero, 'w')
-                fichzip.write("bbdd.sqlite",os.path.basename("bbdd.sqlite"),zipfile.ZIP_DEFLATED)
+                fichzip.write("bbdd.sqlite", os.path.basename("bbdd.sqlite"), zipfile.ZIP_DEFLATED)
                 fichzip.close()
                 shutil.move(fichero, directorio)
 
-                mbox = Eventos.crearMensajeInfo('Copia de seguridad',"Copia de seguridad creada.")
+                mbox = Eventos.crearMensajeInfo('Copia de seguridad', "Copia de seguridad creada.")
                 mbox.exec()
 
         except Exception as error:
             print("error en crear backup: ", error)
 
-
-
     @staticmethod
     def restaurarBackup():
         try:
-            filename= var.dlgAbrir.getOpenFileName(None, "Restaurar Copia Seguridad","","*.zip;;All Files (*)")
+            filename = var.dlgAbrir.getOpenFileName(None, "Restaurar Copia Seguridad", "", "*.zip;;All Files (*)")
             file = filename[0]
             if file:
                 with zipfile.ZipFile(file, 'r') as bbdd:
                     bbdd.extractall(pwd=None)
                 bbdd.close()
-                mbox = Eventos.crearMensajeInfo('Copia de seguridad',"Copia de seguridad restaurada.")
+                mbox = Eventos.crearMensajeInfo('Copia de seguridad', "Copia de seguridad restaurada.")
                 mbox.exec()
                 conexion.Conexion.db_conexion()
                 eventos.Eventos.cargarProv()
@@ -351,37 +378,41 @@ class Eventos():
     def limpiarPanel():
         import propiedades
         objetosPanelCli = [var.ui.txtDnicli, var.ui.txtAltacli, var.ui.txtApelcli, var.ui.txtNomcli,
-                   var.ui.txtEmailcli, var.ui.txtMovilcli, var.ui.txtDircli, var.ui.cmbProvcli,var.ui.cmbMunicli,var.ui.txtBajacli]
+                           var.ui.txtEmailcli, var.ui.txtMovilcli, var.ui.txtDircli, var.ui.cmbProvcli,
+                           var.ui.cmbMunicli, var.ui.txtBajacli]
         for i, dato in enumerate(objetosPanelCli):
-            if i in (7,8):
+            if i in (7, 8):
                 pass
             else:
                 dato.setText("")
 
         var.ui.lblTickcli.clear()
-        var.ui.txtDnicli.setStyleSheet('border: 1px solid black; border-radius: 5px; background-color: rgb(254, 255, 210)')
+        var.ui.txtDnicli.setStyleSheet(
+            'border: 1px solid black; border-radius: 5px; background-color: rgb(254, 255, 210)')
         var.ui.txtDnicli.setPlaceholderText("")
         var.ui.txtMovilcli.setPlaceholderText("")
         var.ui.txtMovilcli.setStyleSheet('border: 1px solid black; border-radius: 5px;')
         var.ui.txtEmailcli.setPlaceholderText("")
         var.ui.txtEmailcli.setStyleSheet('border: 1px solid black; border-radius: 5px;')
 
-        objetosPanelProp = [var.ui.lblProp, var.ui.txtAltaprop,var.ui.txtBajaprop,var.ui.txtDirprop,var.ui.cmbProvprop,
-                            var.ui.cmbMuniprop,var.ui.cmbTipoprop,
-                            var.ui.spinHabprop, var.ui.spinBanosprop, var.ui.txtSuperprop,var.ui.txtPrecioAlquilerprop,
+        objetosPanelProp = [var.ui.lblProp, var.ui.txtAltaprop, var.ui.txtBajaprop, var.ui.txtDirprop,
+                            var.ui.cmbProvprop,
+                            var.ui.cmbMuniprop, var.ui.cmbTipoprop,
+                            var.ui.spinHabprop, var.ui.spinBanosprop, var.ui.txtSuperprop, var.ui.txtPrecioAlquilerprop,
                             var.ui.txtPrecioVentaprop,
-                            var.ui.txtCpprop,var.ui.areatxtDescriprop, var.ui.rbtDisponprop, var.ui.rbtAlquilprop,var.ui.chkVentaprop,var.ui.chkInterprop,
-                            var.ui.chkAlquilprop,var.ui.rbtVentaprop,var.ui.txtNomeprop,var.ui.txtMovilprop]
+                            var.ui.txtCpprop, var.ui.areatxtDescriprop, var.ui.rbtDisponprop, var.ui.rbtAlquilprop,
+                            var.ui.chkVentaprop, var.ui.chkInterprop,
+                            var.ui.chkAlquilprop, var.ui.rbtVentaprop, var.ui.txtNomeprop, var.ui.txtMovilprop]
         for i, dato in enumerate(objetosPanelProp):
-            if i in (4,5,6):
+            if i in (4, 5, 6):
                 pass
-            elif i in (7,8):
+            elif i in (7, 8):
                 dato.setValue(0)
             elif i == 13:
                 dato.setPlainText("")
             elif i == 14:
                 dato.setChecked(True)
-            elif i in (15,16,17,18,19):
+            elif i in (15, 16, 17, 18, 19):
                 dato.setChecked(False)
             else:
                 dato.setText("")
@@ -389,9 +420,10 @@ class Eventos():
         var.ui.btnBuscaTipoProp.setChecked(False)
         propiedades.Propiedades.cargarTablaPropiedades()
 
-        objetosPanelVendedores = [var.ui.lblIdVen,var.ui.txtDniVen, var.ui.txtNomVen, var.ui.txtAltaVen, var.ui.txtBajaVen,
-                   var.ui.txtMovilVen, var.ui.txtEmailVen, var.ui.cmbDeleVen]
-        for i,dato in enumerate(objetosPanelVendedores):
+        objetosPanelVendedores = [var.ui.lblIdVen, var.ui.txtDniVen, var.ui.txtNomVen, var.ui.txtAltaVen,
+                                  var.ui.txtBajaVen,
+                                  var.ui.txtMovilVen, var.ui.txtEmailVen, var.ui.cmbDeleVen]
+        for i, dato in enumerate(objetosPanelVendedores):
             if i == 7:
                 pass
             else:
@@ -400,9 +432,6 @@ class Eventos():
         eventos.Eventos.cargarProv()
         var.ui.chkHistoriaVen.setChecked(False)
         vendedores.Vendedores.cargaTablaVendedores()
-
-
-
 
     @staticmethod
     def abrirTipoprop():
@@ -416,18 +445,22 @@ class Eventos():
         try:
             fecha = datetime.today()
             fecha = fecha.strftime('%Y_%m_%d_%H_%M_%S')
-            file = str(fecha)+'_DatosPropiedades.csv'
+            file = str(fecha) + '_DatosPropiedades.csv'
             directorio, fichero = var.dlgAbrir.getSaveFileName(None, "Exporta Datos a CSV", file, '.csv')
             if fichero:
                 registros = var.claseConexion.cargarAllPropiedadesBD()
                 with open(fichero, 'w', newline='', encoding='utf-8') as csvfile:
                     writer = csv.writer(csvfile)
-                    writer.writerow(["Codigo","Alta","Baja","Dirección","Provincia","Municipio","Tipo","Nº habitaciones","Nº Baños","Superficie","Precio Alquiler","Precio Compra","Código postal", "Observaciones","Operación","Estado","Propietario","Móvil"])
+                    writer.writerow(
+                        ["Codigo", "Alta", "Baja", "Dirección", "Provincia", "Municipio", "Tipo", "Nº habitaciones",
+                         "Nº Baños", "Superficie", "Precio Alquiler", "Precio Compra", "Código postal", "Observaciones",
+                         "Operación", "Estado", "Propietario", "Móvil"])
                     for registro in registros:
                         writer.writerow(registro)
                 shutil.move(fichero, directorio)
             else:
-                eventos.Eventos.crearMensajeError("Error","Se ha producido un error al exportar los datos en formato CSV.")
+                eventos.Eventos.crearMensajeError("Error",
+                                                  "Se ha producido un error al exportar los datos en formato CSV.")
         except Exception as e:
             print("error en exportar cvs tipo prop: ", e)
 
@@ -436,17 +469,20 @@ class Eventos():
         try:
             fecha = datetime.today()
             fecha = fecha.strftime('%Y_%m_%d_%H_%M_%S')
-            file = str(fecha)+'_DatosPropiedades.json'
+            file = str(fecha) + '_DatosPropiedades.json'
             directorio, fichero = var.dlgAbrir.getSaveFileName(None, "Exporta Datos a JSON", file, '.json')
             if fichero:
-                keys = ["Codigo","Alta","Baja","Dirección","Provincia","Municipio","Tipo","Nº habitaciones","Nº Baños","Superficie","Precio Alquiler","Precio Compra","Código postal", "Observaciones","Operación","Estado","Propietario","Móvil"]
+                keys = ["Codigo", "Alta", "Baja", "Dirección", "Provincia", "Municipio", "Tipo", "Nº habitaciones",
+                        "Nº Baños", "Superficie", "Precio Alquiler", "Precio Compra", "Código postal", "Observaciones",
+                        "Operación", "Estado", "Propietario", "Móvil"]
                 registros = var.claseConexion.cargarAllPropiedadesBD()
                 lista_propiedades = [dict(zip(keys, registro)) for registro in registros]
                 with open(fichero, 'w', newline='', encoding='utf-8') as jsonFile:
                     json.dump(lista_propiedades, jsonFile, ensure_ascii=False, indent=4)
                 shutil.move(fichero, directorio)
             else:
-                eventos.Eventos.crearMensajeError("Error","Se ha producido un error al exportar los datos en formato JSON.")
+                eventos.Eventos.crearMensajeError("Error",
+                                                  "Se ha producido un error al exportar los datos en formato JSON.")
         except Exception as e:
             print("error en exportar cvs tipo prop: ", e)
 
@@ -457,14 +493,12 @@ class Eventos():
         except Exception as e:
             print("error en abrir informe propiedades: ", e)
 
-
     @staticmethod
     def abrir_about():
         try:
             var.dlgabout.show()
         except Exception as e:
             print("error en abrir about: ", e)
-
 
     @staticmethod
     def siguienteCli():
@@ -507,23 +541,23 @@ class Eventos():
             var.maxPropPagina = 10
         propiedades.Propiedades.cargarTablaPropiedades()
 
-
     @staticmethod
     def exportJSONven():
         try:
             fecha = datetime.today()
             fecha = fecha.strftime('%Y_%m_%d_%H_%M_%S')
-            file = str(fecha)+'_DatosVendedores.json'
+            file = str(fecha) + '_DatosVendedores.json'
             directorio, fichero = var.dlgAbrir.getSaveFileName(None, "Exporta Datos a JSON", file, '.json')
             if fichero:
-                keys = ["Id","Dni","Nombre","Alta","Baja","Movil","Email","Delegacion"]
+                keys = ["Id", "Dni", "Nombre", "Alta", "Baja", "Movil", "Email", "Delegacion"]
                 registros = var.claseConexion.cargarAllVendedoresBD()
                 lista_propiedades = [dict(zip(keys, registro)) for registro in registros]
                 with open(fichero, 'w', newline='', encoding='utf-8') as jsonFile:
                     json.dump(lista_propiedades, jsonFile, ensure_ascii=False, indent=4)
                 shutil.move(fichero, directorio)
             else:
-                eventos.Eventos.crearMensajeError("Error","Se ha producido un error al exportar los datos en formato JSON.")
+                eventos.Eventos.crearMensajeError("Error",
+                                                  "Se ha producido un error al exportar los datos en formato JSON.")
         except Exception as e:
             print("error en exportar cvs tipo prop: ", e)
 
@@ -549,7 +583,7 @@ class Eventos():
         try:
             header = var.ui.pnlVisualizacionAlquileres.horizontalHeader()
             for i in range(header.count()):
-                if i not in (0, 1, 2):
+                if i != 0:
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Stretch)
                 else:
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)

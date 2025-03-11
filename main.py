@@ -3,6 +3,7 @@ from xmlrpc.client import DateTime
 from PyQt6.QtCore import QLocale, QRegularExpression, QDate, Qt
 from PyQt6.QtGui import QIcon, QDoubleValidator, QIntValidator, QRegularExpressionValidator
 
+import alquileres
 import clientes
 import conexion
 import conexionserver
@@ -109,8 +110,8 @@ class Main(QtWidgets.QMainWindow):
         #ALQUILERES
         eventos.Eventos.resizeTablaAlquileresGestion()
         eventos.Eventos.pnlVisualizacionAlquileres()
-
-
+        alquileres.Alquileres.cargaTablaContratos()
+        alquileres.Alquileres.cargaTablaMensualidades()
         '''
         zona de eventos del menubar
         '''
@@ -135,6 +136,12 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnBajaprop.clicked.connect(lambda: eventos.Eventos.abrirCalendar(1,1))
         var.ui.btnBajaVen.clicked.connect(lambda: eventos.Eventos.abrirCalendar(2,1))
         var.ui.btnFechaFactura.clicked.connect(lambda: eventos.Eventos.abrirCalendar(3,0))
+        var.ui.btnFechaInicioAlquiler.clicked.connect(lambda: eventos.Eventos.abrirCalendar(4,0))
+        var.ui.btnFechaFinAlquiler.clicked.connect(lambda: eventos.Eventos.abrirCalendar(4,1))
+
+
+
+
         var.ui.btnModifcli.clicked.connect(clientes.Clientes.modifCliente)
         var.ui.btnDelcli.clicked.connect(clientes.Clientes.bajaCliente)
         var.ui.btnBuscarDni.clicked.connect(clientes.Clientes.buscaOneCliente)
@@ -152,6 +159,8 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnBuscaMovil.clicked.connect(vendedores.Vendedores.buscaOneVendedor)
         var.ui.btnGrabarFactura.clicked.connect(facturas.Facturas.altaFactura)
         var.ui.btnGrabarventa.clicked.connect(facturas.Facturas.grabarVenta)
+
+        var.ui.btnAltaContratoAlquiler.clicked.connect(alquileres.Alquileres.altaAlquiler)
 
         '''
         zona de eventos de cajas de texto
@@ -197,6 +206,7 @@ class Main(QtWidgets.QMainWindow):
 
         var.ui.cmbTipoprop.currentIndexChanged.connect(propiedades.Propiedades.cargarTablaPropiedades)
         var.ui.cmbMuniprop.currentIndexChanged.connect(propiedades.Propiedades.cargarTablaPropiedades)
+
 
         '''
         zona eventos toolBar

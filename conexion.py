@@ -939,3 +939,115 @@ class Conexion:
         except Exception as e:
             print("Error in selectById:", e)
             return None
+
+    @staticmethod
+    def altaContratoAlquiler(nuevoAlquiler):
+        try:
+            query = QtSql.QSqlQuery()
+            query.prepare(
+                "INSERT INTO alquileres (propiedad_id, cliente_dni, agente_id, fecha_inicio, fecha_fin, precio_alquiler) "
+                "VALUES (:idPropiedad, :vendedor, :dniCliente, :inicioAlquiler, :finAlquiler, :precioAlquiler)"
+            )
+            query.bindValue(":idPropiedad", str(nuevoAlquiler[0]))
+            query.bindValue(":vendedor", str(nuevoAlquiler[1]))
+            query.bindValue(":dniCliente", str(nuevoAlquiler[2]))
+            query.bindValue(":inicioAlquiler", str(nuevoAlquiler[3]))
+            query.bindValue(":finAlquiler", str(nuevoAlquiler[4]))
+            query.bindValue(":precioAlquiler", str(nuevoAlquiler[5]))
+
+            if query.exec():
+                return True
+            else:
+                print("Error en la ejecución de la consulta:", query.lastError().text())
+                return False
+        except Exception as e:
+            print("Error al dar de alta contrato de alquiler en conexion:", e)
+            return False
+
+    @staticmethod
+    def listadoContratosAlquileres():
+        try:
+            listado = []
+            query = QtSql.QSqlQuery()
+            query.prepare("SELECT * FROM alquileres")
+
+            if query.exec():
+                while query.next():
+                    fila = [query.value(i) for i in range(query.record().count())]
+                    listado.append(fila)
+            else:
+                print("Error en la ejecución de la consulta:", query.lastError().text())
+
+            return listado
+        except Exception as e:
+            print("Error listando contratos de alquiler en listadoContratosAlquileres - conexión", e)
+            return []
+
+    @staticmethod
+    def altaMensualidades(propiedad_id, precio_mensual):
+        try:
+            query = QtSql.QSqlQuery()
+            mensualidades = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ]
+
+            for mes in mensualidades:
+                query.prepare(
+                    "INSERT INTO mensualidades (propiedad, mensualidad, importe, pagado) "
+                    "VALUES (:propiedad, :mensualidad, :importe, :pagado)"
+                )
+                query.bindValue(":propiedad", propiedad_id)
+                query.bindValue(":mensualidad", mes)
+                query.bindValue(":importe", precio_mensual)
+                query.bindValue(":pagado", 0)  # 0 indica que no está pagado
+
+                if not query.exec():
+                    print(f"Error al insertar la mensualidad de {mes}: {query.lastError().text()}")
+                    return False
+
+            return True
+        except Exception as e:
+            print("Error al insertar mensualidades:", e)
+            return False
+
+    @staticmethod
+    def listadoMensualidades():
+        try:
+            listado = []
+            query = QtSql.QSqlQuery()
+            query.prepare("SELECT * FROM mensualidades")
+
+            if query.exec():
+                while query.next():
+                    fila = [query.value(i) for i in range(query.record().count())]
+                    listado.append(fila)
+            else:
+                print("Error en la ejecución de la consulta:", query.lastError().text())
+
+            return listado
+        except Exception as e:
+            print("Error listando mensualidades en listadoMensualidades - conexión", e)
+            return []
+
+
+    @staticmethod
+    def actualizarEstadoMensualidad(id_mensualidad, estado):
+        try:
+            query = QtSql.QSqlQuery()
+            # Convertimos el estado del checkbox a 1 (True) o 0 (False)
+            pagado = 1 if estado == QtCore.Qt.CheckState.Checked else 0
+
+            query.prepare("UPDATE mensualidades SET pagado = :pagado WHERE id = :id")
+            query.bindValue(":pagado", pagado)
+            query.bindValue(":id", id_mensualidad)
+
+            if query.exec():
+                print(f"Estado actualizado: ID {id_mensualidad}, Pagado = {pagado}")
+                return True
+            else:
+                print(f"Error actualizando el estado: {query.lastError().text()}")
+                return False
+        except Exception as e:
+            print(f"Error en actualizarEstadoMensualidad: {e}")
+            return False

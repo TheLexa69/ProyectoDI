@@ -132,11 +132,11 @@ class Facturas:
         except Exception as e:
             print("Error en cargaTablaVentas:", e)
 
-    @classmethod
-    def bajaFactura(cls, id):
+    @staticmethod
+    def bajaFactura(id):
         try:
             if conexion.Conexion.eliminarFactura(id):
-                cls.cargaTablaFacturas()
+                Facturas.cargaTablaFacturas()
                 eventos.Eventos.crearMensajeInfo("Factura eliminada", "Se ha eliminado la factura")
             else:
                 eventos.Eventos.crearMensajeError("Error", "No se ha podido eliminar la factura")
