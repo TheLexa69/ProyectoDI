@@ -80,8 +80,13 @@ class Alquileres:
             if conexion.Conexion.altaContratoAlquiler(nuevoAlquiler):
                 eventos.Eventos.crearMensajeInfo("Contrato grabado", "Se ha grabado una nueva venta")
 
+                # idPropiedad = conexion.Conexion.getIdAlquilerByPropiedad(nuevoAlquiler[0])
+                print("ID Propiedad:", nuevoAlquiler[0])
+
+                var.ui.pnlVisualizacionAlquileres.clear()
+
                 Alquileres.cargaTablaContratos()
-                Alquileres.cargaTablaMensualidades()
+                Alquileres.cargaTablaMensualidades(nuevoAlquiler[0])
 
                 eventos.Eventos.resizeTablaAlquileresGestion()
                 eventos.Eventos.pnlVisualizacionAlquileres()
@@ -157,24 +162,15 @@ class Alquileres:
             print("Error en cargaTablaContratos:", e)
 
     @staticmethod
-    def cargaTablaMensualidades():
-        """
-            Esta función carga las mensualidades de alquiler en la tabla de visualización de alquileres.
-
-            Procedimiento:
-            1. Obtiene el listado de mensualidades desde la base de datos.
-            2. Configura el número de filas y columnas de la tabla.
-            3. Establece los encabezados de las columnas.
-            4. Rellena la tabla con los datos de las mensualidades.
-            5. Añade un checkbox en cada fila para gestionar el estado de pago de las mensualidades.
-
-            Excepciones:
-            - Captura y muestra cualquier excepción que ocurra durante el proceso de carga de la tabla.
-            """
+    def cargaTablaMensualidades(numContrato=None):
         try:
             # Obtenemos el listado de mensualidades
-            listado = conexion.Conexion.listadoMensualidades()
-            print("Listado obtenido:", listado)  # Debug: Verifica el contenido de los datos
+            listado = conexion.Conexion.listadoMensualidades(numContrato)
+            print("Listado obtenido:", listado)
+
+            if not listado:
+                print("El listado está vacío, no se cargarán mensualidades.")
+                return
 
             # Configuramos filas y columnas
             var.ui.pnlVisualizacionAlquileres.setRowCount(len(listado))
@@ -224,3 +220,28 @@ class Alquileres:
 
         except Exception as e:
             print("Error en cargaTablaMensualidades:", e)
+
+    @staticmethod
+    def cargaOneContrato():
+        try:
+            fila = var.ui.pnlGestionAlquileres.selectedItems()
+            datos = [dato.text() for dato in fila]
+            print("Datos seleccionados:", datos)
+            try:
+                mensualidades = conexion.Conexion.cargaMensualidades(datos[0]) #Obtengo el código de la propiedad
+                print("Mensualidades:", mensualidades) #Guardamos las Mensualidades
+                if mensualidades:
+                    codProp = mensualidades[0][1]
+                    print("Código de la propiedad:", codProp) #Codigo de la propiedad
+                    # propiedad = conexion.Conexion.listadoMensualidades(codProp)  # Recupera la propiedad a partir de su código
+                    Alquileres.cargaTablaMensualidades(codProp)
+                    # eventos.Eventos.resizeTablaAlquileresGestion()
+                    eventos.Eventos.pnlVisualizacionAlquileres()
+                else:
+                    Alquileres.cargaTablaMensualidades()
+
+            except Exception as e:
+                print("Error en carga Factura", e)
+
+        except Exception as e:
+            print("Error cargaOneFactura en Facturas", e)

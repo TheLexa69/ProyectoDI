@@ -1205,7 +1205,7 @@ class Conexion:
             return False
 
     @staticmethod
-    def listadoMensualidades():
+    def listadoMensualidades(numContrato):
         """
             Devuelve el listado de todas las mensualidades.
 
@@ -1221,8 +1221,10 @@ class Conexion:
             """
         try:
             listado = []
+            base_query = "SELECT * FROM mensualidades WHERE propiedad IN (SELECT propiedad_id FROM alquileres WHERE propiedad_id = :numero_contrato)"
             query = QtSql.QSqlQuery()
-            query.prepare("SELECT * FROM mensualidades")
+            query.prepare(base_query)
+            query.bindValue(":numero_contrato", str(numContrato))
 
             if query.exec():
                 while query.next():
@@ -1233,8 +1235,23 @@ class Conexion:
 
             return listado
         except Exception as e:
-            print("Error listando mensualidades en listadoMensualidades - conexión", e)
+            print("Error al cargar ventas en conexion:", e)
             return []
+        #     listado = []
+        #     query = QtSql.QSqlQuery()
+        #     query.prepare("SELECT * FROM mensualidades")
+        #
+        #     if query.exec():
+        #         while query.next():
+        #             fila = [query.value(i) for i in range(query.record().count())]
+        #             listado.append(fila)
+        #     else:
+        #         print("Error en la ejecución de la consulta:", query.lastError().text())
+        #
+        #     return listado
+        # except Exception as e:
+        #     print("Error listando mensualidades en listadoMensualidades - conexión", e)
+        #     return []
 
     @staticmethod
     def actualizarEstadoMensualidad(id_mensualidad, estado):
@@ -1340,3 +1357,46 @@ class Conexion:
         except Exception as e:
             print(f"Error en borrarContrato: {e}")
             return False
+
+    @staticmethod
+    def cargaMensualidades(numero_contrato):
+        try:
+            listado = []
+            base_query = "SELECT * FROM mensualidades WHERE propiedad IN (SELECT propiedad_id FROM alquileres WHERE id = :numero_contrato)"
+            query = QtSql.QSqlQuery()
+            query.prepare(base_query)
+            query.bindValue(":numero_contrato", str(numero_contrato))
+
+            if query.exec():
+                while query.next():
+                    fila = [query.value(i) for i in range(query.record().count())]
+                    listado.append(fila)
+            else:
+                print("Error en la ejecución de la consulta:", query.lastError().text())
+
+            return listado
+        except Exception as e:
+            print("Error al cargar ventas en conexion:", e)
+            return []
+
+    # @staticmethod
+    # def getIdAlquilerByPropiedad(propiedad_id):
+    #     """
+    #     Devuelve el ID del alquiler asociado a una propiedad específica.
+    #
+    #     :param propiedad_id: ID de la propiedad
+    #     :type propiedad_id: int
+    #     :return: ID del alquiler asociado
+    #     :rtype: int
+    #     """
+    #     try:
+    #         query = QtSql.QSqlQuery()
+    #         query.prepare("SELECT id FROM alquileres WHERE propiedad_id = :propiedad_id")
+    #         query.bindValue(":propiedad_id", propiedad_id)
+    #         if query.exec() and query.next():
+    #             return query.value(0)
+    #         else:
+    #             return None
+    #     except Exception as e:
+    #         print("Error al obtener el ID del alquiler por propiedad:", e)
+    #         return None

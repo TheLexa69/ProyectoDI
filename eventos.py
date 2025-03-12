@@ -1158,6 +1158,9 @@ class Eventos():
                 @return None
             """
         try:
+            header_labels = ['Recibo', 'Propiedad', 'Mensualidad', 'Importe', 'Gestión']
+            var.ui.pnlVisualizacionAlquileres.setHorizontalHeaderLabels(header_labels)
+
             header = var.ui.pnlVisualizacionAlquileres.horizontalHeader()
             for i in range(header.count()):
                 if i != 0:
@@ -1166,8 +1169,9 @@ class Eventos():
                     header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 
                 header_items = var.ui.pnlVisualizacionAlquileres.horizontalHeaderItem(i)
-                font = header_items.font()
-                font.setBold(True)
-                header_items.setFont(font)
+                if header_items is not None:
+                    font = header_items.font()
+                    font.setBold(True)
+                    header_items.setFont(font)
         except Exception as e:
-            print("error en resize tabla clientes ", e)
+            print("error en resize visualizacion alquileres ", e)
