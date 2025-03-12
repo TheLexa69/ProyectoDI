@@ -3,6 +3,7 @@ from datetime import datetime
 
 from PyQt6 import QtSql, QtWidgets, QtGui, QtCore
 
+import alquileres
 import conexion
 import eventos
 import var
@@ -956,6 +957,7 @@ class Conexion:
             query.bindValue(":precioAlquiler", str(nuevoAlquiler[5]))
 
             if query.exec():
+                Conexion.altaMensualidades(nuevoAlquiler[0], nuevoAlquiler[5])
                 return True
             else:
                 print("Error en la ejecución de la consulta:", query.lastError().text())
@@ -1005,7 +1007,6 @@ class Conexion:
                 if not query.exec():
                     print(f"Error al insertar la mensualidad de {mes}: {query.lastError().text()}")
                     return False
-
             return True
         except Exception as e:
             print("Error al insertar mensualidades:", e)
@@ -1030,13 +1031,15 @@ class Conexion:
             print("Error listando mensualidades en listadoMensualidades - conexión", e)
             return []
 
-
     @staticmethod
     def actualizarEstadoMensualidad(id_mensualidad, estado):
         try:
             query = QtSql.QSqlQuery()
+            print("mensualidad:", id_mensualidad, "estado:", estado)
+
             # Convertimos el estado del checkbox a 1 (True) o 0 (False)
-            pagado = 1 if estado == QtCore.Qt.CheckState.Checked else 0
+            pagado = 1 if estado == QtCore.Qt.CheckState.Checked.value else 0
+            print("estado check:", pagado)
 
             query.prepare("UPDATE mensualidades SET pagado = :pagado WHERE id = :id")
             query.bindValue(":pagado", pagado)
@@ -1050,4 +1053,48 @@ class Conexion:
                 return False
         except Exception as e:
             print(f"Error en actualizarEstadoMensualidad: {e}")
+            return False
+
+    @staticmethod
+    def borrarContrato(id_contrato):
+        try:
+            # Verificar si existen mensualidades pagadas para el contrato
+            query = QtSql.QSqlQuery()
+            query.prepare(
+                "SELECT COUNT(*) FROM mensualidades WHERE propiedad IN (SELECT propiedad_id FROM alquileres WHERE id = :id_contrato) AND pagado = 1")
+            query.bindValue(":id_contrato", id_contrato)
+
+            if query.exec() and query.next():
+                if query.value(0) > 0:
+                    eventos.Eventos.crearMensajeError("Mensualidades", "No se puede borrar el contrato porque tiene mensualidades pagadas.")
+                    print("No se puede borrar el contrato porque tiene mensualidades pagadas.")
+                    return False
+                else:
+                    # Borrar mensualidades asociadas al contrato
+                    query.prepare(
+                        "DELETE FROM mensualidades WHERE propiedad IN (SELECT propiedad_id FROM alquileres WHERE id = :id_contrato)")
+                    query.bindValue(":id_contrato", id_contrato)
+                    if not query.exec():
+                        print("Error al borrar mensualidades:", query.lastError().text())
+                        return False
+
+                    # Borrar el contrato
+                    query.prepare("DELETE FROM alquileres WHERE id = :id_contrato")
+                    query.bindValue(":id_contrato", id_contrato)
+                    if query.exec():
+                        print(f"Contrato {id_contrato} borrado correctamente.")
+                        alquileres.Alquileres.cargaTablaContratos()
+                        alquileres.Alquileres.cargaTablaMensualidades()
+
+                        eventos.Eventos.resizeTablaAlquileresGestion()
+                        eventos.Eventos.pnlVisualizacionAlquileres()
+                        return True
+                    else:
+                        print("Error al borrar el contrato:", query.lastError().text())
+                        return False
+            else:
+                print("Error al verificar mensualidades pagadas:", query.lastError().text())
+                return False
+        except Exception as e:
+            print(f"Error en borrarContrato: {e}")
             return False

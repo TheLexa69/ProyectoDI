@@ -26,37 +26,49 @@ class Alquileres:
                 var.ui.txtPrecioAlquiler.text(),
             ]
 
+            print("Nuevo Alquiler:", nuevoAlquiler)
+
             # Verificamos que los campos no estén vacíos antes de grabar el contrato
             if nuevoAlquiler[0] == "":
                 eventos.Eventos.crearMensajeError("Error grabar el contrato",
                                                   "Recuerda ingresar el ID de la propiedad")
+                return
 
             elif nuevoAlquiler[1] == "":
                 eventos.Eventos.crearMensajeError("Error grabar el contrato",
                                                   "Recuerda ingresar el DNI del cliente")
+                return
 
             elif nuevoAlquiler[2] == "":
                 eventos.Eventos.crearMensajeError("Error grabar el contrato",
                                                   "Recuerda ingresar el vendedor")
+                return
 
             elif nuevoAlquiler[3] == "":
                 eventos.Eventos.crearMensajeError("Error grabar el contrato",
                                                   "Recuerda ingresar la fecha de inicio del alquiler")
+                return
 
             elif nuevoAlquiler[4] == "":
                 eventos.Eventos.crearMensajeError("Error grabar el contrato",
                                                   "Recuerda ingresar la fecha de fin del alquiler")
+                return
 
             elif nuevoAlquiler[5] == "":
                 eventos.Eventos.crearMensajeError("Error grabar el contrato",
                                                   "Recuerda ingresar el precio del alquiler")
+                return
 
             print(
                 f"Nuevo Alquiler: ID Propiedad: {nuevoAlquiler[0]}, DNI Cliente: {nuevoAlquiler[1]}, Vendedor: {nuevoAlquiler[2]}, Fecha Inicio: {nuevoAlquiler[3]}, Fecha Fin: {nuevoAlquiler[4]}, Precio: {nuevoAlquiler[5]}")
             if conexion.Conexion.altaContratoAlquiler(nuevoAlquiler):
                 eventos.Eventos.crearMensajeInfo("Contrato grabado", "Se ha grabado una nueva venta")
+
                 Alquileres.cargaTablaContratos()
                 Alquileres.cargaTablaMensualidades()
+
+                eventos.Eventos.resizeTablaAlquileresGestion()
+                eventos.Eventos.pnlVisualizacionAlquileres()
             else:
                 eventos.Eventos.crearMensajeError("Error", "No se ha podido grabar el contrato de alquiler")
         except Exception as e:
@@ -90,16 +102,18 @@ class Alquileres:
                 botondelfac.setStyleSheet("background: transparent; border: none;")
                 botondelfac.setProperty("row", index)
 
+                # Conectar el botón a la función borrarContrato
+                botondelfac.clicked.connect(
+                    lambda _, id_contrato=registro[0]: conexion.Conexion.borrarContrato(id_contrato))
+
                 contenedor = QtWidgets.QWidget()
                 layout = QHBoxLayout()
                 layout.addWidget(botondelfac)
                 layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                 layout.setContentsMargins(0, 0, 0, 0)
                 contenedor.setLayout(layout)
-
                 var.ui.pnlGestionAlquileres.setCellWidget(index, 2, contenedor)
-
-            var.ui.pnlGestionAlquileres.resizeColumnsToContents()
+                var.ui.pnlGestionAlquileres.resizeColumnsToContents()
 
         except Exception as e:
             print("Error en cargaTablaContratos:", e)
@@ -144,8 +158,7 @@ class Alquileres:
 
                 # Conectar el evento del checkbox al cambio en la base de datos
                 checkbox.stateChanged.connect(
-                    lambda estado, id_mensualidad=registro[0]: conexion.Conexion.actualizarEstadoMensualidad(
-                        id_mensualidad, estado) )
+                    lambda estado, id_mensualidad=registro[0]: conexion.Conexion.actualizarEstadoMensualidad( id_mensualidad, estado) )
 
                 checkbox_layout = QHBoxLayout()
                 checkbox_layout.addWidget(checkbox)

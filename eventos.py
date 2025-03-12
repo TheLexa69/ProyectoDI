@@ -561,8 +561,8 @@ class Eventos():
         except Exception as e:
             print("error en exportar cvs tipo prop: ", e)
 
-    @classmethod
-    def resizeTablaAlquileresGestion(cls):
+    @staticmethod
+    def resizeTablaAlquileresGestion():
         try:
             header = var.ui.pnlGestionAlquileres.horizontalHeader()
             for i in range(header.count()):

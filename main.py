@@ -112,6 +112,10 @@ class Main(QtWidgets.QMainWindow):
         eventos.Eventos.pnlVisualizacionAlquileres()
         alquileres.Alquileres.cargaTablaContratos()
         alquileres.Alquileres.cargaTablaMensualidades()
+
+
+
+
         '''
         zona de eventos del menubar
         '''
