@@ -682,6 +682,19 @@ class Conexion:
 
     @staticmethod
     def listadoFacturas():
+        """
+            Devuelve el listado de todas las facturas.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para obtener todas las facturas ordenadas por ID.
+            2. Recorre los resultados de la consulta y los añade a una lista.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+            @param None
+            @return list: Lista de todas las facturas.
+            """
         try:
             listado = []
             query = QtSql.QSqlQuery()
@@ -803,6 +816,21 @@ class Conexion:
 
     @staticmethod
     def altaFactura(registro):
+        """
+            Añade una nueva factura a la base de datos.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para insertar una nueva factura con la fecha y el DNI del cliente.
+            2. Devuelve True si la inserción es exitosa, de lo contrario devuelve False.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de inserción de la factura.
+
+            @param registro: Lista con los datos de la factura. El primer elemento es la fecha de la factura y el segundo es el DNI del cliente.
+            @type registro: list
+            @return: Éxito de la inserción de la factura.
+            @rtype: bool
+            """
         try:
             query = QtSql.QSqlQuery()
             query.prepare("INSERT INTO FACTURAS (fechafac, dnicli) values (:fechafac,:dnicli)")
@@ -819,6 +847,21 @@ class Conexion:
 
     @staticmethod
     def eliminarFactura(id):
+        """
+           Elimina una factura de la base de datos.
+
+           Procedimiento:
+           1. Prepara y ejecuta una consulta SQL para eliminar una factura por su ID.
+           2. Devuelve True si la eliminación es exitosa, de lo contrario devuelve False.
+
+           Excepciones:
+           - Captura y muestra cualquier excepción que ocurra durante el proceso de eliminación de la factura.
+
+           @param id: ID de la factura a eliminar.
+           @type id: int
+           @return: Éxito de la eliminación de la factura.
+           @rtype: bool
+           """
         try:
             query = QtSql.QSqlQuery()
             query.prepare("DELETE FROM facturas WHERE id = :id")
@@ -833,6 +876,21 @@ class Conexion:
 
     @staticmethod
     def altaVenta(registro):
+        """
+            Añade una nueva venta a la base de datos.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para insertar una nueva venta con los datos proporcionados.
+            2. Devuelve True si la inserción es exitosa, de lo contrario devuelve False.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de inserción de la venta.
+
+            @param registro: Lista con los datos de la venta. El primer elemento es el ID de la factura, el segundo es el código de la propiedad y el tercero es el ID del agente.
+            @type registro: list
+            @return: Éxito de la inserción de la venta.
+            @rtype: bool
+            """
         try:
             query = QtSql.QSqlQuery()
             query.prepare("INSERT INTO ventas (facventa, codprop, agente) VALUES (:facventa, :codprop, :agente)")
@@ -850,6 +908,21 @@ class Conexion:
 
     @staticmethod
     def listadoVentas(idFactura):
+        """
+            Devuelve el listado de ventas asociadas a una factura específica.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para obtener las ventas asociadas a la factura.
+            2. Recorre los resultados de la consulta y los añade a una lista.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+            @param idFactura: ID de la factura para la cual se desean obtener las ventas.
+            @type idFactura: int
+            @return: Lista de ventas asociadas a la factura.
+            @rtype: list
+            """
         try:
             listado = []
             query = QtSql.QSqlQuery()
@@ -872,6 +945,21 @@ class Conexion:
 
     @staticmethod
     def bajaVenta(idVenta):
+        """
+            Elimina una venta de la base de datos.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para eliminar una venta por su ID.
+            2. Devuelve True si la eliminación es exitosa, de lo contrario devuelve False.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de eliminación de la venta.
+
+            @param idVenta: ID de la venta a eliminar.
+            @type idVenta: int
+            @return: Éxito de la eliminación de la venta.
+            @rtype: bool
+            """
         try:
             query = QtSql.QSqlQuery()
             query.prepare("DELETE FROM ventas WHERE idventa = :idventa")
@@ -886,6 +974,21 @@ class Conexion:
 
     @staticmethod
     def altaPropiedadVenta(codigoPropiedad):
+        """
+            Actualiza el estado de una propiedad a 'Disponible' y elimina la fecha de baja.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para actualizar el estado de la propiedad y eliminar la fecha de baja.
+            2. Devuelve True si la actualización es exitosa, de lo contrario devuelve False.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de actualización.
+
+            @param codigoPropiedad: Código de la propiedad a actualizar.
+            @type codigoPropiedad: int
+            @return: Éxito de la actualización de la propiedad.
+            @rtype: bool
+            """
         try:
             query = QtSql.QSqlQuery()
             query.prepare(
@@ -901,6 +1004,21 @@ class Conexion:
 
     @staticmethod
     def cargaVenta(codigoVenta):
+        """
+            Carga las ventas asociadas a una factura específica.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para obtener las ventas asociadas a la factura.
+            2. Recorre los resultados de la consulta y los añade a una lista.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+            @param codigoVenta: Código de la factura para la cual se desean obtener las ventas.
+            @type codigoVenta: int
+            @return: Lista de ventas asociadas a la factura.
+            @rtype: list
+            """
         try:
             listado = []
             base_query = "SELECT * FROM ventas WHERE facventa = :codigoVenta"
@@ -922,6 +1040,22 @@ class Conexion:
 
     @staticmethod
     def cargaPropiedadVenta(codigoPropiedad):
+        """
+            Carga los datos de una propiedad específica.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para obtener los datos de la propiedad con el código proporcionado.
+            2. Si se encuentra la propiedad, devuelve una lista con sus datos.
+            3. Si no se encuentra la propiedad, devuelve None.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+            @param codigoPropiedad: Código de la propiedad a buscar.
+            @type codigoPropiedad: int
+            @return: Lista con los datos de la propiedad o None si no se encuentra.
+            @rtype: list or None
+            """
         try:
             query = QtSql.QSqlQuery()
             query.prepare("SELECT * FROM propiedades WHERE codigo = :id")
@@ -943,6 +1077,24 @@ class Conexion:
 
     @staticmethod
     def altaContratoAlquiler(nuevoAlquiler):
+        """
+            Añade un nuevo contrato de alquiler a la base de datos.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para insertar un nuevo contrato de alquiler con los datos proporcionados.
+            2. Si la inserción es exitosa, llama al método `altaMensualidades` para generar las mensualidades correspondientes.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de inserción del contrato de alquiler.
+
+            @param nuevoAlquiler: Lista con los datos del nuevo contrato de alquiler.
+                                  El primer elemento es el ID de la propiedad, el segundo es el DNI del cliente,
+                                  el tercero es el ID del agente, el cuarto es la fecha de inicio del alquiler,
+                                  el quinto es la fecha de fin del alquiler y el sexto es el precio del alquiler.
+            @type nuevoAlquiler: list
+            @return: Éxito de la inserción del contrato de alquiler.
+            @rtype: bool
+            """
         try:
             query = QtSql.QSqlQuery()
             query.prepare(
@@ -968,6 +1120,19 @@ class Conexion:
 
     @staticmethod
     def listadoContratosAlquileres():
+        """
+            Devuelve el listado de todos los contratos de alquiler.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para obtener todos los contratos de alquiler.
+            2. Recorre los resultados de la consulta y los añade a una lista.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+            @param None
+            @return list: Lista de todos los contratos de alquiler.
+            """
         try:
             listado = []
             query = QtSql.QSqlQuery()
@@ -986,6 +1151,28 @@ class Conexion:
             return []
 
     def altaMensualidades(propiedad_id, fecha_inicio, fecha_fin, precio_mensual):
+        """
+            Añade mensualidades para un contrato de alquiler.
+
+            Procedimiento:
+            1. Convierte las fechas de inicio y fin a objetos datetime.
+            2. Inserta una mensualidad para cada mes entre las fechas de inicio y fin.
+            3. Marca cada mensualidad como no pagada.
+
+            Parámetros:
+            @param propiedad_id: ID de la propiedad.
+            @type propiedad_id: int
+            @param fecha_inicio: Fecha de inicio del contrato de alquiler en formato dd/mm/yyyy.
+            @type fecha_inicio: str
+            @param fecha_fin: Fecha de fin del contrato de alquiler en formato dd/mm/yyyy.
+            @type fecha_fin: str
+            @param precio_mensual: Precio mensual del alquiler.
+            @type precio_mensual: float
+
+            Retorna:
+            @return: Éxito de la inserción de las mensualidades.
+            @rtype: bool
+            """
         try:
             query = QtSql.QSqlQuery()
             fecha_inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
@@ -1019,6 +1206,19 @@ class Conexion:
 
     @staticmethod
     def listadoMensualidades():
+        """
+            Devuelve el listado de todas las mensualidades.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para obtener todas las mensualidades.
+            2. Recorre los resultados de la consulta y los añade a una lista.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+            @param None
+            @return list: Lista de todas las mensualidades.
+            """
         try:
             listado = []
             query = QtSql.QSqlQuery()
@@ -1038,6 +1238,24 @@ class Conexion:
 
     @staticmethod
     def actualizarEstadoMensualidad(id_mensualidad, estado):
+        """
+            Actualiza el estado de pago de una mensualidad.
+
+            Procedimiento:
+            1. Convierte el estado del checkbox a 1 (True) o 0 (False).
+            2. Prepara y ejecuta una consulta SQL para actualizar el estado de la mensualidad.
+            3. Devuelve True si la actualización es exitosa, de lo contrario devuelve False.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de actualización del estado.
+
+            @param id_mensualidad: ID de la mensualidad a actualizar.
+            @type id_mensualidad: int
+            @param estado: Estado del checkbox que indica si la mensualidad está pagada.
+            @type estado: QtCore.Qt.CheckState
+            @return: Éxito de la actualización del estado de la mensualidad.
+            @rtype: bool
+            """
         try:
             query = QtSql.QSqlQuery()
             print("mensualidad:", id_mensualidad, "estado:", estado)
@@ -1062,6 +1280,25 @@ class Conexion:
 
     @staticmethod
     def borrarContrato(id_contrato):
+        """
+                    Elimina un contrato de alquiler de la base de datos.
+
+                    Procedimiento:
+                    1. Verifica si existen mensualidades pagadas para el contrato.
+                    2. Si existen mensualidades pagadas, muestra un mensaje de error y no elimina el contrato.
+                    3. Si no existen mensualidades pagadas, elimina las mensualidades asociadas al contrato.
+                    4. Elimina el contrato de alquiler de la base de datos.
+                    5. Recarga las tablas de contratos y mensualidades.
+                    6. Ajusta el tamaño de las tablas de gestión y visualización de alquileres.
+
+                    Excepciones:
+                    - Captura y muestra cualquier excepción que ocurra durante el proceso de eliminación del contrato.
+
+                    @param id_contrato: ID del contrato a eliminar.
+                    @type id_contrato: int
+                    @return: Éxito de la eliminación del contrato.
+                    @rtype: bool
+                """
         try:
             # Verificar si existen mensualidades pagadas para el contrato
             query = QtSql.QSqlQuery()

@@ -16,6 +16,17 @@ class Facturas:
 
     @staticmethod
     def altaFactura():
+        """
+           Crea una nueva factura y la guarda en la base de datos.
+
+           La función verifica que se haya seleccionado un cliente y una fecha antes de intentar
+           guardar la factura. Si falta alguno de estos datos, se muestra un mensaje de error.
+           Si la factura se guarda correctamente, se muestra un mensaje de éxito y se actualiza
+           la tabla de facturas. En caso de error, se muestra un mensaje de error.
+
+           Excepciones:
+               Exception: Captura cualquier excepción y la imprime en la consola.
+           """
         try:
             nuevaFactura = [var.ui.txtFechaFactura.text(), var.ui.txtdniclifac.text()]
             if var.ui.txtdniclifac.text() == "" or var.ui.txtdniclifac.text() is None:
@@ -34,6 +45,17 @@ class Facturas:
 
     @staticmethod
     def cargaTablaFacturas():
+        """
+                Carga la tabla de facturas en la interfaz de usuario.
+
+                La función obtiene el listado de facturas desde la base de datos y las muestra en la tabla de facturas
+                de la interfaz de usuario. Para cada factura, se crea una fila con su ID, fecha y DNI del cliente.
+                Además, se añade un botón para eliminar la factura.
+
+                Excepciones:
+                    IndexError: Captura cualquier excepción de índice y la imprime en la consola.
+                    Exception: Captura cualquier otra excepción y la imprime en la consola.
+                """
         try:
             listado = var.claseConexion.listadoFacturas()
             var.ui.tablaFacturas.setRowCount(len(listado))
@@ -77,6 +99,19 @@ class Facturas:
 
     @staticmethod
     def cargaTablaVentas(idVenta=None):
+        """
+                Carga la tabla de ventas en la interfaz de usuario.
+
+                La función obtiene el listado de ventas desde la base de datos y las muestra en la tabla de ventas
+                de la interfaz de usuario. Para cada venta, se crea una fila con sus datos correspondientes.
+                Además, se añade un botón para eliminar la venta.
+
+                Parámetros:
+                    idVenta (str, opcional): El ID de la venta a cargar. Si no se proporciona, se utiliza el ID de la factura actual.
+
+                Excepciones:
+                    Exception: Captura cualquier excepción y la imprime en la consola.
+                """
         try:
             if not idVenta:
                 idVenta = var.ui.lblNumFactura.text()
@@ -134,6 +169,15 @@ class Facturas:
 
     @staticmethod
     def bajaFactura(id):
+        """
+                Elimina una factura de la base de datos.
+
+                La función intenta eliminar una factura utilizando su ID. Si la eliminación es exitosa,
+                se actualiza la tabla de facturas y se muestra un mensaje de éxito. Si no, se muestra un mensaje de error.
+
+                Excepciones:
+                    Exception: Captura cualquier excepción y la imprime en la consola.
+        """
         try:
             if conexion.Conexion.eliminarFactura(id):
                 Facturas.cargaTablaFacturas()
@@ -145,6 +189,15 @@ class Facturas:
 
     @staticmethod
     def cargaOneFactura():
+        """
+            Carga una factura seleccionada en la interfaz de usuario.
+
+            La función obtiene los datos de la factura seleccionada en la tabla de facturas y los muestra en la interfaz de usuario.
+            Luego, carga las ventas asociadas a esa factura y las propiedades correspondientes.
+
+            Excepciones:
+                Exception: Captura cualquier excepción y la imprime en la consola.
+            """
         try:
             fila = var.ui.tablaFacturas.selectedItems()
             datos = [dato.text() for dato in fila]
@@ -173,6 +226,21 @@ class Facturas:
 
     @staticmethod
     def cargarPropiedadVenta(propiedad):
+        """
+            Carga los datos de una propiedad en la interfaz de usuario.
+
+            La función recibe una lista con los datos de una propiedad y los muestra en los campos correspondientes
+            de la interfaz de usuario. Si la propiedad no está disponible, muestra un mensaje de error.
+
+            Parámetros:
+                propiedad (list): Lista con los datos de la propiedad.
+
+            Retorna:
+                bool: True si la propiedad está disponible y se cargan los datos correctamente, False en caso contrario.
+
+            Excepciones:
+                Exception: Captura cualquier excepción y la imprime en la consola.
+            """
         try:
             if str(propiedad[6]).lower() == "disponible":
                 var.ui.txtCodProp.setText(str(propiedad[1]))
@@ -191,6 +259,17 @@ class Facturas:
 
     @staticmethod
     def grabarVenta():
+        """
+                Graba una nueva venta en la base de datos.
+
+                La función verifica que se hayan seleccionado una propiedad, un vendedor y una factura antes de intentar
+                guardar la venta. Si falta alguno de estos datos, se muestra un mensaje de error. Si la venta se guarda
+                correctamente, se muestra un mensaje de éxito y se actualizan las tablas de ventas y propiedades. En caso
+                de error, se muestra un mensaje de error.
+
+                Excepciones:
+                    Exception: Captura cualquier excepción y la imprime en la consola.
+        """
         try:
             nuevaVenta = [var.ui.lblNumFactura.text(), var.ui.txtCodProp.text(), var.ui.txtIdVendedor.text()]
             if var.ui.txtCodProp.text() == "" or var.ui.txtCodProp.text() is None:
@@ -217,6 +296,20 @@ class Facturas:
             print("venta", e)
 
     def eliminarVenta(idventa, idpropiedad):
+        """
+            Elimina una venta de la base de datos y actualiza las tablas de ventas y propiedades.
+
+            La función intenta eliminar una venta utilizando su ID y marca la propiedad asociada como disponible.
+            Si la eliminación es exitosa, se actualizan las tablas de ventas y propiedades y se muestra un mensaje de éxito.
+            Si no, se muestra un mensaje de error.
+
+            Parámetros:
+                idventa (int): El ID de la venta a eliminar.
+                idpropiedad (int): El ID de la propiedad asociada a la venta.
+
+            Excepciones:
+                Exception: Captura cualquier excepción y la imprime en la consola.
+            """
         try:
             if conexion.Conexion.bajaVenta(idventa) and conexion.Conexion.altaPropiedadVenta(str(idpropiedad)):
                 eventos.Eventos.crearMensajeInfo("Venta eliminada", "Se ha eliminado la venta")
@@ -229,6 +322,21 @@ class Facturas:
 
     @staticmethod
     def cargarPropiedadAlquiler(listadoAlquileres):
+        """
+            Carga los datos de una propiedad en alquiler en la interfaz de usuario.
+
+            La función recibe una lista con los datos de una propiedad en alquiler y los muestra en los campos correspondientes
+            de la interfaz de usuario. Si la propiedad no está disponible, muestra un mensaje de error.
+
+            Parámetros:
+                listadoAlquileres (list): Lista con los datos de la propiedad en alquiler.
+
+            Retorna:
+                bool: True si la propiedad está disponible y se cargan los datos correctamente, False en caso contrario.
+
+            Excepciones:
+                Exception: Captura cualquier excepción y la imprime en la consola.
+            """
         try:
             if str(listadoAlquileres[6]).lower() == "disponible":
                 # var.ui.txtCodProp.setText(str(listadoAlquileres[1]))

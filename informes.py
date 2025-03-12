@@ -12,6 +12,24 @@ import var
 class Informes:
     @staticmethod
     def reportClientes():
+        """
+            Genera un informe en formato PDF con la lista de clientes.
+
+            El informe incluye los campos: DNI, Apellidos, Nombre, Móvil, Provincia y Municipio.
+            Se crea un archivo PDF en el directorio `.\informes` con el nombre `listadoclientes` seguido de la fecha y hora actual.
+            Si el número de registros excede el espacio disponible en una página, se crean páginas adicionales.
+
+            Pasos:
+            1. Crea el directorio `.\informes` si no existe.
+            2. Genera el archivo PDF con el nombre basado en la fecha y hora actual.
+            3. Consulta la base de datos para obtener el número de clientes y los datos de cada cliente.
+            4. Escribe los datos en el PDF, creando nuevas páginas si es necesario.
+            5. Guarda y abre el archivo PDF generado.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante la generación del informe.
+
+            """
         ymax = 660
         ymin = 90
         ystep = 20
@@ -91,6 +109,23 @@ class Informes:
 
     @staticmethod
     def reportPropiedades(municipio):
+        """
+            Genera un informe en formato PDF con la lista de propiedades de un municipio específico.
+
+            El informe incluye los campos: COD, DIRECCION, TIPO PROP., OPERACION, PRECIO ALQ., PRECIO VENTA.
+            Se crea un archivo PDF en el directorio `.\informes` con el nombre `listadopropiedades` seguido de la fecha y hora actual.
+            Si el número de registros excede el espacio disponible en una página, se crean páginas adicionales.
+
+            Pasos:
+            1. Crea el directorio `.\informes` si no existe.
+            2. Genera el archivo PDF con el nombre basado en la fecha y hora actual.
+            3. Consulta la base de datos para obtener el número de propiedades y los datos de cada propiedad.
+            4. Escribe los datos en el PDF, creando nuevas páginas si es necesario.
+            5. Guarda y abre el archivo PDF generado.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante la generación del informe.
+            """
         try:
             ymax = 655
             ymin = 90
@@ -176,10 +211,32 @@ class Informes:
 
     @staticmethod
     def getMaxElementosPpag(ymax, ymin, ystep, numRegistros):
+        """
+                Calcula el número máximo de elementos por página.
+
+                Args:
+                    ymax (int): Coordenada Y máxima.
+                    ymin (int): Coordenada Y mínima.
+                    ystep (int): Paso en Y entre elementos.
+                    numRegistros (int): Número total de registros.
+
+                Returns:
+                    int: Número máximo de elementos por página.
+                """
         numPpagina = math.ceil(numRegistros/(ymax - ymin) / ystep)
         return numPpagina
 
     def topInforme(titulo, municipio):
+        """
+            Dibuja la cabecera del informe PDF.
+
+            Args:
+                titulo (str): Título del informe.
+                municipio (str): Nombre del municipio (opcional).
+
+            Excepciones:
+                - Captura y muestra cualquier excepción que ocurra durante el dibujo de la cabecera.
+            """
         try:
             if municipio:
                 municipio = municipio.upper()
@@ -221,6 +278,16 @@ class Informes:
             print('Error en cabecera informe:', error)
 
     def footInforme(titulo, paginas):
+        """
+            Dibuja el pie de página del informe PDF.
+
+            Args:
+                titulo (str): Título del informe.
+                paginas (int): Número total de páginas.
+
+            Excepciones:
+                - Captura y muestra cualquier excepción que ocurra durante el dibujo del pie de página.
+            """
         try:
             total_pages = 0
             var.report.line(40, 50, 540, 50)
@@ -232,9 +299,6 @@ class Informes:
 
         except Exception as error:
             print('Error en pie informe de cualquier tipo: ', error)
-
-
-
 
 if __name__ == '__main__':
     Informes.reportClientes()

@@ -16,6 +16,22 @@ class Alquileres:
 
     @staticmethod
     def altaAlquiler():
+        """
+            Esta función se encarga de registrar un nuevo contrato de alquiler.
+
+            Procedimiento:
+            1. Recopila los datos del nuevo alquiler desde la interfaz de usuario.
+            2. Verifica que todos los campos requeridos no estén vacíos.
+            3. Si algún campo está vacío, muestra un mensaje de error específico.
+            4. Si todos los campos están completos, intenta registrar el nuevo contrato de alquiler en la base de datos.
+            5. Si el registro es exitoso, actualiza las tablas de contratos y mensualidades, y ajusta el tamaño de las tablas.
+            6. Limpia los campos de entrada en la interfaz de usuario.
+            7. Si ocurre un error durante el registro, muestra un mensaje de error.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de registro.
+
+            """
         try:
             nuevoAlquiler = [
                 var.ui.txtIdPropiedadAlquiler.text(),
@@ -85,6 +101,19 @@ class Alquileres:
 
     @staticmethod
     def cargaTablaContratos():
+        """
+               Esta función carga los contratos de alquiler en la tabla de gestión de alquileres.
+
+               Procedimiento:
+               1. Obtiene el listado de contratos de alquiler desde la base de datos.
+               2. Configura el número de filas y columnas de la tabla.
+               3. Establece los encabezados de las columnas.
+               4. Rellena la tabla con los datos de los contratos.
+               5. Añade un botón de eliminar en cada fila para gestionar la eliminación de contratos.
+
+               Excepciones:
+               - Captura y muestra cualquier excepción que ocurra durante el proceso de carga de la tabla.
+               """
         try:
             listado = conexion.Conexion.listadoContratosAlquileres()
             var.ui.pnlGestionAlquileres.setRowCount(len(listado))
@@ -129,6 +158,19 @@ class Alquileres:
 
     @staticmethod
     def cargaTablaMensualidades():
+        """
+            Esta función carga las mensualidades de alquiler en la tabla de visualización de alquileres.
+
+            Procedimiento:
+            1. Obtiene el listado de mensualidades desde la base de datos.
+            2. Configura el número de filas y columnas de la tabla.
+            3. Establece los encabezados de las columnas.
+            4. Rellena la tabla con los datos de las mensualidades.
+            5. Añade un checkbox en cada fila para gestionar el estado de pago de las mensualidades.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de carga de la tabla.
+            """
         try:
             # Obtenemos el listado de mensualidades
             listado = conexion.Conexion.listadoMensualidades()
