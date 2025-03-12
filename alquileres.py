@@ -69,6 +69,15 @@ class Alquileres:
 
                 eventos.Eventos.resizeTablaAlquileresGestion()
                 eventos.Eventos.pnlVisualizacionAlquileres()
+
+                var.ui.txtIdPropiedadAlquiler.clear()
+                var.ui.txtDniClienteAlquiler.clear()
+                var.ui.txtVendedorAlquiler.clear()
+                var.ui.txtInicioAlquiler.clear()
+                var.ui.txtFinAlquiler.clear()
+                var.ui.txtPrecioAlquiler.clear()
+
+
             else:
                 eventos.Eventos.crearMensajeError("Error", "No se ha podido grabar el contrato de alquiler")
         except Exception as e:

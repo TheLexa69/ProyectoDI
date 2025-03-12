@@ -957,7 +957,7 @@ class Conexion:
             query.bindValue(":precioAlquiler", str(nuevoAlquiler[5]))
 
             if query.exec():
-                Conexion.altaMensualidades(nuevoAlquiler[0], nuevoAlquiler[5])
+                Conexion.altaMensualidades(nuevoAlquiler[0], nuevoAlquiler[3], nuevoAlquiler[4] ,nuevoAlquiler[5])
                 return True
             else:
                 print("Error en la ejecución de la consulta:", query.lastError().text())
@@ -985,16 +985,14 @@ class Conexion:
             print("Error listando contratos de alquiler en listadoContratosAlquileres - conexión", e)
             return []
 
-    @staticmethod
-    def altaMensualidades(propiedad_id, precio_mensual):
+    def altaMensualidades(propiedad_id, fecha_inicio, fecha_fin, precio_mensual):
         try:
             query = QtSql.QSqlQuery()
-            mensualidades = [
-                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-            ]
+            fecha_inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
+            fecha_fin = datetime.strptime(fecha_fin, "%d/%m/%Y")
 
-            for mes in mensualidades:
+            while fecha_inicio <= fecha_fin:
+                mes = fecha_inicio.strftime("%B")
                 query.prepare(
                     "INSERT INTO mensualidades (propiedad, mensualidad, importe, pagado) "
                     "VALUES (:propiedad, :mensualidad, :importe, :pagado)"
@@ -1007,6 +1005,13 @@ class Conexion:
                 if not query.exec():
                     print(f"Error al insertar la mensualidad de {mes}: {query.lastError().text()}")
                     return False
+
+                # Avanzar al siguiente mes
+                if fecha_inicio.month == 12:
+                    fecha_inicio = fecha_inicio.replace(year=fecha_inicio.year + 1, month=1)
+                else:
+                    fecha_inicio = fecha_inicio.replace(month=fecha_inicio.month + 1)
+
             return True
         except Exception as e:
             print("Error al insertar mensualidades:", e)
