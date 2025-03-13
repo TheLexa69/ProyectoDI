@@ -1087,6 +1087,34 @@ class Conexion:
             return None
 
     @staticmethod
+    def cargaOneFactura(idFactura):
+        """
+
+        :param idFactura: La id de la factura
+        :type idFactura: String
+        :return: Lista con los datos de una factura
+        :rtype: List
+
+        Metodo para buscar una factura en concreto
+        """
+        try:
+            registro = []
+            query = QtSql.QSqlQuery()
+            query.prepare("SELECT * FROM facturas WHERE id = :id")
+            query.bindValue(":id", idFactura)
+            if query.exec():
+                while query.next():
+                    for i in range(query.record().count()):
+                        registro.append(str(query.value(i)))
+            return registro
+        except Exception as e:
+            print("Error cargando factura en cargaOneFactura - conexión", e)
+
+    '''
+    GESTION DE ALQUILERES
+    '''
+
+    @staticmethod
     def altaContratoAlquiler(nuevoAlquiler):
         """
             Añade un nuevo contrato de alquiler a la base de datos.

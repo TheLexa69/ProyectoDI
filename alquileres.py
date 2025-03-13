@@ -238,9 +238,10 @@ class Alquileres:
         try:
             fila = var.ui.pnlGestionAlquileres.selectedItems()
             datos = [dato.text() for dato in fila]
-            # print("Datos seleccionados:", datos)
+            print("Datos seleccionados:", datos)
             try:
                 mensualidades = conexion.Conexion.cargaMensualidades(datos[0]) #Obtengo el código de la propiedad
+                var.ui.txtNumAlquiler.setText(datos[0])
                 # print("Mensualidades:", mensualidades) #Guardamos las Mensualidades
                 if mensualidades:
                     codProp = mensualidades[0][1]
@@ -249,6 +250,7 @@ class Alquileres:
                     Alquileres.cargaTablaMensualidades(codProp)
                     # eventos.Eventos.resizeTablaAlquileresGestion()
                     eventos.Eventos.pnlVisualizacionAlquileres()
+
                 else:
                     Alquileres.cargaTablaMensualidades()
 
@@ -257,3 +259,20 @@ class Alquileres:
 
         except Exception as e:
             print("Error cargaOneFactura en Facturas", e)
+
+    @staticmethod
+    def selectOneMensualidad():
+        """
+            Selecciona una mensualidad de la tabla de visualización de alquileres.
+
+            @return: None
+            """
+        try:
+            fila = var.ui.pnlVisualizacionAlquileres.selectedItems()
+            datos = [dato.text() for dato in fila]
+            print("Datos seleccionados:", datos)
+            var.ui.txtNumRecibo.setText(datos[0])
+            # datos[0] = ID de la mensualidad
+        except Exception as e:
+            print("Error en selectOneMensualidad:", e)
+

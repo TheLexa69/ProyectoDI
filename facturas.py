@@ -6,6 +6,7 @@ from PyQt6.QtGui import QIcon
 from reportlab.lib.testutils import setOutDir
 
 import conexion
+import informes
 import propiedades
 import eventos
 import var
@@ -354,3 +355,11 @@ class Facturas:
                 return False
         except Exception as e:
             print("Error en cargarPropiedadVenta", e)
+
+    @staticmethod
+    def guardarFactura():
+        if not var.ui.lblNumFactura.text():
+            eventos.Eventos.crearMensajeError("Error", "No hay ninguna factura seleccionada")
+            print("lblNumFactura no tiene valor")
+            return
+        informes.Informes.reportFact(var.ui.lblNumFactura.text())

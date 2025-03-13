@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1619</width>
-    <height>793</height>
+    <height>795</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../../../.designer/img/icono.png</normaloff>../../../../../../.designer/img/icono.png</iconset>
+    <normaloff>../../../../../../../.designer/img/icono.png</normaloff>../../../../../../../.designer/img/icono.png</iconset>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -58,7 +58,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="pesClientes">
        <attribute name="title">
@@ -242,7 +242,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../.designer/img/calendario.ico</iconset>
+              <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -347,7 +347,7 @@
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../.designer/img/lupa.ico</iconset>
+                <normaloff>../../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../../.designer/img/lupa.ico</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -655,7 +655,7 @@
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../.designer/img/calendario.ico</iconset>
+                <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1327,7 +1327,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../.designer/img/btnAnterior.png</normaloff>../../../../../../.designer/img/btnAnterior.png</iconset>
+              <normaloff>../../../../../../../.designer/img/btnAnterior.png</normaloff>../../../../../../../.designer/img/btnAnterior.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -1350,7 +1350,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../.designer/img/btnSiguiente.png</normaloff>../../../../../../.designer/img/btnSiguiente.png</iconset>
+              <normaloff>../../../../../../../.designer/img/btnSiguiente.png</normaloff>../../../../../../../.designer/img/btnSiguiente.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -2329,7 +2329,7 @@
                 </property>
                 <property name="icon">
                  <iconset>
-                  <normaloff>../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../.designer/img/lupa.ico</iconset>
+                  <normaloff>../../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../../.designer/img/lupa.ico</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -2791,7 +2791,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../.designer/img/calendario.ico</iconset>
+                    <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -3619,7 +3619,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../.designer/img/calendario.ico</iconset>
+                    <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -3941,7 +3941,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../.designer/img/btnAnterior.png</normaloff>../../../../../../.designer/img/btnAnterior.png</iconset>
+              <normaloff>../../../../../../../.designer/img/btnAnterior.png</normaloff>../../../../../../../.designer/img/btnAnterior.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -3964,7 +3964,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../.designer/img/btnSiguiente.png</normaloff>../../../../../../.designer/img/btnSiguiente.png</iconset>
+              <normaloff>../../../../../../../.designer/img/btnSiguiente.png</normaloff>../../../../../../../.designer/img/btnSiguiente.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -4144,7 +4144,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../.designer/img/calendario.ico</iconset>
+                    <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -4256,7 +4256,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../.designer/img/calendario.ico</iconset>
+                    <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -4695,7 +4695,7 @@
                 </property>
                 <property name="icon">
                  <iconset>
-                  <normaloff>../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../.designer/img/lupa.ico</iconset>
+                  <normaloff>../../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../../.designer/img/lupa.ico</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -5356,7 +5356,6 @@
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -5436,7 +5435,6 @@
                   <property name="font">
                    <font>
                     <pointsize>11</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -5854,6 +5852,80 @@
                </item>
                <item>
                 <layout class="QGridLayout" name="gridLayout_7">
+                 <item row="2" column="0" colspan="2">
+                  <widget class="QLabel" name="label_4">
+                   <property name="text">
+                    <string>Fecha Factura:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="2" colspan="2">
+                  <widget class="QLineEdit" name="txtdniclifac">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>80</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>80</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="2">
+                  <spacer name="verticalSpacer_14">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QPushButton" name="btnFechaFactura">
+                   <property name="minimumSize">
+                    <size>
+                     <width>32</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>32</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Abrir calendario</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color : rgb(255, 255, 255)</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>25</width>
+                     <height>25</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="2" colspan="2">
                   <widget class="QLabel" name="lblNumFactura">
                    <property name="minimumSize">
@@ -5871,7 +5943,6 @@
                    <property name="font">
                     <font>
                      <pointsize>10</pointsize>
-                     <weight>75</weight>
                      <bold>true</bold>
                     </font>
                    </property>
@@ -5885,6 +5956,32 @@
                     <set>Qt::AlignCenter</set>
                    </property>
                   </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <spacer name="verticalSpacer_16">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="6" column="1">
+                  <spacer name="verticalSpacer_15">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label">
@@ -5928,7 +6025,20 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="1" colspan="2">
+                 <item row="5" column="3">
+                  <widget class="QPushButton" name="btnGuardarFactura">
+                   <property name="minimumSize">
+                    <size>
+                     <width>80</width>
+                     <height>25</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Guardar Factura</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
                   <widget class="QPushButton" name="btnGrabarFactura">
                    <property name="minimumSize">
                     <size>
@@ -5946,106 +6056,6 @@
                     <string>Grabar factura</string>
                    </property>
                   </widget>
-                 </item>
-                 <item row="2" column="0" colspan="2">
-                  <widget class="QLabel" name="label_4">
-                   <property name="text">
-                    <string>Fecha Factura:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="2" colspan="2">
-                  <widget class="QLineEdit" name="txtdniclifac">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>80</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>80</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="3">
-                  <widget class="QPushButton" name="btnFechaFactura">
-                   <property name="minimumSize">
-                    <size>
-                     <width>32</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>32</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="toolTip">
-                    <string>Abrir calendario</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background-color : rgb(255, 255, 255)</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset>
-                     <normaloff>../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../.designer/img/calendario.ico</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>25</width>
-                     <height>25</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1">
-                  <spacer name="verticalSpacer_15">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="4" column="2">
-                  <spacer name="verticalSpacer_14">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="0" column="2">
-                  <spacer name="verticalSpacer_16">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
                  </item>
                 </layout>
                </item>
@@ -6135,73 +6145,21 @@
              </item>
              <item row="0" column="0">
               <layout class="QGridLayout" name="gridLayout_17">
-               <item row="5" column="2">
-                <widget class="QLineEdit" name="txtDniClienteAlquiler">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>150</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(254, 255, 210);</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0" colspan="2">
-                <widget class="QLabel" name="label_16">
+               <item row="2" column="4">
+                <widget class="QLabel" name="label_22">
                  <property name="text">
-                  <string>Num. Alquiler</string>
+                  <string>ID Propiedad</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
-                <widget class="QLineEdit" name="txtNumAlquiler">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(254, 255, 210);</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0" colspan="2">
-                <widget class="QLabel" name="label_17">
+               <item row="3" column="0" colspan="2">
+                <widget class="QLabel" name="label_20">
                  <property name="text">
-                  <string>Inicio Alquiler</string>
+                  <string>Fin Alquiler</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2">
-                <widget class="QLabel" name="label_23">
-                 <property name="text">
-                  <string>CONTRATOS</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="2">
-                <widget class="QLineEdit" name="txtFinAlquiler">
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(254, 255, 210);</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="7">
+               <item row="5" column="7">
                 <widget class="QLineEdit" name="txtPrecioAlquiler">
                  <property name="enabled">
                   <bool>false</bool>
@@ -6230,21 +6188,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="4" colspan="2">
-                <widget class="QLabel" name="label_25">
-                 <property name="text">
-                  <string>Precio Alquiler</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="4" colspan="2">
-                <widget class="QLabel" name="label_24">
-                 <property name="text">
-                  <string>ID Vendedor</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="7">
+               <item row="3" column="7">
                 <widget class="QLineEdit" name="txtVendedorAlquiler">
                  <property name="enabled">
                   <bool>false</bool>
@@ -6260,7 +6204,14 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="7">
+               <item row="1" column="0" colspan="2">
+                <widget class="QLabel" name="label_16">
+                 <property name="text">
+                  <string>Num. Contrato</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="7">
                 <widget class="QLineEdit" name="txtIdPropiedadAlquiler">
                  <property name="enabled">
                   <bool>false</bool>
@@ -6276,17 +6227,31 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="4" colspan="2">
-                <widget class="QLabel" name="label_22">
+               <item row="1" column="4">
+                <widget class="QLabel" name="label_26">
                  <property name="text">
-                  <string>ID Propiedad</string>
+                  <string>Num. Recibo</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="0" colspan="2">
-                <widget class="QLabel" name="label_20">
+               <item row="3" column="4">
+                <widget class="QLabel" name="label_24">
                  <property name="text">
-                  <string>Fin Alquiler</string>
+                  <string>ID Vendedor</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QLabel" name="label_23">
+                 <property name="text">
+                  <string>CONTRATOS</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="4">
+                <widget class="QLabel" name="label_25">
+                 <property name="text">
+                  <string>Precio Alquiler</string>
                  </property>
                 </widget>
                </item>
@@ -6374,7 +6339,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>../img/calendario.ico</normaloff>../img/calendario.ico</iconset>
+                     <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -6398,6 +6363,55 @@
                   </spacer>
                  </item>
                 </layout>
+               </item>
+               <item row="5" column="2">
+                <widget class="QLineEdit" name="txtDniClienteAlquiler">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(254, 255, 210);</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLineEdit" name="txtNumAlquiler">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(254, 255, 210);</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <widget class="QLabel" name="label_17">
+                 <property name="text">
+                  <string>Inicio Alquiler</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="7">
+                <widget class="QLineEdit" name="txtNumRecibo">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(254, 255, 210);</string>
+                 </property>
+                </widget>
                </item>
                <item row="3" column="3">
                 <layout class="QHBoxLayout" name="horizontalLayout_53">
@@ -6427,7 +6441,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>../img/calendario.ico</normaloff>../img/calendario.ico</iconset>
+                     <normaloff>../../../../../../../.designer/img/calendario.ico</normaloff>../../../../../../../.designer/img/calendario.ico</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -6451,6 +6465,19 @@
                   </spacer>
                  </item>
                 </layout>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLineEdit" name="txtFinAlquiler">
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(254, 255, 210);</string>
+                 </property>
+                </widget>
                </item>
                <item row="6" column="6" colspan="2">
                 <widget class="QPushButton" name="btnDescargaPDFAlquiler">
@@ -6547,7 +6574,7 @@
      <x>0</x>
      <y>0</y>
      <width>1619</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
@@ -6641,8 +6668,8 @@
   <action name="actionbarSalir">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../../.designer/img/salir.ico</normaloff>
-     <normalon>../../../../../../a23yelkovq/.designer/img/salir.svg</normalon>../../../../../../.designer/img/salir.ico</iconset>
+     <normaloff>../../../../../../../.designer/img/salir.ico</normaloff>
+     <normalon>../../../../../../../a23yelkovq/.designer/img/salir.svg</normalon>../../../../../../../.designer/img/salir.ico</iconset>
    </property>
    <property name="text">
     <string>Salir</string>
@@ -6651,8 +6678,8 @@
   <action name="actionbarLimpiar">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../../.designer/img/reload.ico</normaloff>
-     <normalon>../../../../../../a23yelkovq/.designer/img/reload.ico</normalon>../../../../../../.designer/img/reload.ico</iconset>
+     <normaloff>../../../../../../../.designer/img/reload.ico</normaloff>
+     <normalon>../../../../../../../a23yelkovq/.designer/img/reload.ico</normalon>../../../../../../../.designer/img/reload.ico</iconset>
    </property>
    <property name="text">
     <string>Limpiar</string>
@@ -6672,7 +6699,7 @@
   <action name="actionbarAltaTipoprop">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../../.designer/img/tipoProp.ico</normaloff>../../../../../../.designer/img/tipoProp.ico</iconset>
+     <normaloff>../../../../../../../.designer/img/tipoProp.ico</normaloff>../../../../../../../.designer/img/tipoProp.ico</iconset>
    </property>
    <property name="text">
     <string>Alta tipo de propiedad</string>
@@ -6681,7 +6708,7 @@
   <action name="actionFiltrar">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../.designer/img/lupa.ico</iconset>
+     <normaloff>../../../../../../../.designer/img/lupa.ico</normaloff>../../../../../../../.designer/img/lupa.ico</iconset>
    </property>
    <property name="text">
     <string>Filtrar</string>

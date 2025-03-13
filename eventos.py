@@ -832,7 +832,7 @@ class Eventos():
         # 🏠💰 Limpiar panel de Alquileres
         objetosPanelAlquileres = [
             var.ui.txtNumAlquiler, var.ui.txtInicioAlquiler, var.ui.txtFinAlquiler,  # Fechas y número de alquiler
-            var.ui.txtDniClienteAlquiler, var.ui.txtIdPropiedadAlquiler, var.ui.txtVendedorAlquiler,
+            var.ui.txtDniClienteAlquiler, var.ui.txtIdPropiedadAlquiler, var.ui.txtVendedorAlquiler, var.ui.txtNumRecibo,
             # Cliente, propiedad y vendedor
             var.ui.txtPrecioAlquiler  # Precio
         ]

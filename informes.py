@@ -7,6 +7,8 @@ import os, shutil
 from PyQt6 import QtSql, QtWidgets, QtCore
 import sqlite3
 
+import conexion
+import eventos
 import var
 
 class Informes:
@@ -210,6 +212,65 @@ class Informes:
             print(e)
 
     @staticmethod
+    def reportFact(idFactura):
+        xidventa = 55
+        xidpropiedad = xidventa + 35
+        xdireccion = xidpropiedad + 50
+        xlocalidad = xdireccion + 150
+        xtipo = xlocalidad + 100
+        xprecio = xtipo + 50
+        try:
+            if ((idFactura != None) and (idFactura != "")):
+                rootPath = '.\\informes'
+                if not os.path.exists(rootPath):
+                    os.makedirs(rootPath)
+                fecha = datetime.today()
+                fecha = fecha.strftime("%Y_%m_%d_%H_%M_%S")
+                nompdfcli = fecha + "_FacturaVentas.pdf"
+                pdf_path = os.path.join(rootPath, nompdfcli)
+
+                var.report = canvas.Canvas(pdf_path)
+                titulo = "Factura Código " + idFactura
+                listado_ventas = conexion.Conexion.listadoVentas(idFactura)
+                factura = conexion.Conexion.cargaOneFactura(idFactura)
+                cliente = conexion.Conexion.datosOneCliente(factura[2]) # ['20367722A', '27/07/2024', 'Fernández López', 'Manuel', 'fernandez.lopez@example.com', '602345678', 'Avenida de Castelao, 8', 'Pontevedra', 'Vigo', '']
+                Informes.topInforme(titulo, cliente[8])
+                Informes.topDatosCliente(cliente, factura[1])
+                Informes.footInforme(titulo, 1)
+                items = ["ID VENTA", "CÓDIGO", "DIRECCIÓN", "LOCALIDAD", "TIPO", "PRECIO"]
+                Informes.footInforme(titulo, "1")
+                var.report.setFont("Helvetica-Bold", size=10)
+                var.report.drawString(55, 600, str(items[0]))
+                var.report.drawString(110, 600, str(items[1]))
+                var.report.drawString(160, 600, str(items[2]))
+                var.report.drawString(290, 600, str(items[3]))
+                var.report.drawString(390, 600, str(items[4]))
+                var.report.drawString(440, 600, str(items[5]))
+                var.report.line(50, 595, 525, 595)
+                y = 580
+                for registro in listado_ventas:
+                    var.report.setFont("Helvetica", size=8)
+                    var.report.drawCentredString(75, y, str(registro[0]))
+                    var.report.drawCentredString(120, y, str(registro[1]).title())
+                    var.report.drawString(170, y, str(registro[2]).title())
+                    var.report.drawString(300, y, str(registro[3]).title())
+                    var.report.drawString(390, y, str(registro[4]).title())
+                    var.report.drawCentredString(470, y, str(registro[5]).title() + " €")
+                    y -= 30
+
+                var.report.save()
+
+                for file in os.listdir(rootPath):
+                    if file.endswith(nompdfcli):
+                        os.startfile(pdf_path)
+            else:
+                mbox = eventos.Eventos.crearMensajeError("Error ifrome factura",
+                                                         "No se ha seleccionado ninguna factura")
+                mbox.exec()
+        except Exception as e:
+            print("Error reportFact = ", e)
+
+    @staticmethod
     def getMaxElementosPpag(ymax, ymin, ystep, numRegistros):
         """
                 Calcula el número máximo de elementos por página.
@@ -256,11 +317,11 @@ class Informes:
                 var.report.setFont('Helvetica-Bold', size=14)
                 var.report.drawString(55, 785, 'InmoTeis')
                 if municipio:
-                    var.report.drawCentredString(300, 725, titulo)
-                    var.report.drawCentredString(300, 705, municipio)
+                    var.report.drawCentredString(110, 685, titulo)
+                    var.report.drawCentredString(110, 665, municipio)
                 else:
                     var.report.drawString(230, 715, titulo)
-                var.report.line(40, 695, 540, 695)
+                var.report.line(40, 645, 540, 645)
 
 
                 # Dibuja la imagen en el informe
@@ -270,8 +331,8 @@ class Informes:
                 var.report.drawString(230, 772, 'CIF: A12345678')
                 var.report.drawString(55, 772, 'Avda. Galicia - 101')
                 var.report.drawString(55, 757, 'Vigo - 36216 - España')
-                var.report.drawString(360, 772, 'Teléfono: 986 132 456')
-                var.report.drawString(360, 757, 'e-mail: cartesteisr@mail.com')
+                var.report.drawString(360, 772, 'Teléfono: 986 41 52 63')
+                var.report.drawString(360, 757, 'e-mail: inmoteis@iesteis.es')
             else:
                 print(f'Error: No se pudo cargar la imagen en {ruta_logo} o en {ruta_letras}')
         except Exception as error:
@@ -299,6 +360,24 @@ class Informes:
 
         except Exception as error:
             print('Error en pie informe de cualquier tipo: ', error)
+
+    @staticmethod
+    def topDatosCliente(cliente, fecha):
+        try:
+            var.report.setFont('Helvetica-Bold', size=8)
+            var.report.drawString(300, 710, 'DNI Cliente:')
+            var.report.drawString(300, 692, 'Nombre:')
+            var.report.drawString(300, 674, 'Dirección:')
+            var.report.drawString(300, 656, 'Localidad:')
+            var.report.drawString(55, 622, "Fecha Factura:")
+            var.report.setFont('Helvetica', size=8)
+            var.report.drawString(360, 710, cliente[0])
+            var.report.drawString(360, 692, cliente[3] + " " + cliente[2])
+            var.report.drawString(360, 674, cliente[6])
+            var.report.drawString(360, 656, cliente[8])
+            var.report.drawString(120, 622, fecha)
+        except Exception as error:
+            print('Error en cabecera informe:', error)
 
 if __name__ == '__main__':
     Informes.reportClientes()
