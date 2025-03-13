@@ -1466,6 +1466,41 @@ class Conexion:
             print("Error al cargar ventas en conexion:", e)
             return []
 
+    @staticmethod
+    def datosOneAlquiler(idContrato):
+        try:
+            registro = []
+            query = QtSql.QSqlQuery()
+            query.prepare(
+                "SELECT a.id, a.fecha_inicio, a.fecha_fin, a.agente_id, c.dnicli, c.nomecli, c.apelcli, p.codigo, "
+                "p.tipo_propiedad, p.precio_alquiler, p.municipio, p.direccion FROM alquileres as a "
+                "INNER JOIN propiedades as p ON a.propiedad_id = p.codigo "
+                "INNER JOIN clientes as c ON a.cliente_dni = c.dnicli WHERE a.id = :idAlquiler")
+            query.bindValue(':idAlquiler', idContrato)
+            if query.exec():
+                while query.next():
+                    for i in range(12):
+                        registro.append(query.value(i))
+            return registro
+        except Exception as e:
+            print("Error datosOneAlquiler: ", e)
+
+    @staticmethod
+    def datosOneMensualidad(idMensualidad):
+        try:
+            registro = []
+            query = QtSql.QSqlQuery()
+            query.prepare("SELECT id, mensualidad, pagado FROM mensualidades WHERE id = :idMensualidad")
+            query.bindValue(":idMensualidad", idMensualidad)
+            if query.exec():
+                while query.next():
+                    for i in range(query.record().count()):
+                        registro.append(query.value(i))
+            return registro
+
+        except Exception as e:
+            print("Error al cargar datos de una mensualidad en conexcion", str(e))
+
     # @staticmethod
     # def getIdAlquilerByPropiedad(propiedad_id):
     #     """

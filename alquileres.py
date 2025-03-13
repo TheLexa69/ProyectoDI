@@ -6,6 +6,7 @@ from PyQt6.QtGui import QIcon
 from reportlab.lib.testutils import setOutDir
 
 import conexion
+import informes
 import propiedades
 import eventos
 import var
@@ -271,8 +272,16 @@ class Alquileres:
             fila = var.ui.pnlVisualizacionAlquileres.selectedItems()
             datos = [dato.text() for dato in fila]
             print("Datos seleccionados:", datos)
-            var.ui.txtNumRecibo.setText(datos[0])
+            var.ui.txtNumRecibo.setText(datos[0]) #ID de la mensualidad
+
             # datos[0] = ID de la mensualidad
         except Exception as e:
             print("Error en selectOneMensualidad:", e)
 
+    @staticmethod
+    def guardarFactura():
+        if not var.ui.txtNumRecibo.text() or not var.ui.txtNumAlquiler.text():
+            eventos.Eventos.crearMensajeError("Error", "No hay ninguna alquiler o contrato seleccionado")
+            print("txtNumRecibo no tiene valor o txtNumAlquiler no tiene valor")
+            return
+        informes.Informes.reportReciboMensualidad(var.ui.txtNumAlquiler.text(),var.ui.txtNumRecibo.text())

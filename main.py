@@ -112,6 +112,7 @@ class Main(QtWidgets.QMainWindow):
         eventos.Eventos.pnlVisualizacionAlquileres()
         alquileres.Alquileres.cargaTablaContratos()
         var.ui.pnlGestionAlquileres.clicked.connect(alquileres.Alquileres.cargaOneContrato)
+        var.ui.pnlVisualizacionAlquileres.clicked.connect(alquileres.Alquileres.selectOneMensualidad)
         # alquileres.Alquileres.cargaTablaMensualidades()
 
 
@@ -166,7 +167,8 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnGrabarventa.clicked.connect(facturas.Facturas.grabarVenta)
 
         var.ui.btnAltaContratoAlquiler.clicked.connect(alquileres.Alquileres.altaAlquiler)
-
+        var.ui.btnGuardarFactura.clicked.connect(facturas.Facturas.guardarFactura)
+        var.ui.btnDescargaPDFAlquiler.clicked.connect(alquileres.Alquileres.guardarFactura)
         '''
         zona de eventos de cajas de texto
         '''
