@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>clientes module &#8212; documentación de PROYECTODAM24_25 - v.0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=8ee129b9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-clientes">
+<span id="clientes-module"></span><h1>clientes module<a class="headerlink" href="#module-clientes" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="clientes.Clientes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clientes.</span></span><span class="sig-name descname"><span class="pre">Clientes</span></span><a class="reference internal" href="../_modules/clientes.html#Clientes"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.altaCliente">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altaCliente</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.altaCliente"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.altaCliente" title="Link to this definition">¶</a></dt>
+<dd><p>Da de alta un nuevo cliente en la base de datos.</p>
+<p>Recoge los datos del cliente desde la interfaz de usuario, verifica que todos los campos obligatorios estén completos
+y luego intenta insertar el nuevo cliente en la base de datos. Si la inserción es exitosa, muestra un mensaje de éxito
+y recarga la tabla de clientes. Si faltan campos obligatorios, muestra un mensaje de error indicando que algunos campos
+deben ser cubiertos. Si ocurre un error durante la inserción, muestra un mensaje de error indicando que hubo un problema
+al grabar el cliente.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.bajaCliente">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bajaCliente</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.bajaCliente"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.bajaCliente" title="Link to this definition">¶</a></dt>
+<dd><p>Da de baja a un cliente en la base de datos.</p>
+<p>Obtiene el DNI del cliente desde la interfaz de usuario y lo utiliza para dar de baja al cliente en la base de datos.
+Si la baja es exitosa, muestra un mensaje de éxito con la fecha de baja y recarga la tabla de clientes.
+Si el cliente no existe o ya ha sido dado de baja, muestra un mensaje de error.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.buscaOneCliente">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buscaOneCliente</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.buscaOneCliente"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.buscaOneCliente" title="Link to this definition">¶</a></dt>
+<dd><p>Busca y carga los datos de un cliente en la interfaz de usuario.</p>
+<p>Obtiene el DNI del cliente desde la interfaz de usuario, busca los datos del cliente en la base de datos
+y, si el cliente existe, carga los datos en los campos correspondientes de la interfaz de usuario.
+Si el cliente no existe, muestra un mensaje de error.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.cargaOneCliente">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaOneCliente</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.cargaOneCliente"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.cargaOneCliente" title="Link to this definition">¶</a></dt>
+<dd><p>Carga los datos de un cliente seleccionado en la interfaz de usuario.</p>
+<p>Obtiene la fila seleccionada en la tabla de clientes, extrae los datos del cliente y los carga en los campos
+correspondientes de la interfaz de usuario. También actualiza los campos relacionados con facturas y alquileres.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.cargaTablaClientes">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaTablaClientes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.cargaTablaClientes"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.cargaTablaClientes" title="Link to this definition">¶</a></dt>
+<dd><p>Carga los datos de los clientes en la tabla de la interfaz de usuario.</p>
+<p>Obtiene la lista de clientes desde la base de datos, calcula la paginación y actualiza la tabla de clientes
+en la interfaz de usuario con los datos correspondientes a la página actual. También gestiona la habilitación
+y deshabilitación de los botones de navegación (anterior y siguiente) según la página actual.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.cargarCruzcli">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargarCruzcli</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.cargarCruzcli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.cargarCruzcli" title="Link to this definition">¶</a></dt>
+<dd><p>Carga una imagen de cruz en el label correspondiente.</p>
+<p>Utiliza la función cargarCruz de la clase Eventos para obtener la imagen de la cruz y la establece en el label lblTickcli.
+Además, ajusta el contenido del label para que la imagen se escale correctamente.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.cargarTickcli">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargarTickcli</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.cargarTickcli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.cargarTickcli" title="Link to this definition">¶</a></dt>
+<dd><p>Carga una imagen de tick en el label correspondiente.</p>
+<p>Utiliza la función cargarTick de la clase Eventos para obtener la imagen del tick y la establece en el label lblTickcli.
+Además, ajusta el contenido del label para que la imagen se escale correctamente.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.checkDniCli">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkDniCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dni</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.checkDniCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.checkDniCli" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica la validez del DNI del cliente.</p>
+<p>Toma el DNI ingresado por el usuario, lo convierte a mayúsculas y lo valida.
+Si el DNI es válido, cambia el estilo del campo de texto para indicar validez y muestra un tick.
+Si el DNI no es válido, cambia el estilo del campo de texto para indicar error, borra el contenido y muestra un mensaje de error.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.checkEmailCli">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkEmailCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mail</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.checkEmailCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.checkEmailCli" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica la validez del correo electrónico del cliente.</p>
+<p>Toma el correo electrónico ingresado por el usuario, lo convierte a minúsculas y lo valida.
+Si el correo es válido, cambia el estilo del campo de texto para indicar validez.
+Si el correo no es válido, cambia el estilo del campo de texto para indicar error, borra el contenido y muestra un mensaje de error.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.checkMovilCli">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkMovilCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">movil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.checkMovilCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.checkMovilCli" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica la validez del número de móvil del cliente.</p>
+<p>Toma el número de móvil ingresado por el usuario y lo valida.
+Si el número es válido, cambia el estilo del campo de texto para indicar validez.
+Si el número no es válido, cambia el estilo del campo de texto para indicar error, borra el contenido y muestra un mensaje de error.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.esFechasValidas">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">esFechasValidas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datosClientes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.esFechasValidas"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.esFechasValidas" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica que las fechas de alta y baja del cliente sean válidas.</p>
+<p>Toma una lista de datos del cliente, extrae las fechas de alta y baja,
+y verifica que la fecha de alta sea anterior a la fecha de baja.
+Si la fecha de alta es posterior a la fecha de baja, devuelve False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>datosClientes</strong> – Lista de datos del cliente.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la fecha de alta es anterior a la fecha de baja, False en caso contrario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.hasCamposObligatoriosCli">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasCamposObligatoriosCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datosClientes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.hasCamposObligatoriosCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.hasCamposObligatoriosCli" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica que todos los campos obligatorios del cliente estén completos.</p>
+<p>Toma una lista de datos del cliente, elimina el correo electrónico de la lista y verifica que
+todos los campos restantes no estén vacíos ni sean nulos. Si todos los campos obligatorios
+están completos, devuelve True; de lo contrario, devuelve False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>datosClientes</strong> – Lista de datos del cliente.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si todos los campos obligatorios están completos, False en caso contrario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.historicoCli">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">historicoCli</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.historicoCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.historicoCli" title="Link to this definition">¶</a></dt>
+<dd><p>Carga el historial de clientes en la tabla de la interfaz de usuario.</p>
+<p>Establece la página actual de clientes a 0 y recarga la tabla de clientes
+con los datos correspondientes. Si ocurre un error durante el proceso,
+imprime un mensaje de error en la consola.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clientes.Clientes.modifCliente">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">modifCliente</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clientes.html#Clientes.modifCliente"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#clientes.Clientes.modifCliente" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica los datos de un cliente en la base de datos.</p>
+<p>Recoge los datos del cliente desde la interfaz de usuario, verifica que todos los campos obligatorios estén completos
+y que las fechas de alta y baja sean válidas. Luego intenta actualizar los datos del cliente en la base de datos.
+Si la modificación es exitosa, muestra un mensaje de éxito y recarga la tabla de clientes. Si faltan campos obligatorios
+o las fechas no son válidas, muestra un mensaje de error indicando el problema. Si ocurre un error durante la modificación,
+muestra un mensaje de error indicando que hubo un problema al modificar el cliente.</p>
+<dl class="simple">
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura cualquier excepción que ocurra durante el proceso y la imprime en la consola.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PROYECTODAM24_25</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Guillermo Andre Garrido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/src/clientes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

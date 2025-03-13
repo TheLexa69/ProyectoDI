@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eventos &#8212; documentación de PROYECTODAM24_25 - v.0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=8ee129b9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para eventos</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPixmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QHeaderView</span><span class="p">,</span> <span class="n">QCompleter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QHeaderView</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">locale</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">eventos</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">clientes</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">conexion</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">conexionserver</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">var</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">vendedores</span>
+
+<span class="c1"># Establecer configuracion regional</span>
+
+<span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_TIME</span><span class="p">,</span> <span class="s1">&#39;es_ES.UTF-8&#39;</span><span class="p">)</span>
+<span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_MONETARY</span><span class="p">,</span> <span class="s1">&#39;es_ES.UTF-8&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Eventos">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Eventos</span><span class="p">():</span>
+<div class="viewcode-block" id="Eventos.mensajeSalir">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.mensajeSalir">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mensajeSalir</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Muestra un mensaje de confirmación para salir de la aplicación.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Crea un cuadro de mensaje con el título &#39;Salir&#39; y el mensaje &#39;¿Desea salir?&#39;.</span>
+<span class="sd">            2. Si el usuario selecciona &#39;Sí&#39;, cierra la aplicación.</span>
+<span class="sd">            3. Si el usuario selecciona &#39;No&#39;, oculta el cuadro de mensaje.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de salida.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">mbox</span> <span class="o">=</span> <span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeSalida</span><span class="p">(</span><span class="s1">&#39;Salir&#39;</span><span class="p">,</span> <span class="s2">&quot;¿Desea salir?&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span> <span class="o">==</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.crearMensajeSalida">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.crearMensajeSalida">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">crearMensajeSalida</span><span class="p">(</span><span class="n">titulo_ventana</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Crea un cuadro de mensaje de confirmación para salir de la aplicación.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Crea un cuadro de mensaje con el título y mensaje proporcionados.</span>
+<span class="sd">                2. Establece el icono del cuadro de mensaje como una pregunta.</span>
+<span class="sd">                3. Establece el icono de la ventana del cuadro de mensaje.</span>
+<span class="sd">                4. Establece los botones estándar del cuadro de mensaje a &#39;Sí&#39; y &#39;No&#39;.</span>
+<span class="sd">                5. Establece el botón predeterminado a &#39;No&#39;.</span>
+<span class="sd">                6. Cambia el texto de los botones a &#39;Sí&#39; y &#39;No&#39; respectivamente.</span>
+<span class="sd">                7. Retorna el cuadro de mensaje creado.</span>
+
+<span class="sd">                Parámetros:</span>
+<span class="sd">                - titulo_ventana: Título de la ventana del cuadro de mensaje.</span>
+<span class="sd">                - mensaje: Mensaje a mostrar en el cuadro de mensaje.</span>
+
+<span class="sd">                Retorna:</span>
+<span class="sd">                - mbox: El cuadro de mensaje creado.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Question</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;./img/icono.png&#39;</span><span class="p">))</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">titulo_ventana</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setDefaultButton</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Yes</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Sí&#39;</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">No</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;No&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mbox</span></div>
+
+
+<div class="viewcode-block" id="Eventos.crearMensajeInfo">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.crearMensajeInfo">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">crearMensajeInfo</span><span class="p">(</span><span class="n">titulo_ventana</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Crea y muestra un cuadro de mensaje de información.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Crea un cuadro de mensaje con el título y mensaje proporcionados.</span>
+<span class="sd">                2. Establece el icono del cuadro de mensaje como información.</span>
+<span class="sd">                3. Establece el icono de la ventana del cuadro de mensaje.</span>
+<span class="sd">                4. Establece los botones estándar del cuadro de mensaje a &#39;Aceptar&#39;.</span>
+<span class="sd">                5. Establece el botón predeterminado a &#39;Aceptar&#39;.</span>
+<span class="sd">                6. Cambia el texto del botón a &#39;Aceptar&#39;.</span>
+<span class="sd">                7. Muestra el cuadro de mensaje.</span>
+
+<span class="sd">                Parámetros:</span>
+<span class="sd">                - titulo_ventana: Título de la ventana del cuadro de mensaje.</span>
+<span class="sd">                - mensaje: Mensaje a mostrar en el cuadro de mensaje.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;img/icono.png&#39;</span><span class="p">))</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">titulo_ventana</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setDefaultButton</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Aceptar&#39;</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.crearMensajeError">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.crearMensajeError">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">crearMensajeError</span><span class="p">(</span><span class="n">titulo_ventana</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Crea y muestra un cuadro de mensaje de error.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Crea un cuadro de mensaje con el título y mensaje proporcionados.</span>
+<span class="sd">                2. Establece el icono del cuadro de mensaje como un error crítico.</span>
+<span class="sd">                3. Establece el icono de la ventana del cuadro de mensaje.</span>
+<span class="sd">                4. Establece los botones estándar del cuadro de mensaje a &#39;Aceptar&#39;.</span>
+<span class="sd">                5. Establece el botón predeterminado a &#39;Aceptar&#39;.</span>
+<span class="sd">                6. Cambia el texto del botón a &#39;Aceptar&#39;.</span>
+<span class="sd">                7. Muestra el cuadro de mensaje.</span>
+
+<span class="sd">                Parámetros:</span>
+<span class="sd">                - titulo_ventana: Título de la ventana del cuadro de mensaje.</span>
+<span class="sd">                - mensaje: Mensaje a mostrar en el cuadro de mensaje.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;img/icono.png&#39;</span><span class="p">))</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">titulo_ventana</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">setDefaultButton</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Aceptar&#39;</span><span class="p">)</span>
+        <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cargarProv">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cargarProv">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargarProv</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga las provincias en los campos de selección de la interfaz de usuario.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Limpia los campos de selección de provincias de clientes, propiedades y delegaciones de vendedores.</span>
+<span class="sd">            2. Obtiene la lista de provincias desde la base de datos.</span>
+<span class="sd">            3. Asigna la lista de provincias a los campos de selección correspondientes.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de carga de provincias.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvcli</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvprop</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbDeleVen</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">listado</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">claseConexion</span><span class="o">.</span><span class="n">listaProv</span><span class="p">()</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">provincias</span> <span class="o">=</span> <span class="n">listado</span>
+
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvcli</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="n">listado</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvprop</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="n">listado</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbDeleVen</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="n">listado</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cargaMunicli">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cargaMunicli">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargaMunicli</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga los municipios en el campo de selección de la interfaz de usuario.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Limpia el campo de selección de municipios de clientes.</span>
+<span class="sd">            2. Obtiene la lista de municipios desde la base de datos según la provincia seleccionada.</span>
+<span class="sd">            3. Asigna la lista de municipios al campo de selección correspondiente.</span>
+<span class="sd">            4. Configura el autocompletado del campo de selección de municipios.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de carga de municipios.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMunicli</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">provinciaCli</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvcli</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+        <span class="n">listado</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">claseConexion</span><span class="o">.</span><span class="n">listaMunicipio</span><span class="p">(</span><span class="n">provinciaCli</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMunicli</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="n">listado</span><span class="p">)</span>
+
+        <span class="n">var</span><span class="o">.</span><span class="n">municli</span> <span class="o">=</span> <span class="n">listado</span>
+
+        <span class="n">completer</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCompleter</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">municli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMunicli</span><span class="p">)</span>
+        <span class="n">completer</span><span class="o">.</span><span class="n">setCaseSensitivity</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">CaseSensitivity</span><span class="o">.</span><span class="n">CaseInsensitive</span><span class="p">)</span>
+        <span class="n">completer</span><span class="o">.</span><span class="n">setFilterMode</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">MatchFlag</span><span class="o">.</span><span class="n">MatchContains</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMunicli</span><span class="o">.</span><span class="n">setCompleter</span><span class="p">(</span><span class="n">completer</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cargaMuniprop">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cargaMuniprop">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargaMuniprop</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Carga los municipios en el campo de selección de la interfaz de usuario.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Limpia el campo de selección de municipios de propiedades.</span>
+<span class="sd">                2. Obtiene la lista de municipios desde la base de datos según la provincia seleccionada.</span>
+<span class="sd">                3. Asigna la lista de municipios al campo de selección correspondiente.</span>
+<span class="sd">                4. Configura el autocompletado del campo de selección de municipios.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de carga de municipios.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniprop</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">provinciaProp</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvprop</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+        <span class="n">listado</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">claseConexion</span><span class="o">.</span><span class="n">listaMunicipio</span><span class="p">(</span><span class="n">provinciaProp</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniprop</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="n">listado</span><span class="p">)</span>
+
+        <span class="n">var</span><span class="o">.</span><span class="n">muniprop</span> <span class="o">=</span> <span class="n">listado</span>
+
+        <span class="n">completer</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCompleter</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">muniprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniprop</span><span class="p">)</span>
+        <span class="n">completer</span><span class="o">.</span><span class="n">setCaseSensitivity</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">CaseSensitivity</span><span class="o">.</span><span class="n">CaseInsensitive</span><span class="p">)</span>
+        <span class="n">completer</span><span class="o">.</span><span class="n">setFilterMode</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">MatchFlag</span><span class="o">.</span><span class="n">MatchContains</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniprop</span><span class="o">.</span><span class="n">setCompleter</span><span class="p">(</span><span class="n">completer</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.checkMunicipioCli">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.checkMunicipioCli">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkMunicipioCli</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Verifica si el municipio seleccionado es válido.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Comprueba si el municipio seleccionado en el campo de selección de municipios de clientes está en la lista de municipios.</span>
+<span class="sd">            2. Si el municipio no está en la lista, establece el índice del campo de selección a 0.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de verificación del municipio.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMunicli</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var</span><span class="o">.</span><span class="n">municli</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMunicli</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.checkProvinciaCli">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.checkProvinciaCli">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkProvinciaCli</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Verifica si la provincia seleccionada es válida.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Comprueba si la provincia seleccionada en el campo de selección de provincias de clientes está en la lista de provincias.</span>
+<span class="sd">                2. Si la provincia no está en la lista, establece el índice del campo de selección a 0.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de verificación de la provincia.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvcli</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var</span><span class="o">.</span><span class="n">provincias</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvcli</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.checkMunicipioProp">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.checkMunicipioProp">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkMunicipioProp</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Verifica si el municipio seleccionado es válido.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Comprueba si el municipio seleccionado en el campo de selección de municipios de propiedades está en la lista de municipios.</span>
+<span class="sd">                2. Si el municipio no está en la lista, establece el índice del campo de selección a 0.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de verificación del municipio.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniprop</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var</span><span class="o">.</span><span class="n">muniprop</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniprop</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.checkProvinciaProp">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.checkProvinciaProp">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkProvinciaProp</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Verifica si la provincia seleccionada es válida.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Comprueba si la provincia seleccionada en el campo de selección de provincias de propiedades está en la lista de provincias.</span>
+<span class="sd">                2. Si la provincia no está en la lista, establece el índice del campo de selección a 0.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de verificación de la provincia.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvprop</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var</span><span class="o">.</span><span class="n">provincias</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvprop</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.checkProvinciaVen">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.checkProvinciaVen">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkProvinciaVen</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Verifica si la provincia seleccionada es válida.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Comprueba si la provincia seleccionada en el campo de selección de provincias de vendedores está en la lista de provincias.</span>
+<span class="sd">            2. Si la provincia no está en la lista, establece el índice del campo de selección a 0.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de verificación de la provincia.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbDeleVen</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var</span><span class="o">.</span><span class="n">provincias</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbDeleVen</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.isDniValido">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.isDniValido">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isDniValido</span><span class="p">(</span><span class="n">dni</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Verifica si un DNI es válido.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Convierte el DNI a mayúsculas.</span>
+<span class="sd">                2. Establece el DNI en el campo de texto correspondiente.</span>
+<span class="sd">                3. Define la tabla de caracteres de control y los dígitos especiales.</span>
+<span class="sd">                4. Reemplaza los dígitos especiales por sus valores numéricos.</span>
+<span class="sd">                5. Verifica si el DNI tiene 9 caracteres.</span>
+<span class="sd">                6. Extrae el dígito de control y los dígitos del DNI.</span>
+<span class="sd">                7. Comprueba si el primer carácter es un dígito especial y lo reemplaza.</span>
+<span class="sd">                8. Verifica si los dígitos son numéricos y si el dígito de control es correcto.</span>
+<span class="sd">                9. Retorna True si el DNI es válido, False en caso contrario.</span>
+
+<span class="sd">                Parámetros:</span>
+<span class="sd">                - dni: El DNI a verificar.</span>
+
+<span class="sd">                Retorna:</span>
+<span class="sd">                - True si el DNI es válido, False en caso contrario.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de validación del DNI.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dni</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">dni</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDnicli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">dni</span><span class="p">))</span>
+            <span class="n">tabla</span> <span class="o">=</span> <span class="s2">&quot;TRWAGMYFPDXBNJZSQVHLCKE&quot;</span>
+            <span class="n">dig_ext</span> <span class="o">=</span> <span class="s2">&quot;XYZ&quot;</span>
+            <span class="n">reemp_dig_ext</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">}</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dni</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+                <span class="n">dig_control</span> <span class="o">=</span> <span class="n">dni</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+                <span class="n">dni</span> <span class="o">=</span> <span class="n">dni</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">dni</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">dig_ext</span><span class="p">:</span>
+                    <span class="n">dni</span> <span class="o">=</span> <span class="n">dni</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">dni</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reemp_dig_ext</span><span class="p">[</span><span class="n">dni</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                <span class="k">if</span> <span class="n">dni</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">tabla</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">dni</span><span class="p">)</span> <span class="o">%</span> <span class="mi">23</span><span class="p">]</span> <span class="o">==</span> <span class="n">dig_control</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en validar dni &quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.isMovilValido">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.isMovilValido">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isMovilValido</span><span class="p">(</span><span class="n">movil</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Verifica si un número de móvil es válido.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Define una expresión regular para validar números de móvil que comiencen con 6 o 7 y tengan 9 dígitos.</span>
+<span class="sd">            2. Comprueba si el número de móvil coincide con la expresión regular.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - movil: Número de móvil a verificar.</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">            - True si el número de móvil es válido, False en caso contrario.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[67]\d</span><span class="si">{8}</span><span class="s2">$&quot;</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">movil</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cargarTick">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cargarTick">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargarTick</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga la imagen de un tick.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Crea un objeto QPixmap con la imagen del tick.</span>
+
+<span class="sd">            @return: QPixmap con la imagen del tick.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s2">&quot;img/tick.svg&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pixmap</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cargarCruz">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cargarCruz">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargarCruz</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga la imagen de una cruz.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Crea un objeto QPixmap con la imagen de la cruz.</span>
+
+<span class="sd">            @return: QPixmap con la imagen de la cruz.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s2">&quot;img/cruz.svg&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pixmap</span></div>
+
+
+<div class="viewcode-block" id="Eventos.abrirCalendar">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.abrirCalendar">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">abrirCalendar</span><span class="p">(</span><span class="n">pan</span><span class="p">,</span> <span class="n">btn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Abre el calendario y lo muestra en la interfaz de usuario.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Establece el panel y el botón en las variables globales.</span>
+<span class="sd">            2. Muestra el calendario en la interfaz de usuario.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - pan: Panel donde se mostrará el calendario.</span>
+<span class="sd">            - btn: Botón que activa la apertura del calendario.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de apertura del calendario.</span>
+
+<span class="sd">            @param pan: Panel donde se mostrará el calendario.</span>
+<span class="sd">            @param btn: Botón que activa la apertura del calendario.</span>
+<span class="sd">            @return: None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">=</span> <span class="n">pan</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">=</span> <span class="n">btn</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">uicalendar</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en abrir calendar &quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cargaFecha">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cargaFecha">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargaFecha</span><span class="p">(</span><span class="n">qDate</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga la fecha seleccionada en el calendario en el campo correspondiente de la interfaz de usuario.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Formatea la fecha seleccionada en el calendario.</span>
+<span class="sd">            2. Dependiendo del panel y botón seleccionados, asigna la fecha formateada al campo correspondiente.</span>
+<span class="sd">            3. Si la fecha de inicio de alquiler es mayor que la fecha de fin, muestra un mensaje de error.</span>
+<span class="sd">            4. Si la fecha de fin de alquiler es menor que la fecha de inicio, muestra un mensaje de error.</span>
+<span class="sd">            5. Oculta el calendario después de un breve retraso.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - qDate: La fecha seleccionada en el calendario (QDate).</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">            - data: La fecha formateada como cadena (str).</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de carga de la fecha.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">/</span><span class="si">{:02d}</span><span class="s1">/</span><span class="si">{:4d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">qDate</span><span class="o">.</span><span class="n">day</span><span class="p">(),</span> <span class="n">qDate</span><span class="o">.</span><span class="n">month</span><span class="p">(),</span> <span class="n">qDate</span><span class="o">.</span><span class="n">year</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtAltacli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtAltaprop</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtAltaVen</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtBajacli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtBajaprop</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtBajaVen</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaFactura</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">fecha_fin_text</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFinAlquiler</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">fecha_fin_text</span><span class="p">:</span>
+                    <span class="n">fecha_fin</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">fecha_fin_text</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">)</span>
+                    <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fecha_inicio</span> <span class="o">&gt;</span> <span class="n">fecha_fin</span><span class="p">:</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtInicioAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;color: red;&#39;</span><span class="p">)</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtInicioAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: rgb(254, 255, 210);&#39;</span><span class="p">)</span>
+                        <span class="n">mbox</span> <span class="o">=</span> <span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s1">&#39;Fecha Incorrecta&#39;</span><span class="p">,</span>
+                                                         <span class="s2">&quot;La fecha de inicio de alquiler no puede ser mayor a la de fin.&quot;</span><span class="p">)</span>
+                        <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtInicioAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtInicioAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: rgb(254, 255, 210);&#39;</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtInicioAlquiler</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">panel</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">btn</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">fecha_inicio_text</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtInicioAlquiler</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">fecha_inicio_text</span><span class="p">:</span>
+                    <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">fecha_inicio_text</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">)</span>
+                    <span class="n">fecha_fin</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fecha_fin</span> <span class="o">&lt;</span> <span class="n">fecha_inicio</span><span class="p">:</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFinAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;color: red;&#39;</span><span class="p">)</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFinAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: rgb(254, 255, 210);&#39;</span><span class="p">)</span>
+                        <span class="n">mbox</span> <span class="o">=</span> <span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s1">&#39;Fecha Incorrecta&#39;</span><span class="p">,</span>
+                                                         <span class="s2">&quot;La fecha de fin de alquiler no puede ser anterior a la de inicio.&quot;</span><span class="p">)</span>
+                        <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFinAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFinAlquiler</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: rgb(254, 255, 210);&#39;</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFinAlquiler</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">uicalendar</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar fecha: &quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.isMailValido">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.isMailValido">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isMailValido</span><span class="p">(</span><span class="n">mail</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">           Verifica si un correo electrónico es válido.</span>
+
+<span class="sd">           Procedimiento:</span>
+<span class="sd">           1. Convierte el correo electrónico a minúsculas.</span>
+<span class="sd">           2. Define una expresión regular para validar el formato del correo electrónico.</span>
+<span class="sd">           3. Comprueba si el correo electrónico coincide con la expresión regular o si está vacío.</span>
+
+<span class="sd">           Parámetros:</span>
+<span class="sd">           - mail: Correo electrónico a verificar.</span>
+
+<span class="sd">           Retorna:</span>
+<span class="sd">           - True si el correo electrónico es válido o está vacío, False en caso contrario.</span>
+<span class="sd">           &quot;&quot;&quot;</span>
+        <span class="n">mail</span> <span class="o">=</span> <span class="n">mail</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^([a-z0-9]+[\._])*[a-z0-9]+[@](\w+[.])*\w+$&#39;</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">mail</span><span class="p">)</span> <span class="ow">or</span> <span class="n">mail</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Eventos.resizeTablaClientes">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.resizeTablaClientes">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTablaClientes</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Ajusta el tamaño de las columnas de la tabla de clientes.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene el encabezado horizontal de la tabla de clientes.</span>
+<span class="sd">            2. Recorre cada columna del encabezado.</span>
+<span class="sd">            3. Si la columna no está en las posiciones 0, 3 o 6, ajusta su tamaño para que se estire.</span>
+<span class="sd">            4. Si la columna está en las posiciones 0, 3 o 6, ajusta su tamaño para que se ajuste al contenido.</span>
+<span class="sd">            5. Establece la fuente de los elementos del encabezado en negrita.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de ajuste de tamaño de las columnas.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaClientes</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+
+                <span class="n">header_items</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaClientes</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en resize tabla clientes &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.resizeTablaPropiedades">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.resizeTablaPropiedades">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTablaPropiedades</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Ajusta el tamaño de las columnas de la tabla de propiedades.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Obtiene el encabezado horizontal de la tabla de propiedades.</span>
+<span class="sd">                2. Recorre cada columna del encabezado.</span>
+<span class="sd">                3. Si la columna está en las posiciones 1, 2 o 7, ajusta su tamaño para que se estire.</span>
+<span class="sd">                4. Si la columna no está en las posiciones 1, 2 o 7, ajusta su tamaño para que se ajuste al contenido.</span>
+<span class="sd">                5. Establece la fuente de los elementos del encabezado en negrita.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de ajuste de tamaño de las columnas.</span>
+
+<span class="sd">                @param None</span>
+<span class="sd">                @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaProp</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+
+                <span class="n">header_items</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaProp</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en resize tabla clientes &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.resizeTablaVendedores">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.resizeTablaVendedores">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTablaVendedores</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">           Ajusta el tamaño de las columnas de la tabla de vendedores.</span>
+
+<span class="sd">           Procedimiento:</span>
+<span class="sd">           1. Obtiene el encabezado horizontal de la tabla de vendedores.</span>
+<span class="sd">           2. Recorre cada columna del encabezado.</span>
+<span class="sd">           3. Si la columna no está en las posiciones 0, 2 o 4, ajusta su tamaño para que se estire.</span>
+<span class="sd">           4. Si la columna está en las posiciones 0, 2 o 4, ajusta su tamaño para que se ajuste al contenido.</span>
+<span class="sd">           5. Establece la fuente de los elementos del encabezado en negrita.</span>
+
+<span class="sd">           Excepciones:</span>
+<span class="sd">           - Captura y muestra cualquier excepción que ocurra durante el proceso de ajuste de tamaño de las columnas.</span>
+
+<span class="sd">           @param None</span>
+<span class="sd">           @return None</span>
+<span class="sd">           &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVendedores</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+
+                <span class="n">header_items</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVendedores</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en resize tabla clientes &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.resizeTablaFacturas">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.resizeTablaFacturas">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTablaFacturas</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Ajusta el tamaño de las columnas de la tabla de facturas.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene el encabezado horizontal de la tabla de facturas.</span>
+<span class="sd">            2. Recorre cada columna del encabezado.</span>
+<span class="sd">            3. Si la columna no está en la posición 0, ajusta su tamaño para que se estire.</span>
+<span class="sd">            4. Si la columna está en la posición 0, ajusta su tamaño para que se ajuste al contenido.</span>
+<span class="sd">            5. Establece la fuente de los elementos del encabezado en negrita.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de ajuste de tamaño de las columnas.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaFacturas</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+
+                <span class="n">header_items</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVendedores</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en resize tabla clientes &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.resizeTablaVentas_3">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.resizeTablaVentas_3">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTablaVentas_3</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Ajusta el tamaño de las columnas de la tabla de ventas.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene el encabezado horizontal de la tabla de ventas.</span>
+<span class="sd">            2. Recorre cada columna del encabezado.</span>
+<span class="sd">            3. Si la columna no está en la posición 0, ajusta su tamaño para que se estire.</span>
+<span class="sd">            4. Si la columna está en la posición 0, ajusta su tamaño para que se ajuste al contenido.</span>
+<span class="sd">            5. Establece la fuente de los elementos del encabezado en negrita.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de ajuste de tamaño de las columnas.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVentas</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+                <span class="n">header_items</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVentas</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en resize tabla ventas3 &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.crearBackup">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.crearBackup">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">crearBackup</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Crea una copia de seguridad de la base de datos en un archivo ZIP.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene la fecha y hora actual y la formatea.</span>
+<span class="sd">            2. Genera el nombre del archivo ZIP de la copia de seguridad.</span>
+<span class="sd">            3. Abre un cuadro de diálogo para seleccionar la ubicación y el nombre del archivo ZIP.</span>
+<span class="sd">            4. Si se acepta el cuadro de diálogo y se selecciona un archivo, crea el archivo ZIP y guarda la base de datos en él.</span>
+<span class="sd">            5. Muestra un mensaje de confirmación si la copia de seguridad se crea correctamente.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de creación de la copia de seguridad.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fecha</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">_%H_%M_%S&quot;</span><span class="p">)</span>
+            <span class="n">copia</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_backup.zip&#39;</span>
+            <span class="n">directorio</span><span class="p">,</span> <span class="n">fichero</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">dlgAbrir</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Guardar Copia Seguridad&quot;</span><span class="p">,</span> <span class="n">copia</span><span class="p">,</span> <span class="s1">&#39;.zip&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">dlgAbrir</span><span class="o">.</span><span class="n">accept</span> <span class="ow">and</span> <span class="n">fichero</span><span class="p">:</span>
+                <span class="n">fichzip</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+                <span class="n">fichzip</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;bbdd.sqlite&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="s2">&quot;bbdd.sqlite&quot;</span><span class="p">),</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_DEFLATED</span><span class="p">)</span>
+                <span class="n">fichzip</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="n">directorio</span><span class="p">)</span>
+
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeInfo</span><span class="p">(</span><span class="s1">&#39;Copia de seguridad&#39;</span><span class="p">,</span> <span class="s2">&quot;Copia de seguridad creada.&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en crear backup: &quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.restaurarBackup">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.restaurarBackup">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restaurarBackup</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Restaura una copia de seguridad de la base de datos desde un archivo ZIP.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Abre un cuadro de diálogo para seleccionar el archivo ZIP de la copia de seguridad.</span>
+<span class="sd">            2. Si se selecciona un archivo, extrae el contenido del archivo ZIP.</span>
+<span class="sd">            3. Muestra un mensaje de confirmación si la restauración se realiza correctamente.</span>
+<span class="sd">            4. Reconecta la base de datos y recarga las provincias y la tabla de clientes.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de restauración de la copia de seguridad.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">dlgAbrir</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Restaurar Copia Seguridad&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;*.zip;;All Files (*)&quot;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bbdd</span><span class="p">:</span>
+                    <span class="n">bbdd</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">pwd</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="n">bbdd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeInfo</span><span class="p">(</span><span class="s1">&#39;Copia de seguridad&#39;</span><span class="p">,</span> <span class="s2">&quot;Copia de seguridad restaurada.&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">db_conexion</span><span class="p">()</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">cargarProv</span><span class="p">()</span>
+                <span class="n">clientes</span><span class="o">.</span><span class="n">Clientes</span><span class="o">.</span><span class="n">cargaTablaClientes</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en restaurar backup: &quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.limpiarPanel">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.limpiarPanel">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">limpiarPanel</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Limpia los campos de los paneles de clientes, propiedades y vendedores en la interfaz de usuario.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Limpia los campos de texto y selección del panel de clientes.</span>
+<span class="sd">            2. Limpia los campos de texto y selección del panel de propiedades.</span>
+<span class="sd">            3. Limpia los campos de texto y selección del panel de vendedores.</span>
+<span class="sd">            4. Limpia los campos de texto y selección del panel de ventas</span>
+<span class="sd">            5. Limpia los campos de texto y selección del panel de alquileres</span>
+<span class="sd">            6. Recarga las provincias en los campos de selección.</span>
+<span class="sd">            7. Recarga las tablas de propiedades y vendedores.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de limpieza de los paneles.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">propiedades</span>
+        <span class="n">objetosPanelCli</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDnicli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtAltacli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtApelcli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNomcli</span><span class="p">,</span>
+                           <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtEmailcli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtMovilcli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDircli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvcli</span><span class="p">,</span>
+                           <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMunicli</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtBajacli</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dato</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">objetosPanelCli</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblTickcli</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDnicli</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span>
+            <span class="s1">&#39;border: 1px solid black; border-radius: 5px; background-color: rgb(254, 255, 210)&#39;</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDnicli</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtMovilcli</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtMovilcli</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;border: 1px solid black; border-radius: 5px;&#39;</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtEmailcli</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtEmailcli</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;border: 1px solid black; border-radius: 5px;&#39;</span><span class="p">)</span>
+
+        <span class="n">objetosPanelProp</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblProp</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtAltaprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtBajaprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirprop</span><span class="p">,</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvprop</span><span class="p">,</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbTipoprop</span><span class="p">,</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">spinHabprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">spinBanosprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtSuperprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtPrecioAlquilerprop</span><span class="p">,</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtPrecioVentaprop</span><span class="p">,</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCpprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">areatxtDescriprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">rbtDisponprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">rbtAlquilprop</span><span class="p">,</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkVentaprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkInterprop</span><span class="p">,</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkAlquilprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">rbtVentaprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNomeprop</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtMovilprop</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dato</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">objetosPanelProp</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setPlainText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">14</span><span class="p">:</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">):</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnBuscaTipoProp</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">propiedades</span><span class="o">.</span><span class="n">Propiedades</span><span class="o">.</span><span class="n">cargarTablaPropiedades</span><span class="p">()</span>
+
+        <span class="n">objetosPanelVendedores</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblIdVen</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniVen</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNomVen</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtAltaVen</span><span class="p">,</span>
+                                  <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtBajaVen</span><span class="p">,</span>
+                                  <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtMovilVen</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtEmailVen</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbDeleVen</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dato</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">objetosPanelVendedores</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">cargarProv</span><span class="p">()</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkHistoriaVen</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">vendedores</span><span class="o">.</span><span class="n">Vendedores</span><span class="o">.</span><span class="n">cargaTablaVendedores</span><span class="p">()</span>
+
+        <span class="c1"># 🔴 Limpiar panel de Ventas</span>
+        <span class="n">objetosPanelVentas</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblSubTotal</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblIVA</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblTotal</span><span class="p">,</span>  <span class="c1"># QLabel</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaFactura</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtdniclifac</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCliApel</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCliNom</span><span class="p">,</span>  <span class="c1"># QLineEdit</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtIdVendedor</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCodProp</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtTipoProp</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtPrecioProp</span><span class="p">,</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirProp</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtLocProp</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">dato</span> <span class="ow">in</span> <span class="n">objetosPanelVentas</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dato</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">):</span>  <span class="c1"># Limpiar labels</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dato</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">):</span>  <span class="c1"># Limpiar campos de texto</span>
+                <span class="n">dato</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Recargar Provincias</span>
+        <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">cargarProv</span><span class="p">()</span>
+
+        <span class="c1"># 🏠💰 Limpiar panel de Alquileres</span>
+        <span class="n">objetosPanelAlquileres</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNumAlquiler</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtInicioAlquiler</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFinAlquiler</span><span class="p">,</span>  <span class="c1"># Fechas y número de alquiler</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniClienteAlquiler</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtIdPropiedadAlquiler</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtVendedorAlquiler</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNumRecibo</span><span class="p">,</span>
+            <span class="c1"># Cliente, propiedad y vendedor</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtPrecioAlquiler</span>  <span class="c1"># Precio</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">dato</span> <span class="ow">in</span> <span class="n">objetosPanelAlquileres</span><span class="p">:</span>
+            <span class="n">dato</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Limpiar tabla de visualización de alquileres</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pnlVisualizacionAlquileres</span><span class="o">.</span><span class="n">clearContents</span><span class="p">()</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pnlVisualizacionAlquileres</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Recargar Provincias</span>
+        <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">cargarProv</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.abrirTipoprop">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.abrirTipoprop">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">abrirTipoprop</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Abre el diálogo de gestión de tipos de propiedades.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Muestra el diálogo de gestión de tipos de propiedades.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de apertura del diálogo.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">dlggestion</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en abrir tipo prop: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.exportCSVprop">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.exportCSVprop">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportCSVprop</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Exporta los datos de las propiedades a un archivo CSV.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene la fecha y hora actual y la formatea.</span>
+<span class="sd">            2. Genera el nombre del archivo CSV de la exportación.</span>
+<span class="sd">            3. Abre un cuadro de diálogo para seleccionar la ubicación y el nombre del archivo CSV.</span>
+<span class="sd">            4. Si se acepta el cuadro de diálogo y se selecciona un archivo, crea el archivo CSV y guarda los datos de las propiedades en él.</span>
+<span class="sd">            5. Muestra un mensaje de error si ocurre algún problema durante la exportación.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de exportación de datos a CSV.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fecha</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+            <span class="n">fecha</span> <span class="o">=</span> <span class="n">fecha</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y_%m_</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_DatosPropiedades.csv&#39;</span>
+            <span class="n">directorio</span><span class="p">,</span> <span class="n">fichero</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">dlgAbrir</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Exporta Datos a CSV&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fichero</span><span class="p">:</span>
+                <span class="n">registros</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">claseConexion</span><span class="o">.</span><span class="n">cargarAllPropiedadesBD</span><span class="p">()</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+                    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
+                    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
+                        <span class="p">[</span><span class="s2">&quot;Codigo&quot;</span><span class="p">,</span> <span class="s2">&quot;Alta&quot;</span><span class="p">,</span> <span class="s2">&quot;Baja&quot;</span><span class="p">,</span> <span class="s2">&quot;Dirección&quot;</span><span class="p">,</span> <span class="s2">&quot;Provincia&quot;</span><span class="p">,</span> <span class="s2">&quot;Municipio&quot;</span><span class="p">,</span> <span class="s2">&quot;Tipo&quot;</span><span class="p">,</span> <span class="s2">&quot;Nº habitaciones&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;Nº Baños&quot;</span><span class="p">,</span> <span class="s2">&quot;Superficie&quot;</span><span class="p">,</span> <span class="s2">&quot;Precio Alquiler&quot;</span><span class="p">,</span> <span class="s2">&quot;Precio Compra&quot;</span><span class="p">,</span> <span class="s2">&quot;Código postal&quot;</span><span class="p">,</span> <span class="s2">&quot;Observaciones&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;Operación&quot;</span><span class="p">,</span> <span class="s2">&quot;Estado&quot;</span><span class="p">,</span> <span class="s2">&quot;Propietario&quot;</span><span class="p">,</span> <span class="s2">&quot;Móvil&quot;</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">registro</span> <span class="ow">in</span> <span class="n">registros</span><span class="p">:</span>
+                        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">registro</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="n">directorio</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Se ha producido un error al exportar los datos en formato CSV.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en exportar cvs tipo prop: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.exportJSONprop">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.exportJSONprop">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportJSONprop</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Exporta los datos de las propiedades a un archivo JSON.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene la fecha y hora actual y la formatea.</span>
+<span class="sd">            2. Genera el nombre del archivo JSON de la exportación.</span>
+<span class="sd">            3. Abre un cuadro de diálogo para seleccionar la ubicación y el nombre del archivo JSON.</span>
+<span class="sd">            4. Si se acepta el cuadro de diálogo y se selecciona un archivo, crea el archivo JSON y guarda los datos de las propiedades en él.</span>
+<span class="sd">            5. Muestra un mensaje de error si ocurre algún problema durante la exportación.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de exportación de datos a JSON.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fecha</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+            <span class="n">fecha</span> <span class="o">=</span> <span class="n">fecha</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y_%m_</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_DatosPropiedades.json&#39;</span>
+            <span class="n">directorio</span><span class="p">,</span> <span class="n">fichero</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">dlgAbrir</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Exporta Datos a JSON&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fichero</span><span class="p">:</span>
+                <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Codigo&quot;</span><span class="p">,</span> <span class="s2">&quot;Alta&quot;</span><span class="p">,</span> <span class="s2">&quot;Baja&quot;</span><span class="p">,</span> <span class="s2">&quot;Dirección&quot;</span><span class="p">,</span> <span class="s2">&quot;Provincia&quot;</span><span class="p">,</span> <span class="s2">&quot;Municipio&quot;</span><span class="p">,</span> <span class="s2">&quot;Tipo&quot;</span><span class="p">,</span> <span class="s2">&quot;Nº habitaciones&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;Nº Baños&quot;</span><span class="p">,</span> <span class="s2">&quot;Superficie&quot;</span><span class="p">,</span> <span class="s2">&quot;Precio Alquiler&quot;</span><span class="p">,</span> <span class="s2">&quot;Precio Compra&quot;</span><span class="p">,</span> <span class="s2">&quot;Código postal&quot;</span><span class="p">,</span> <span class="s2">&quot;Observaciones&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;Operación&quot;</span><span class="p">,</span> <span class="s2">&quot;Estado&quot;</span><span class="p">,</span> <span class="s2">&quot;Propietario&quot;</span><span class="p">,</span> <span class="s2">&quot;Móvil&quot;</span><span class="p">]</span>
+                <span class="n">registros</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">claseConexion</span><span class="o">.</span><span class="n">cargarAllPropiedadesBD</span><span class="p">()</span>
+                <span class="n">lista_propiedades</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">registro</span><span class="p">))</span> <span class="k">for</span> <span class="n">registro</span> <span class="ow">in</span> <span class="n">registros</span><span class="p">]</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jsonFile</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">lista_propiedades</span><span class="p">,</span> <span class="n">jsonFile</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="n">directorio</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Se ha producido un error al exportar los datos en formato JSON.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en exportar cvs tipo prop: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.abrir_informeProp">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.abrir_informeProp">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">abrir_informeProp</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Abre el diálogo de informe de propiedades.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Muestra el diálogo de informe de propiedades.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de apertura del diálogo.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">dlgInformeProp</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en abrir informe propiedades: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.abrir_about">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.abrir_about">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">abrir_about</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Abre el diálogo de información &#39;Acerca de&#39;.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Muestra el diálogo de información &#39;Acerca de&#39;.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de apertura del diálogo.</span>
+
+<span class="sd">                @param None</span>
+<span class="sd">                @return None</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">dlgabout</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en abrir about: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.siguienteCli">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.siguienteCli">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">siguienteCli</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">               Avanza a la siguiente página de la tabla de clientes.</span>
+
+<span class="sd">               Procedimiento:</span>
+<span class="sd">               1. Incrementa el número de la página actual de clientes.</span>
+<span class="sd">               2. Carga los datos de la tabla de clientes para la nueva página.</span>
+
+<span class="sd">               Parámetros:</span>
+<span class="sd">               - Ninguno</span>
+
+<span class="sd">               Retorna:</span>
+<span class="sd">               - Ninguno</span>
+<span class="sd">               &quot;&quot;&quot;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">paginaActualCli</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">clientes</span><span class="o">.</span><span class="n">Clientes</span><span class="o">.</span><span class="n">cargaTablaClientes</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.anteriorCli">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.anteriorCli">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">anteriorCli</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Retrocede a la página anterior de la tabla de clientes.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Verifica si la página actual es mayor que 0.</span>
+<span class="sd">            2. Si es mayor que 0, decrementa el número de la página actual.</span>
+<span class="sd">            3. Carga los datos de la tabla de clientes para la nueva página.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - Ninguno</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">            - Ninguno</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">paginaActualCli</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">paginaActualCli</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">clientes</span><span class="o">.</span><span class="n">Clientes</span><span class="o">.</span><span class="n">cargaTablaClientes</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.siguienteProp">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.siguienteProp">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">siguienteProp</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Avanza a la siguiente página de la tabla de propiedades.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Incrementa el número de la página actual de propiedades.</span>
+<span class="sd">            2. Carga los datos de la tabla de propiedades para la nueva página.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - Ninguno</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">            - Ninguno</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">propiedades</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">paginaActualProp</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">propiedades</span><span class="o">.</span><span class="n">Propiedades</span><span class="o">.</span><span class="n">cargarTablaPropiedades</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.anteriorProp">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.anteriorProp">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">anteriorProp</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Retrocede a la página anterior de la tabla de propiedades.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Verifica si la página actual es mayor que 0.</span>
+<span class="sd">            2. Si es mayor que 0, decrementa el número de la página actual.</span>
+<span class="sd">            3. Carga los datos de la tabla de propiedades para la nueva página.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - Ninguno</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">            - Ninguno</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">propiedades</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">paginaActualProp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">paginaActualProp</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">propiedades</span><span class="o">.</span><span class="n">Propiedades</span><span class="o">.</span><span class="n">cargarTablaPropiedades</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cambiarCliMaxpPagina">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cambiarCliMaxpPagina">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cambiarCliMaxpPagina</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Cambia el número máximo de clientes por página y recarga la tabla de clientes.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Establece la página actual de clientes a 0.</span>
+<span class="sd">            2. Obtiene el valor del campo de texto correspondiente al número máximo de clientes por página.</span>
+<span class="sd">            3. Si el valor es mayor que 15, lo establece a 15.</span>
+<span class="sd">            4. Recarga la tabla de clientes con el nuevo valor.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - Ninguno</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">            - Ninguno</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">paginaActualCli</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">maxClientesPagina</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">spinClipPag</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">maxClientesPagina</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">maxClientesPagina</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">clientes</span><span class="o">.</span><span class="n">Clientes</span><span class="o">.</span><span class="n">cargaTablaClientes</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.cambiarPropMaxpPagina">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.cambiarPropMaxpPagina">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cambiarPropMaxpPagina</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Cambia el número máximo de propiedades por página y recarga la tabla de propiedades.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Establece la página actual de propiedades a 0.</span>
+<span class="sd">            2. Obtiene el valor del campo de texto correspondiente al número máximo de propiedades por página.</span>
+<span class="sd">            3. Si el valor es mayor que 10, lo establece a 10.</span>
+<span class="sd">            4. Recarga la tabla de propiedades con el nuevo valor.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">            - Ninguno</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">            - Ninguno</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">propiedades</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">paginaActualProp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">maxPropPagina</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">spinProppPag</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">maxPropPagina</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">maxPropPagina</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">propiedades</span><span class="o">.</span><span class="n">Propiedades</span><span class="o">.</span><span class="n">cargarTablaPropiedades</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Eventos.exportJSONven">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.exportJSONven">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportJSONven</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Exporta los datos de los vendedores a un archivo JSON.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene la fecha y hora actual y la formatea.</span>
+<span class="sd">            2. Genera el nombre del archivo JSON de la exportación.</span>
+<span class="sd">            3. Abre un cuadro de diálogo para seleccionar la ubicación y el nombre del archivo JSON.</span>
+<span class="sd">            4. Si se acepta el cuadro de diálogo y se selecciona un archivo, crea el archivo JSON y guarda los datos de los vendedores en él.</span>
+<span class="sd">            5. Muestra un mensaje de error si ocurre algún problema durante la exportación.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de exportación de datos a JSON.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fecha</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+            <span class="n">fecha</span> <span class="o">=</span> <span class="n">fecha</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y_%m_</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_DatosVendedores.json&#39;</span>
+            <span class="n">directorio</span><span class="p">,</span> <span class="n">fichero</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">dlgAbrir</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Exporta Datos a JSON&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fichero</span><span class="p">:</span>
+                <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Id&quot;</span><span class="p">,</span> <span class="s2">&quot;Dni&quot;</span><span class="p">,</span> <span class="s2">&quot;Nombre&quot;</span><span class="p">,</span> <span class="s2">&quot;Alta&quot;</span><span class="p">,</span> <span class="s2">&quot;Baja&quot;</span><span class="p">,</span> <span class="s2">&quot;Movil&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">,</span> <span class="s2">&quot;Delegacion&quot;</span><span class="p">]</span>
+                <span class="n">registros</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">claseConexion</span><span class="o">.</span><span class="n">cargarAllVendedoresBD</span><span class="p">()</span>
+                <span class="n">lista_propiedades</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">registro</span><span class="p">))</span> <span class="k">for</span> <span class="n">registro</span> <span class="ow">in</span> <span class="n">registros</span><span class="p">]</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jsonFile</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">lista_propiedades</span><span class="p">,</span> <span class="n">jsonFile</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">fichero</span><span class="p">,</span> <span class="n">directorio</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Se ha producido un error al exportar los datos en formato JSON.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en exportar cvs tipo prop: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.resizeTablaAlquileresGestion">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.resizeTablaAlquileresGestion">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTablaAlquileresGestion</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Ajusta el tamaño de las columnas de la tabla de gestión de alquileres.</span>
+
+<span class="sd">            Procedimiento:</span>
+<span class="sd">            1. Obtiene el encabezado horizontal de la tabla de gestión de alquileres.</span>
+<span class="sd">            2. Recorre cada columna del encabezado.</span>
+<span class="sd">            3. Si la columna no está en las posiciones 0 o 2, ajusta su tamaño para que se estire.</span>
+<span class="sd">            4. Si la columna está en las posiciones 0 o 2, ajusta su tamaño para que se ajuste al contenido.</span>
+<span class="sd">            5. Establece la fuente de los elementos del encabezado en negrita.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">            - Captura y muestra cualquier excepción que ocurra durante el proceso de ajuste de tamaño de las columnas.</span>
+
+<span class="sd">            @param None</span>
+<span class="sd">            @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pnlGestionAlquileres</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+
+                <span class="n">header_items</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pnlGestionAlquileres</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en resize tabla clientes &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eventos.pnlVisualizacionAlquileres">
+<a class="viewcode-back" href="../src/eventos.html#eventos.Eventos.pnlVisualizacionAlquileres">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pnlVisualizacionAlquileres</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Ajusta el tamaño de las columnas de la tabla de visualización de alquileres.</span>
+
+<span class="sd">                Procedimiento:</span>
+<span class="sd">                1. Obtiene el encabezado horizontal de la tabla de visualización de alquileres.</span>
+<span class="sd">                2. Recorre cada columna del encabezado.</span>
+<span class="sd">                3. Si la columna no está en la posición 0, ajusta su tamaño para que se estire.</span>
+<span class="sd">                4. Si la columna está en la posición 0, ajusta su tamaño para que se ajuste al contenido.</span>
+<span class="sd">                5. Establece la fuente de los elementos del encabezado en negrita.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                - Captura y muestra cualquier excepción que ocurra durante el proceso de ajuste de tamaño de las columnas.</span>
+
+<span class="sd">                @param None</span>
+<span class="sd">                @return None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Recibo&#39;</span><span class="p">,</span> <span class="s1">&#39;Propiedad&#39;</span><span class="p">,</span> <span class="s1">&#39;Mensualidad&#39;</span><span class="p">,</span> <span class="s1">&#39;Importe&#39;</span><span class="p">,</span> <span class="s1">&#39;Gestión&#39;</span><span class="p">]</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pnlVisualizacionAlquileres</span><span class="o">.</span><span class="n">setHorizontalHeaderLabels</span><span class="p">(</span><span class="n">header_labels</span><span class="p">)</span>
+
+            <span class="n">header</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pnlVisualizacionAlquileres</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+
+                <span class="n">header_items</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pnlVisualizacionAlquileres</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">header_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                    <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en resize visualizacion alquileres &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PROYECTODAM24_25</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Guillermo Andre Garrido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

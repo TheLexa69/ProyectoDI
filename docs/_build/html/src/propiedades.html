@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>propiedades module &#8212; documentación de PROYECTODAM24_25 - v.0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=8ee129b9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-propiedades">
+<span id="propiedades-module"></span><h1>propiedades module<a class="headerlink" href="#module-propiedades" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="propiedades.Propiedades">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">propiedades.</span></span><span class="sig-name descname"><span class="pre">Propiedades</span></span><a class="reference internal" href="../_modules/propiedades.html#Propiedades"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.activarCheckPrecios">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">activarCheckPrecios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.activarCheckPrecios"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.activarCheckPrecios" title="Link to this definition">¶</a></dt>
+<dd><p>Activa o desactiva los checkboxes de precios de venta y alquiler.</p>
+<p>Verifica si los campos de texto de precios de venta y alquiler están vacíos o no.
+Si no están vacíos, activa los checkboxes correspondientes; de lo contrario, los desactiva.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.altaPropiedad">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altaPropiedad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.altaPropiedad"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.altaPropiedad" title="Link to this definition">¶</a></dt>
+<dd><p>Añade una nueva propiedad a la base de datos.</p>
+<p>Recopila los datos de la interfaz de usuario, verifica que los campos obligatorios estén completos y que los precios sean válidos.
+Si todo es correcto, guarda la propiedad en la base de datos y actualiza la tabla de propiedades.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al añadir la propiedad.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.altaTipoPropiedad">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altaTipoPropiedad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">venDialogo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.altaTipoPropiedad"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.altaTipoPropiedad" title="Link to this definition">¶</a></dt>
+<dd><p>Añade un nuevo tipo de propiedad a la base de datos.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>venDialogo (QDialog): El diálogo de gestión de propiedades.</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al añadir el tipo de propiedad.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.bajaProp">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bajaProp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.bajaProp"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.bajaProp" title="Link to this definition">¶</a></dt>
+<dd><p>Da de baja una propiedad existente en la base de datos.</p>
+<p>Recopila los datos de la interfaz de usuario, verifica que los campos obligatorios estén completos y que las fechas sean válidas.
+Si todo es correcto, da de baja la propiedad en la base de datos y actualiza la tabla de propiedades.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al dar de baja la propiedad.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.bajaTipoPropiedad">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bajaTipoPropiedad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">venDialogo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.bajaTipoPropiedad"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.bajaTipoPropiedad" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina un tipo de propiedad de la base de datos.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>venDialogo (QDialog): El diálogo de gestión de propiedades.</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al eliminar el tipo de propiedad.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.buscaProp">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buscaProp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.buscaProp"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.buscaProp" title="Link to this definition">¶</a></dt>
+<dd><p>Realiza una búsqueda filtrada de propiedades.</p>
+<p>Establece la página actual de propiedades a 0 y carga la tabla de propiedades con los datos filtrados.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error durante la búsqueda filtrada.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.cambiarAvailableRbt">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cambiarAvailableRbt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.cambiarAvailableRbt"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.cambiarAvailableRbt" title="Link to this definition">¶</a></dt>
+<dd><p>Cambia la disponibilidad de los botones de radio según el estado del campo de texto de baja.</p>
+<p>Si el campo de texto de baja está vacío, habilita el botón de radio de disponibilidad y deshabilita los botones de radio de alquiler y venta.
+Si el campo de texto de baja no está vacío, habilita los botones de radio de alquiler y venta, y deshabilita el botón de radio de disponibilidad.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.cargaMuniInformeProp">
+<span class="sig-name descname"><span class="pre">cargaMuniInformeProp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.cargaMuniInformeProp"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.cargaMuniInformeProp" title="Link to this definition">¶</a></dt>
+<dd><p>Carga los municipios en el comboBox del informe de propiedades.</p>
+<p>Obtiene la lista de municipios desde la base de datos y la añade al comboBox de municipios en la interfaz de usuario.
+También configura un completer para facilitar la búsqueda de municipios en el comboBox.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>self: La instancia actual del objeto.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.cargaOnePropiedad">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaOnePropiedad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.cargaOnePropiedad"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.cargaOnePropiedad" title="Link to this definition">¶</a></dt>
+<dd><p>Carga los datos de una propiedad seleccionada en la interfaz de usuario.</p>
+<p>Obtiene los datos de la propiedad seleccionada en la tabla de propiedades y los carga en los campos correspondientes de la interfaz de usuario.
+También actualiza las listas de propiedades en venta y alquiler, y carga los datos en las facturas si la propiedad está disponible.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al cargar los datos de la propiedad.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.cargarTablaPropiedades">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargarTablaPropiedades</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.cargarTablaPropiedades"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.cargarTablaPropiedades" title="Link to this definition">¶</a></dt>
+<dd><p>Carga la tabla de propiedades con los datos obtenidos de la base de datos.</p>
+<p>Obtiene la lista de propiedades desde la base de datos y la muestra en la tabla de propiedades de la interfaz de usuario.
+Si no hay propiedades que mostrar, se deshabilitan los botones de navegación y se muestra un mensaje indicándolo.
+Si hay propiedades, se habilitan los botones de navegación según corresponda y se muestra la lista paginada.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al cargar las propiedades en la tabla.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.cargarTipoprop">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargarTipoprop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.cargarTipoprop"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.cargarTipoprop" title="Link to this definition">¶</a></dt>
+<dd><p>Carga los tipos de propiedad en el comboBox correspondiente.</p>
+<p>Obtiene la lista de tipos de propiedad desde la base de datos y la añade al comboBox de tipos de propiedad en la interfaz de usuario.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.cargarTipopropGestion">
+<span class="sig-name descname"><span class="pre">cargarTipopropGestion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.cargarTipopropGestion"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.cargarTipopropGestion" title="Link to this definition">¶</a></dt>
+<dd><p>Carga los tipos de propiedad en el comboBox de gestión de propiedades.</p>
+<p>Obtiene la lista de tipos de propiedad desde la base de datos y la añade al comboBox de tipos de propiedad en la interfaz de usuario.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>self: La instancia actual del objeto.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.checkMovilProp">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkMovilProp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">movil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.checkMovilProp"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.checkMovilProp" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si el número de móvil es válido y actualiza el estilo del campo de texto correspondiente.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>movil (str): El número de móvil a verificar.</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error durante la verificación del número de móvil.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.checkPrecioAlquiler">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkPrecioAlquiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precioAlquiler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.checkPrecioAlquiler"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.checkPrecioAlquiler" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si el precio de alquiler es válido.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>precioAlquiler (str): El precio de alquiler a verificar.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True si el precio de alquiler es válido, False en caso contrario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.checkPrecioVenta">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkPrecioVenta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precioVenta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.checkPrecioVenta"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.checkPrecioVenta" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si el precio de venta es válido.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>precioVenta (str): El precio de venta a verificar.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True si el precio de venta es válido, False en caso contrario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.esFechasValidas">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">esFechasValidas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datosPropiedades</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.esFechasValidas"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.esFechasValidas" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si las fechas de alta y baja de una propiedad son válidas.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>datosPropiedades (list): Lista con los datos de la propiedad.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True si la fecha de alta es anterior a la fecha de baja, False en caso contrario.</p>
+</dd>
+<dt>Raises:</dt><dd><p>ValueError: Si la fecha no tiene el formato correcto o no es válida.
+TypeError: Si se esperaba una cadena de texto para la fecha.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.filtrar">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filtrar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.filtrar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.filtrar" title="Link to this definition">¶</a></dt>
+<dd><p>Filtra las propiedades según los criterios seleccionados.</p>
+<p>Alterna el estado del botón de búsqueda de tipo de propiedad y recarga la tabla de propiedades con los datos filtrados.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.hasCamposObligatoriosAlta">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasCamposObligatoriosAlta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datosPropiedades</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.hasCamposObligatoriosAlta"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.hasCamposObligatoriosAlta" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si los campos obligatorios para el alta de una propiedad están completos.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>datosPropiedades (list): Lista con los datos de la propiedad.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True si todos los campos obligatorios están completos, False en caso contrario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.hasCamposObligatoriosModif">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasCamposObligatoriosModif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datosPropiedades</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.hasCamposObligatoriosModif"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.hasCamposObligatoriosModif" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si los campos obligatorios para la modificación de una propiedad están completos.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>datosPropiedades (list): Lista con los datos de la propiedad.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True si todos los campos obligatorios están completos, False en caso contrario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.historicoProp">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">historicoProp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.historicoProp"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.historicoProp" title="Link to this definition">¶</a></dt>
+<dd><p>Carga el historial de propiedades en la tabla de propiedades.</p>
+<p>Establece la página actual de propiedades a 0 y carga la tabla de propiedades con los datos históricos.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al cargar el historial de propiedades.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.is_num">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.is_num"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.is_num" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si un valor es un número.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>value (str): El valor a verificar.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True si el valor es un número, False en caso contrario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.modifProp">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">modifProp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.modifProp"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.modifProp" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica una propiedad existente en la base de datos.</p>
+<p>Recopila los datos de la interfaz de usuario, verifica que los campos obligatorios estén completos y que los precios sean válidos.
+Si todo es correcto, actualiza la propiedad en la base de datos y actualiza la tabla de propiedades.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>Exception: Si ocurre un error al modificar la propiedad.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="propiedades.Propiedades.seleccionarTipoGestion">
+<span class="sig-name descname"><span class="pre">seleccionarTipoGestion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/propiedades.html#Propiedades.seleccionarTipoGestion"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#propiedades.Propiedades.seleccionarTipoGestion" title="Link to this definition">¶</a></dt>
+<dd><p>Selecciona el tipo de propiedad en la gestión de propiedades.</p>
+<p>Obtiene el tipo de propiedad seleccionado en el comboBox de gestión de propiedades y lo establece en el campo de texto correspondiente.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>self: La instancia actual del objeto.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PROYECTODAM24_25</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Guillermo Andre Garrido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/src/propiedades.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

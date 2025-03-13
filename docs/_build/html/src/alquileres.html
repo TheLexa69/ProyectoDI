@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>alquileres module &#8212; documentación de PROYECTODAM24_25 - v.0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=8ee129b9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-alquileres">
+<span id="alquileres-module"></span><h1>alquileres module<a class="headerlink" href="#module-alquileres" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="alquileres.Alquileres">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">alquileres.</span></span><span class="sig-name descname"><span class="pre">Alquileres</span></span><a class="reference internal" href="../_modules/alquileres.html#Alquileres"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#alquileres.Alquileres" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="alquileres.Alquileres.altaAlquiler">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altaAlquiler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/alquileres.html#Alquileres.altaAlquiler"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#alquileres.Alquileres.altaAlquiler" title="Link to this definition">¶</a></dt>
+<dd><p>Esta función se encarga de registrar un nuevo contrato de alquiler.</p>
+<p>Procedimiento:
+1. Recopila los datos del nuevo alquiler desde la interfaz de usuario.
+2. Verifica que todos los campos requeridos no estén vacíos.
+3. Si algún campo está vacío, muestra un mensaje de error específico.
+4. Si todos los campos están completos, intenta registrar el nuevo contrato de alquiler en la base de datos.
+5. Si el registro es exitoso, actualiza las tablas de contratos y mensualidades, y ajusta el tamaño de las tablas.
+6. Limpia los campos de entrada en la interfaz de usuario.
+7. Si ocurre un error durante el registro, muestra un mensaje de error.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de registro.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="alquileres.Alquileres.cargaOneContrato">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaOneContrato</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/alquileres.html#Alquileres.cargaOneContrato"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#alquileres.Alquileres.cargaOneContrato" title="Link to this definition">¶</a></dt>
+<dd><p>Carga un contrato de alquiler seleccionado y sus mensualidades en la interfaz de usuario.</p>
+<p>&#64;return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="alquileres.Alquileres.cargaTablaContratos">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaTablaContratos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/alquileres.html#Alquileres.cargaTablaContratos"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#alquileres.Alquileres.cargaTablaContratos" title="Link to this definition">¶</a></dt>
+<dd><p>Esta función carga los contratos de alquiler en la tabla de gestión de alquileres.</p>
+<p>Procedimiento:
+1. Obtiene el listado de contratos de alquiler desde la base de datos.
+2. Configura el número de filas y columnas de la tabla.
+3. Establece los encabezados de las columnas.
+4. Rellena la tabla con los datos de los contratos.
+5. Añade un botón de eliminar en cada fila para gestionar la eliminación de contratos.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de carga de la tabla.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="alquileres.Alquileres.cargaTablaMensualidades">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaTablaMensualidades</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numContrato</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/alquileres.html#Alquileres.cargaTablaMensualidades"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#alquileres.Alquileres.cargaTablaMensualidades" title="Link to this definition">¶</a></dt>
+<dd><p>Carga las mensualidades de un contrato de alquiler en la tabla de visualización.</p>
+<p>&#64;param numContrato: Número del contrato de alquiler. Si no se proporciona, se cargan todas las mensualidades.
+&#64;type numContrato: int, optional</p>
+<p>&#64;return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="alquileres.Alquileres.guardarFactura">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">guardarFactura</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/alquileres.html#Alquileres.guardarFactura"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#alquileres.Alquileres.guardarFactura" title="Link to this definition">¶</a></dt>
+<dd><p>Guarda el recibo de una mensualidad seleccionada y genera un informe.</p>
+<p>La función verifica si hay un recibo y un contrato de alquiler seleccionados.
+Si no hay ninguno seleccionado, muestra un mensaje de error y termina la ejecución.
+Si hay un recibo y un contrato seleccionados, genera un informe del recibo de la mensualidad.</p>
+<p>&#64;return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="alquileres.Alquileres.selectOneMensualidad">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selectOneMensualidad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/alquileres.html#Alquileres.selectOneMensualidad"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#alquileres.Alquileres.selectOneMensualidad" title="Link to this definition">¶</a></dt>
+<dd><p>Selecciona una mensualidad de la tabla de visualización de alquileres.</p>
+<p>&#64;return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PROYECTODAM24_25</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Guillermo Andre Garrido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/src/alquileres.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

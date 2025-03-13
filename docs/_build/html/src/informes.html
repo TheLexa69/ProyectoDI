@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>informes module &#8212; documentación de PROYECTODAM24_25 - v.0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=8ee129b9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-informes">
+<span id="informes-module"></span><h1>informes module<a class="headerlink" href="#module-informes" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="informes.Informes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">informes.</span></span><span class="sig-name descname"><span class="pre">Informes</span></span><a class="reference internal" href="../_modules/informes.html#Informes"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.footInforme">
+<span class="sig-name descname"><span class="pre">footInforme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paginas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.footInforme"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.footInforme" title="Link to this definition">¶</a></dt>
+<dd><p>Dibuja el pie de página del informe PDF.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>titulo (str): Título del informe.
+paginas (int): Número total de páginas.</p>
+</dd>
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura y muestra cualquier excepción que ocurra durante el dibujo del pie de página.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.getMaxElementosPpag">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getMaxElementosPpag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ystep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numRegistros</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.getMaxElementosPpag"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.getMaxElementosPpag" title="Link to this definition">¶</a></dt>
+<dd><p>Calcula el número máximo de elementos por página.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ymax (int): Coordenada Y máxima.
+ymin (int): Coordenada Y mínima.
+ystep (int): Paso en Y entre elementos.
+numRegistros (int): Número total de registros.</p>
+</dd>
+<dt>Returns:</dt><dd><p>int: Número máximo de elementos por página.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.reportClientes">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reportClientes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.reportClientes"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.reportClientes" title="Link to this definition">¶</a></dt>
+<dd><p>Genera un informe en formato PDF con la lista de clientes.</p>
+<p>El informe incluye los campos: DNI, Apellidos, Nombre, Móvil, Provincia y Municipio.
+Se crea un archivo PDF en el directorio <cite>.informes</cite> con el nombre <cite>listadoclientes</cite> seguido de la fecha y hora actual.
+Si el número de registros excede el espacio disponible en una página, se crean páginas adicionales.</p>
+<p>Pasos:
+1. Crea el directorio <cite>.informes</cite> si no existe.
+2. Genera el archivo PDF con el nombre basado en la fecha y hora actual.
+3. Consulta la base de datos para obtener el número de clientes y los datos de cada cliente.
+4. Escribe los datos en el PDF, creando nuevas páginas si es necesario.
+5. Guarda y abre el archivo PDF generado.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante la generación del informe.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.reportFact">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reportFact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idFactura</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.reportFact"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.reportFact" title="Link to this definition">¶</a></dt>
+<dd><p>Genera un informe en formato PDF para una factura de venta específica.</p>
+<p>&#64;param idFactura: ID de la factura para la cual se generará el informe.
+&#64;type idFactura: str</p>
+<p>&#64;return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.reportPropiedades">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reportPropiedades</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">municipio</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.reportPropiedades"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.reportPropiedades" title="Link to this definition">¶</a></dt>
+<dd><p>Genera un informe en formato PDF con la lista de propiedades de un municipio específico.</p>
+<p>El informe incluye los campos: COD, DIRECCION, TIPO PROP., OPERACION, PRECIO ALQ., PRECIO VENTA.
+Se crea un archivo PDF en el directorio <cite>.informes</cite> con el nombre <cite>listadopropiedades</cite> seguido de la fecha y hora actual.
+Si el número de registros excede el espacio disponible en una página, se crean páginas adicionales.</p>
+<p>Pasos:
+1. Crea el directorio <cite>.informes</cite> si no existe.
+2. Genera el archivo PDF con el nombre basado en la fecha y hora actual.
+3. Consulta la base de datos para obtener el número de propiedades y los datos de cada propiedad.
+4. Escribe los datos en el PDF, creando nuevas páginas si es necesario.
+5. Guarda y abre el archivo PDF generado.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante la generación del informe.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.reportReciboMensualidad">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reportReciboMensualidad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idAlquiler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idMensualidad</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.reportReciboMensualidad"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.reportReciboMensualidad" title="Link to this definition">¶</a></dt>
+<dd><p>Genera un informe en formato PDF para un recibo de mensualidad de alquiler específico.</p>
+<p>&#64;param idAlquiler: ID del alquiler para el cual se generará el informe.
+&#64;type idAlquiler: int
+&#64;param idMensualidad: ID de la mensualidad para la cual se generará el informe.
+&#64;type idMensualidad: int</p>
+<p>&#64;return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.topDatosCliente">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">topDatosCliente</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cliente</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fecha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.topDatosCliente"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.topDatosCliente" title="Link to this definition">¶</a></dt>
+<dd><p>Dibuja los datos del cliente en la cabecera del informe PDF.</p>
+<p>&#64;param cliente: Lista con los datos del cliente.
+&#64;type cliente: list
+&#64;param fecha: Fecha de la factura.
+&#64;type fecha: str</p>
+<p>&#64;return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.topInforme">
+<span class="sig-name descname"><span class="pre">topInforme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">municipio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.topInforme"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.topInforme" title="Link to this definition">¶</a></dt>
+<dd><p>Dibuja la cabecera del informe PDF.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>titulo (str): Título del informe.
+municipio (str): Nombre del municipio (opcional).</p>
+</dd>
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura y muestra cualquier excepción que ocurra durante el dibujo de la cabecera.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="informes.Informes.topInformeAlquiler">
+<span class="sig-name descname"><span class="pre">topInformeAlquiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">municipio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/informes.html#Informes.topInformeAlquiler"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#informes.Informes.topInformeAlquiler" title="Link to this definition">¶</a></dt>
+<dd><p>Dibuja la cabecera del informe de recibos para los alquileres PDF.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>titulo (str): Título del informe.
+municipio (str): Nombre del municipio (opcional).</p>
+</dd>
+<dt>Excepciones:</dt><dd><ul class="simple">
+<li><p>Captura y muestra cualquier excepción que ocurra durante el dibujo de la cabecera.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PROYECTODAM24_25</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Guillermo Andre Garrido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/src/informes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

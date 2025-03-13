@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>vendedores module &#8212; documentación de PROYECTODAM24_25 - v.0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=8ee129b9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-vendedores">
+<span id="vendedores-module"></span><h1>vendedores module<a class="headerlink" href="#module-vendedores" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="vendedores.Vendedores">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vendedores.</span></span><span class="sig-name descname"><span class="pre">Vendedores</span></span><a class="reference internal" href="../_modules/vendedores.html#Vendedores"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.altaVendedor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altaVendedor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.altaVendedor"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.altaVendedor" title="Link to this definition">¶</a></dt>
+<dd><p>Da de alta a un nuevo vendedor en la base de datos y actualiza la tabla de vendedores.</p>
+<p>Procedimiento:
+1. Obtiene los datos del nuevo vendedor desde la interfaz de usuario.
+2. Verifica si el vendedor ya está presente en la base de datos.
+3. Si el vendedor ya existe, muestra un mensaje de error.
+4. Si los campos obligatorios están completos y el vendedor no existe, lo da de alta en la base de datos.
+5. Si los campos obligatorios no están completos, muestra un mensaje de error.
+6. Si ocurre algún error durante el proceso, muestra un mensaje de error.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de alta del vendedor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.bajaVendedor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bajaVendedor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.bajaVendedor"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.bajaVendedor" title="Link to this definition">¶</a></dt>
+<dd><p>Da de baja a un vendedor en la base de datos y actualiza la tabla de vendedores.</p>
+<p>Procedimiento:
+1. Obtiene el DNI del vendedor desde la interfaz de usuario.
+2. Intenta dar de baja al vendedor en la base de datos.
+3. Si la baja es exitosa, muestra un mensaje de confirmación y actualiza la tabla de vendedores.
+4. Si el vendedor no existe o ya ha sido dado de baja, muestra un mensaje de error.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de baja del vendedor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.buscaOneVendedor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buscaOneVendedor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.buscaOneVendedor"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.buscaOneVendedor" title="Link to this definition">¶</a></dt>
+<dd><p>Busca un vendedor en la base de datos por su número de móvil y carga sus datos en la interfaz de usuario.</p>
+<p>Procedimiento:
+1. Obtiene el número de móvil del campo de texto correspondiente.
+2. Busca el vendedor en la base de datos usando el número de móvil.
+3. Si el vendedor existe, carga sus datos en los campos correspondientes de la interfaz de usuario.
+4. Si el vendedor no existe, muestra un mensaje de error.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de búsqueda del vendedor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.cargaOneVendedor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaOneVendedor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.cargaOneVendedor"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.cargaOneVendedor" title="Link to this definition">¶</a></dt>
+<dd><p>Carga los datos de un vendedor seleccionado en la interfaz de usuario.</p>
+<p>Procedimiento:
+1. Obtiene la fila seleccionada en la tabla de vendedores.
+2. Extrae los datos de la fila seleccionada.
+3. Obtiene los datos completos del vendedor desde la base de datos usando el DNI.
+4. Asigna los datos obtenidos a los campos correspondientes en la interfaz de usuario.
+5. Establece el ID del vendedor en el campo de texto correspondiente.
+6. Establece el ID del vendedor en el campo de texto de alquileres.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de carga de datos del vendedor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.cargaTablaVendedores">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cargaTablaVendedores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.cargaTablaVendedores"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.cargaTablaVendedores" title="Link to this definition">¶</a></dt>
+<dd><p>Carga la tabla de vendedores con los datos obtenidos de la base de datos.</p>
+<p>Procedimiento:
+1. Obtiene el listado de vendedores desde la base de datos.
+2. Configura el número de filas de la tabla según el número de vendedores.
+3. Rellena la tabla con los datos de los vendedores.
+4. Ajusta la alineación del texto en las celdas de la tabla.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de carga de la tabla.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.checkDniVen">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkDniVen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dni</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.checkDniVen"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.checkDniVen" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica la validez del DNI del vendedor y actualiza el campo de texto correspondiente.</p>
+<p>Procedimiento:
+1. Convierte el DNI a mayúsculas y lo establece en el campo de texto.
+2. Verifica si el DNI es válido.
+3. Si el DNI es válido, cambia el estilo del campo de texto a verde.
+4. Si el DNI no es válido, cambia el estilo del campo de texto a rojo, borra el contenido y establece un texto de marcador de posición.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de verificación.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.checkEmailVen">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkEmailVen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mail</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.checkEmailVen"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.checkEmailVen" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica la validez del correo electrónico del vendedor y actualiza el campo de texto correspondiente.</p>
+<p>Procedimiento:
+1. Verifica si el correo electrónico es válido.
+2. Si el correo electrónico es válido, cambia el estilo del campo de texto a blanco y lo establece en minúsculas.
+3. Si el correo electrónico no es válido, cambia el estilo del campo de texto a rojo, borra el contenido y establece un texto de marcador de posición.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de verificación.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.checkMovilVen">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkMovilVen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">movil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.checkMovilVen"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.checkMovilVen" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica la validez del número de móvil del vendedor y actualiza el campo de texto correspondiente.</p>
+<p>Procedimiento:
+1. Verifica si el número de móvil es válido.
+2. Si el número de móvil es válido, cambia el estilo del campo de texto a blanco.
+3. Si el número de móvil no es válido, cambia el estilo del campo de texto a rojo, borra el contenido y establece un texto de marcador de posición.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de verificación.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.esFechasValidas">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">esFechasValidas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datosVendedores</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.esFechasValidas"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.esFechasValidas" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si la fecha de baja es posterior a la fecha de alta.</p>
+<p>Procedimiento:
+1. Extrae las fechas de alta y baja de los datos del vendedor.
+2. Convierte las fechas de alta y baja a objetos datetime.
+3. Compara las fechas y retorna True si la fecha de alta es anterior a la fecha de baja, False en caso contrario.</p>
+<p>Parámetros:
+- datosVendedores: Lista con los datos del vendedor.</p>
+<p>Retorna:
+- True si la fecha de alta es anterior a la fecha de baja, False en caso contrario.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.hasCamposObligatorios">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasCamposObligatorios</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nuevoVendedor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.hasCamposObligatorios"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.hasCamposObligatorios" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si los campos obligatorios del nuevo vendedor están completos.</p>
+<p>Procedimiento:
+1. Crea una copia de la lista de datos del nuevo vendedor.
+2. Elimina los campos de fecha de alta y correo electrónico de la lista.
+3. Recorre los datos restantes y verifica si alguno está vacío o es None.
+4. Si algún campo está vacío o es None, retorna False.
+5. Si todos los campos están completos, retorna True.</p>
+<p>Parámetros:
+- nuevoVendedor: Lista con los datos del nuevo vendedor.</p>
+<p>Retorna:
+- True si todos los campos obligatorios están completos, False en caso contrario.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.historicoVendedores">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">historicoVendedores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.historicoVendedores"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.historicoVendedores" title="Link to this definition">¶</a></dt>
+<dd><p>Carga el historial de vendedores en la tabla de vendedores.</p>
+<p>Procedimiento:
+1. Llama a la función <cite>cargaTablaVendedores</cite> para cargar los datos de los vendedores en la tabla.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de carga del historial de vendedores.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.isVendedorPresent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">isVendedorPresent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nuevoVendedor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.isVendedorPresent"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.isVendedorPresent" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si un vendedor ya está presente en la base de datos.</p>
+<p>Procedimiento:
+1. Obtiene los datos del vendedor a partir del DNI.
+2. Si el registro no está vacío, retorna True.
+3. Si el registro está vacío, retorna False.</p>
+<p>Parámetros:
+- nuevoVendedor: Lista con los datos del nuevo vendedor.</p>
+<p>Retorna:
+- True si el vendedor ya está presente, False en caso contrario.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vendedores.Vendedores.modifVendedor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">modifVendedor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vendedores.html#Vendedores.modifVendedor"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#vendedores.Vendedores.modifVendedor" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica los datos de un vendedor en la base de datos y actualiza la tabla de vendedores.</p>
+<p>Procedimiento:
+1. Obtiene los datos del vendedor desde la interfaz de usuario.
+2. Verifica si la fecha de baja es válida (no puede ser anterior a la fecha de alta).
+3. Verifica si los campos obligatorios están completos.
+4. Si los campos obligatorios están completos y la fecha de baja es válida, modifica el vendedor en la base de datos.
+5. Si la modificación es exitosa, muestra un mensaje de confirmación y actualiza la tabla de vendedores.
+6. Si los campos obligatorios no están completos, muestra un mensaje de error.
+7. Si ocurre algún error durante el proceso, muestra un mensaje de error.</p>
+<p>Excepciones:
+- Captura y muestra cualquier excepción que ocurra durante el proceso de modificación del vendedor.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PROYECTODAM24_25</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Guillermo Andre Garrido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/src/vendedores.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

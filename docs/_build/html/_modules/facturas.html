@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>facturas &#8212; documentación de PROYECTODAM24_25 - v.0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=8ee129b9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para facturas</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mailbox</span><span class="w"> </span><span class="kn">import</span> <span class="n">mboxMessage</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtGui</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QIcon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.testutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">setOutDir</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">conexion</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">informes</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">propiedades</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">eventos</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">var</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span>
+
+
+<div class="viewcode-block" id="Facturas">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Facturas</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Facturas.altaFactura">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.altaFactura">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">altaFactura</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">           Crea una nueva factura y la guarda en la base de datos.</span>
+
+<span class="sd">           La función verifica que se haya seleccionado un cliente y una fecha antes de intentar</span>
+<span class="sd">           guardar la factura. Si falta alguno de estos datos, se muestra un mensaje de error.</span>
+<span class="sd">           Si la factura se guarda correctamente, se muestra un mensaje de éxito y se actualiza</span>
+<span class="sd">           la tabla de facturas. En caso de error, se muestra un mensaje de error.</span>
+
+<span class="sd">           Excepciones:</span>
+<span class="sd">               Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">           &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">nuevaFactura</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaFactura</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtdniclifac</span><span class="o">.</span><span class="n">text</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtdniclifac</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtdniclifac</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error al grabar factura&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Recuerda seleccionar un cliente antes de grabar una factura&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaFactura</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaFactura</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error al grabar factura&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;No es posible grabar una factura sin seleccionar una fecha&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">altaFactura</span><span class="p">(</span><span class="n">nuevaFactura</span><span class="p">):</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeInfo</span><span class="p">(</span><span class="s2">&quot;Factura grabada&quot;</span><span class="p">,</span> <span class="s2">&quot;Se ha grabado una nueva factura&quot;</span><span class="p">)</span>
+                <span class="n">Facturas</span><span class="o">.</span><span class="n">cargaTablaFacturas</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;No se ha podido grabar factura&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;factura&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.cargaTablaFacturas">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.cargaTablaFacturas">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargaTablaFacturas</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Carga la tabla de facturas en la interfaz de usuario.</span>
+
+<span class="sd">                La función obtiene el listado de facturas desde la base de datos y las muestra en la tabla de facturas</span>
+<span class="sd">                de la interfaz de usuario. Para cada factura, se crea una fila con su ID, fecha y DNI del cliente.</span>
+<span class="sd">                Además, se añade un botón para eliminar la factura.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                    IndexError: Captura cualquier excepción de índice y la imprime en la consola.</span>
+<span class="sd">                    Exception: Captura cualquier otra excepción y la imprime en la consola.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">listado</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">claseConexion</span><span class="o">.</span><span class="n">listadoFacturas</span><span class="p">()</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaFacturas</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">listado</span><span class="p">))</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">registro</span> <span class="ow">in</span> <span class="n">listado</span><span class="p">:</span>
+                <span class="n">item_id</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">registro</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">item_id</span><span class="o">.</span><span class="n">setTextAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaFacturas</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">item_id</span><span class="p">)</span>  <span class="c1"># id</span>
+
+                <span class="n">item_fecha</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">registro</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">item_fecha</span><span class="o">.</span><span class="n">setTextAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaFacturas</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item_fecha</span><span class="p">)</span>  <span class="c1"># fecha</span>
+
+                <span class="n">item_dni</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">registro</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="n">item_dni</span><span class="o">.</span><span class="n">setTextAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaFacturas</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">item_dni</span><span class="p">)</span>  <span class="c1"># dni</span>
+
+                <span class="n">botondelfac</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">()</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setIconSize</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QSize</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;./img/basura.ico&quot;</span><span class="p">))</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background: transparent; border: none;&quot;</span><span class="p">)</span>
+
+                <span class="n">contenedor</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">()</span>
+                <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">botondelfac</span><span class="p">)</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">contenedor</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+
+                <span class="n">container</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+                <span class="n">container</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaFacturas</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">checked</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">registro</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">Facturas</span><span class="o">.</span><span class="n">bajaFactura</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IndexError in cargaTablaFacturas:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error carga factura en cargaTablaFacturas&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.cargaTablaVentas">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.cargaTablaVentas">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargaTablaVentas</span><span class="p">(</span><span class="n">idVenta</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Carga la tabla de ventas en la interfaz de usuario.</span>
+
+<span class="sd">                La función obtiene el listado de ventas desde la base de datos y las muestra en la tabla de ventas</span>
+<span class="sd">                de la interfaz de usuario. Para cada venta, se crea una fila con sus datos correspondientes.</span>
+<span class="sd">                Además, se añade un botón para eliminar la venta.</span>
+
+<span class="sd">                Parámetros:</span>
+<span class="sd">                    idVenta (str, opcional): El ID de la venta a cargar. Si no se proporciona, se utiliza el ID de la factura actual.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                    Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">idVenta</span><span class="p">:</span>
+                <span class="n">idVenta</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">idVenta</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">idVenta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVentas</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+                    <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVentas</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblSubTotal</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;0.00 €&quot;</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblIVA</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;0.00 €&quot;</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblTotal</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;0.00 €&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="n">listado</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">listadoVentas</span><span class="p">(</span><span class="n">idVenta</span><span class="p">)</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVentas</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">listado</span><span class="p">))</span>
+
+            <span class="n">subtotal</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">registro</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">listado</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">registro</span><span class="p">[:</span><span class="mi">6</span><span class="p">]):</span>
+                    <span class="n">item</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                    <span class="n">item</span><span class="o">.</span><span class="n">setTextAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                    <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVentas</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+                <span class="c1"># Botón de eliminar</span>
+                <span class="n">botondelfac</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">()</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setIconSize</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QSize</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;./img/basura.ico&quot;</span><span class="p">))</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background: transparent; border: none;&quot;</span><span class="p">)</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+                <span class="n">botondelfac</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">idV</span><span class="o">=</span><span class="n">registro</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idP</span><span class="o">=</span><span class="n">registro</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">Facturas</span><span class="o">.</span><span class="n">eliminarVenta</span><span class="p">(</span><span class="n">idV</span><span class="p">,</span> <span class="n">idP</span><span class="p">))</span>
+
+                <span class="n">contenedor</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">()</span>
+                <span class="n">layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">botondelfac</span><span class="p">)</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">contenedor</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaVentas</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">contenedor</span><span class="p">)</span>
+
+                <span class="n">subtotal</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">registro</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+
+            <span class="n">iva</span> <span class="o">=</span> <span class="n">subtotal</span> <span class="o">*</span> <span class="mf">0.10</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="n">subtotal</span> <span class="o">+</span> <span class="n">iva</span>
+
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblSubTotal</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subtotal</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2"> €&quot;</span><span class="p">)</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblIVA</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">iva</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2"> €&quot;</span><span class="p">)</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblTotal</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">total</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2"> €&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en cargaTablaVentas:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.bajaFactura">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.bajaFactura">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bajaFactura</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Elimina una factura de la base de datos.</span>
+
+<span class="sd">                La función intenta eliminar una factura utilizando su ID. Si la eliminación es exitosa,</span>
+<span class="sd">                se actualiza la tabla de facturas y se muestra un mensaje de éxito. Si no, se muestra un mensaje de error.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                    Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">eliminarFactura</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+                <span class="n">Facturas</span><span class="o">.</span><span class="n">cargaTablaFacturas</span><span class="p">()</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeInfo</span><span class="p">(</span><span class="s2">&quot;Factura eliminada&quot;</span><span class="p">,</span> <span class="s2">&quot;Se ha eliminado la factura&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;No se ha podido eliminar la factura&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en bajaFactura&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.cargaOneFactura">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.cargaOneFactura">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargaOneFactura</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga una factura seleccionada en la interfaz de usuario.</span>
+
+<span class="sd">            La función obtiene los datos de la factura seleccionada en la tabla de facturas y los muestra en la interfaz de usuario.</span>
+<span class="sd">            Luego, carga las ventas asociadas a esa factura y las propiedades correspondientes.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">                Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fila</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tablaFacturas</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">()</span>
+            <span class="n">datos</span> <span class="o">=</span> <span class="p">[</span><span class="n">dato</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">for</span> <span class="n">dato</span> <span class="ow">in</span> <span class="n">fila</span><span class="p">]</span>
+            <span class="n">idVentaFactura</span> <span class="o">=</span> <span class="n">datos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">idVentaFactura</span><span class="p">)</span>  <span class="c1"># HASTA AQUI CARGA EL ID DE LA FACTURA EN NUM FACTURA</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ventas</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">cargaVenta</span><span class="p">(</span><span class="n">idVentaFactura</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ventas</span><span class="p">:</span>
+                    <span class="n">codProp</span> <span class="o">=</span> <span class="n">ventas</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># Guardar el codProp en la variable codProp</span>
+                    <span class="n">idFactura</span> <span class="o">=</span> <span class="n">ventas</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">idVenta</span> <span class="o">=</span> <span class="n">ventas</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="n">propiedad</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">cargaPropiedadVenta</span><span class="p">(</span> <span class="n">codProp</span><span class="p">)</span>  <span class="c1"># Recupera la propiedad a partir de su código</span>
+
+                    <span class="n">Facturas</span><span class="o">.</span><span class="n">cargaTablaVentas</span><span class="p">(</span><span class="n">idFactura</span><span class="p">)</span>
+
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">Facturas</span><span class="o">.</span><span class="n">cargaTablaVentas</span><span class="p">()</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en carga Factura&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error cargaOneFactura en Facturas&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.cargarPropiedadVenta">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.cargarPropiedadVenta">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargarPropiedadVenta</span><span class="p">(</span><span class="n">propiedad</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga los datos de una propiedad en la interfaz de usuario.</span>
+
+<span class="sd">            La función recibe una lista con los datos de una propiedad y los muestra en los campos correspondientes</span>
+<span class="sd">            de la interfaz de usuario. Si la propiedad no está disponible, muestra un mensaje de error.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">                propiedad (list): Lista con los datos de la propiedad.</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">                bool: True si la propiedad está disponible y se cargan los datos correctamente, False en caso contrario.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">                Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">propiedad</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;disponible&quot;</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCodProp</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">propiedad</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtTipoProp</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">propiedad</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtPrecioProp</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">propiedad</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; €&quot;</span><span class="p">)</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirProp</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">propiedad</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtLocProp</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">propiedad</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;La propiedad seleccionada no está disponible&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en cargarPropiedadVenta&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.grabarVenta">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.grabarVenta">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grabarVenta</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Graba una nueva venta en la base de datos.</span>
+
+<span class="sd">                La función verifica que se hayan seleccionado una propiedad, un vendedor y una factura antes de intentar</span>
+<span class="sd">                guardar la venta. Si falta alguno de estos datos, se muestra un mensaje de error. Si la venta se guarda</span>
+<span class="sd">                correctamente, se muestra un mensaje de éxito y se actualizan las tablas de ventas y propiedades. En caso</span>
+<span class="sd">                de error, se muestra un mensaje de error.</span>
+
+<span class="sd">                Excepciones:</span>
+<span class="sd">                    Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">nuevaVenta</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCodProp</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtIdVendedor</span><span class="o">.</span><span class="n">text</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCodProp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtCodProp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error al grabar venta&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Recuerda seleccionar una propiedad antes de grabar una venta&quot;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtIdVendedor</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtIdVendedor</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error al grabar venta&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Recuerda seleccionar un vendedor antes de grabar una venta&quot;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error al grabar venta&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Recuerda seleccionar una factura antes de grabar una venta&quot;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">altaVenta</span><span class="p">(</span><span class="n">nuevaVenta</span><span class="p">):</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeInfo</span><span class="p">(</span><span class="s2">&quot;Venta grabada&quot;</span><span class="p">,</span> <span class="s2">&quot;Se ha grabado una nueva venta&quot;</span><span class="p">)</span>
+
+                <span class="n">Facturas</span><span class="o">.</span><span class="n">cargaTablaVentas</span><span class="p">()</span>
+                <span class="n">propiedades</span><span class="o">.</span><span class="n">Propiedades</span><span class="o">.</span><span class="n">cargarTablaPropiedades</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;No se ha podido grabar venta&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;venta&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.eliminarVenta">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.eliminarVenta">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eliminarVenta</span><span class="p">(</span><span class="n">idventa</span><span class="p">,</span> <span class="n">idpropiedad</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Elimina una venta de la base de datos y actualiza las tablas de ventas y propiedades.</span>
+
+<span class="sd">            La función intenta eliminar una venta utilizando su ID y marca la propiedad asociada como disponible.</span>
+<span class="sd">            Si la eliminación es exitosa, se actualizan las tablas de ventas y propiedades y se muestra un mensaje de éxito.</span>
+<span class="sd">            Si no, se muestra un mensaje de error.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">                idventa (int): El ID de la venta a eliminar.</span>
+<span class="sd">                idpropiedad (int): El ID de la propiedad asociada a la venta.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">                Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">bajaVenta</span><span class="p">(</span><span class="n">idventa</span><span class="p">)</span> <span class="ow">and</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">altaPropiedadVenta</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idpropiedad</span><span class="p">)):</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeInfo</span><span class="p">(</span><span class="s2">&quot;Venta eliminada&quot;</span><span class="p">,</span> <span class="s2">&quot;Se ha eliminado la venta&quot;</span><span class="p">)</span>
+                <span class="n">Facturas</span><span class="o">.</span><span class="n">cargaTablaVentas</span><span class="p">()</span>
+                <span class="n">propiedades</span><span class="o">.</span><span class="n">Propiedades</span><span class="o">.</span><span class="n">cargarTablaPropiedades</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;No se ha podido eliminar la venta&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en eliminarVenta&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.cargarPropiedadAlquiler">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.cargarPropiedadAlquiler">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cargarPropiedadAlquiler</span><span class="p">(</span><span class="n">listadoAlquileres</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Carga los datos de una propiedad en alquiler en la interfaz de usuario.</span>
+
+<span class="sd">            La función recibe una lista con los datos de una propiedad en alquiler y los muestra en los campos correspondientes</span>
+<span class="sd">            de la interfaz de usuario. Si la propiedad no está disponible, muestra un mensaje de error.</span>
+
+<span class="sd">            Parámetros:</span>
+<span class="sd">                listadoAlquileres (list): Lista con los datos de la propiedad en alquiler.</span>
+
+<span class="sd">            Retorna:</span>
+<span class="sd">                bool: True si la propiedad está disponible y se cargan los datos correctamente, False en caso contrario.</span>
+
+<span class="sd">            Excepciones:</span>
+<span class="sd">                Exception: Captura cualquier excepción y la imprime en la consola.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">listadoAlquileres</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;disponible&quot;</span><span class="p">:</span>
+                <span class="c1"># var.ui.txtCodProp.setText(str(listadoAlquileres[1]))</span>
+                <span class="c1"># var.ui.txtTipoProp.setText(str(listadoAlquileres[2]))</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtPrecioAlquiler</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">listadoAlquileres</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; €&quot;</span><span class="p">)</span>
+                <span class="c1"># var.ui.txtDirProp.setText(str(listadoAlquileres[4]).title())</span>
+                <span class="c1"># var.ui.txtLocProp.setText(str(listadoAlquileres[5]))</span>
+
+                <span class="c1"># ALQUILERES</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtIdPropiedadAlquiler</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">listadoAlquileres</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;La propiedad seleccionada no está disponible&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en cargarPropiedadVenta&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Facturas.guardarFactura">
+<a class="viewcode-back" href="../src/facturas.html#facturas.Facturas.guardarFactura">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">guardarFactura</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Guarda la factura seleccionada y genera un informe.</span>
+
+<span class="sd">            La función verifica si hay una factura seleccionada. Si no hay ninguna factura seleccionada,</span>
+<span class="sd">            muestra un mensaje de error y termina la ejecución. Si hay una factura seleccionada, genera</span>
+<span class="sd">            un informe de la factura.</span>
+
+<span class="sd">            @return: None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="o">.</span><span class="n">text</span><span class="p">():</span>
+            <span class="n">eventos</span><span class="o">.</span><span class="n">Eventos</span><span class="o">.</span><span class="n">crearMensajeError</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;No hay ninguna factura seleccionada&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lblNumFactura no tiene valor&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">informes</span><span class="o">.</span><span class="n">Informes</span><span class="o">.</span><span class="n">reportFact</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNumFactura</span><span class="o">.</span><span class="n">text</span><span class="p">())</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PROYECTODAM24_25</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Guillermo Andre Garrido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
