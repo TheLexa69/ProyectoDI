@@ -744,8 +744,10 @@ class Eventos():
             1. Limpia los campos de texto y selección del panel de clientes.
             2. Limpia los campos de texto y selección del panel de propiedades.
             3. Limpia los campos de texto y selección del panel de vendedores.
-            4. Recarga las provincias en los campos de selección.
-            5. Recarga las tablas de propiedades y vendedores.
+            4. Limpia los campos de texto y selección del panel de ventas
+            5. Limpia los campos de texto y selección del panel de alquileres
+            6. Recarga las provincias en los campos de selección.
+            7. Recarga las tablas de propiedades y vendedores.
 
             Excepciones:
             - Captura y muestra cualquier excepción que ocurra durante el proceso de limpieza de los paneles.
@@ -809,6 +811,43 @@ class Eventos():
         eventos.Eventos.cargarProv()
         var.ui.chkHistoriaVen.setChecked(False)
         vendedores.Vendedores.cargaTablaVendedores()
+
+        # 🔴 Limpiar panel de Ventas
+        objetosPanelVentas = [
+            var.ui.lblNumFactura, var.ui.lblSubTotal, var.ui.lblIVA, var.ui.lblTotal,  # QLabel
+            var.ui.txtFechaFactura, var.ui.txtdniclifac, var.ui.txtCliApel, var.ui.txtCliNom,  # QLineEdit
+            var.ui.txtIdVendedor, var.ui.txtCodProp, var.ui.txtTipoProp, var.ui.txtPrecioProp,
+            var.ui.txtDirProp, var.ui.txtLocProp
+        ]
+
+        for dato in objetosPanelVentas:
+            if isinstance(dato, QtWidgets.QLabel):  # Limpiar labels
+                dato.clear()
+            elif isinstance(dato, QtWidgets.QLineEdit):  # Limpiar campos de texto
+                dato.setText("")
+
+        # Recargar Provincias
+        eventos.Eventos.cargarProv()
+
+        # 🏠💰 Limpiar panel de Alquileres
+        objetosPanelAlquileres = [
+            var.ui.txtNumAlquiler, var.ui.txtInicioAlquiler, var.ui.txtFinAlquiler,  # Fechas y número de alquiler
+            var.ui.txtDniClienteAlquiler, var.ui.txtIdPropiedadAlquiler, var.ui.txtVendedorAlquiler,
+            # Cliente, propiedad y vendedor
+            var.ui.txtPrecioAlquiler  # Precio
+        ]
+
+        for dato in objetosPanelAlquileres:
+            dato.setText("")
+
+        # Limpiar tabla de visualización de alquileres
+        var.ui.pnlVisualizacionAlquileres.clearContents()
+        var.ui.pnlVisualizacionAlquileres.setRowCount(0)
+
+        # Recargar Provincias
+        eventos.Eventos.cargarProv()
+
+
 
     @staticmethod
     def abrirTipoprop():
