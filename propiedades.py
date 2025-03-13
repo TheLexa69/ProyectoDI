@@ -241,7 +241,6 @@ class Propiedades():
                     var.ui.tablaProp.item(index, 8).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                     index += 1
 
-
         except Exception as e:
             print("Error al cargar propiedades en la tabla cargarTablaPropiedades", e)
 

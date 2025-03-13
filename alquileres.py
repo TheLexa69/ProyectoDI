@@ -42,7 +42,7 @@ class Alquileres:
                 var.ui.txtPrecioAlquiler.text(),
             ]
 
-            print("Nuevo Alquiler:", nuevoAlquiler)
+            # print("Nuevo Alquiler:", nuevoAlquiler)
 
             # Verificamos que los campos no estén vacíos antes de grabar el contrato
             if nuevoAlquiler[0] == "":
@@ -75,18 +75,18 @@ class Alquileres:
                                                   "Recuerda ingresar el precio del alquiler")
                 return
 
-            print(
-                f"Nuevo Alquiler: ID Propiedad: {nuevoAlquiler[0]}, DNI Cliente: {nuevoAlquiler[1]}, Vendedor: {nuevoAlquiler[2]}, Fecha Inicio: {nuevoAlquiler[3]}, Fecha Fin: {nuevoAlquiler[4]}, Precio: {nuevoAlquiler[5]}")
+            # print( f"Nuevo Alquiler: ID Propiedad: {nuevoAlquiler[0]}, DNI Cliente: {nuevoAlquiler[1]}, Vendedor: {nuevoAlquiler[2]}, Fecha Inicio: {nuevoAlquiler[3]}, Fecha Fin: {nuevoAlquiler[4]}, Precio: {nuevoAlquiler[5]}")
             if conexion.Conexion.altaContratoAlquiler(nuevoAlquiler):
                 eventos.Eventos.crearMensajeInfo("Contrato grabado", "Se ha grabado una nueva venta")
 
                 # idPropiedad = conexion.Conexion.getIdAlquilerByPropiedad(nuevoAlquiler[0])
-                print("ID Propiedad:", nuevoAlquiler[0])
+                # print("ID Propiedad:", nuevoAlquiler[0])
 
                 var.ui.pnlVisualizacionAlquileres.clear()
 
                 Alquileres.cargaTablaContratos()
                 Alquileres.cargaTablaMensualidades(nuevoAlquiler[0])
+                propiedades.Propiedades.cargarTablaPropiedades()
 
                 eventos.Eventos.resizeTablaAlquileresGestion()
                 eventos.Eventos.pnlVisualizacionAlquileres()
@@ -146,8 +146,7 @@ class Alquileres:
                 botondelfac.setProperty("row", index)
 
                 # Conectar el botón a la función borrarContrato
-                botondelfac.clicked.connect(
-                    lambda _, id_contrato=registro[0]: conexion.Conexion.borrarContrato(id_contrato))
+                botondelfac.clicked.connect( lambda _, id_contrato=registro[0]: conexion.Conexion.borrarContrato(id_contrato))
 
                 contenedor = QtWidgets.QWidget()
                 layout = QHBoxLayout()
@@ -157,18 +156,26 @@ class Alquileres:
                 contenedor.setLayout(layout)
                 var.ui.pnlGestionAlquileres.setCellWidget(index, 2, contenedor)
                 var.ui.pnlGestionAlquileres.resizeColumnsToContents()
-
         except Exception as e:
             print("Error en cargaTablaContratos:", e)
 
     @staticmethod
     def cargaTablaMensualidades(numContrato=None):
+        """
+            Carga las mensualidades de un contrato de alquiler en la tabla de visualización.
+
+            @param numContrato: Número del contrato de alquiler. Si no se proporciona, se cargan todas las mensualidades.
+            @type numContrato: int, optional
+
+            @return: None
+            """
         try:
             # Obtenemos el listado de mensualidades
             listado = conexion.Conexion.listadoMensualidades(numContrato)
-            print("Listado obtenido:", listado)
+            # print("Listado obtenido:", listado)
 
             if not listado:
+                var.ui.pnlVisualizacionAlquileres.setRowCount(0)
                 print("El listado está vacío, no se cargarán mensualidades.")
                 return
 
@@ -223,16 +230,21 @@ class Alquileres:
 
     @staticmethod
     def cargaOneContrato():
+        """
+           Carga un contrato de alquiler seleccionado y sus mensualidades en la interfaz de usuario.
+
+           @return: None
+           """
         try:
             fila = var.ui.pnlGestionAlquileres.selectedItems()
             datos = [dato.text() for dato in fila]
-            print("Datos seleccionados:", datos)
+            # print("Datos seleccionados:", datos)
             try:
                 mensualidades = conexion.Conexion.cargaMensualidades(datos[0]) #Obtengo el código de la propiedad
-                print("Mensualidades:", mensualidades) #Guardamos las Mensualidades
+                # print("Mensualidades:", mensualidades) #Guardamos las Mensualidades
                 if mensualidades:
                     codProp = mensualidades[0][1]
-                    print("Código de la propiedad:", codProp) #Codigo de la propiedad
+                    # print("Código de la propiedad:", codProp) #Codigo de la propiedad
                     # propiedad = conexion.Conexion.listadoMensualidades(codProp)  # Recupera la propiedad a partir de su código
                     Alquileres.cargaTablaMensualidades(codProp)
                     # eventos.Eventos.resizeTablaAlquileresGestion()

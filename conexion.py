@@ -6,6 +6,7 @@ from PyQt6 import QtSql, QtWidgets, QtGui, QtCore
 import alquileres
 import conexion
 import eventos
+import propiedades
 import var
 from eventos import Eventos
 from facturas import Facturas
@@ -881,7 +882,8 @@ class Conexion:
 
             Procedimiento:
             1. Prepara y ejecuta una consulta SQL para insertar una nueva venta con los datos proporcionados.
-            2. Devuelve True si la inserción es exitosa, de lo contrario devuelve False.
+            2. Si la inserción es exitosa, actualiza el estado de la propiedad a 'Vendido' y establece la fecha de baja.
+            3. Devuelve True si la inserción y la actualización son exitosas, de lo contrario devuelve False.
 
             Excepciones:
             - Captura y muestra cualquier excepción que ocurra durante el proceso de inserción de la venta.
@@ -890,7 +892,7 @@ class Conexion:
             @type registro: list
             @return: Éxito de la inserción de la venta.
             @rtype: bool
-            """
+        """
         try:
             query = QtSql.QSqlQuery()
             query.prepare("INSERT INTO ventas (facventa, codprop, agente) VALUES (:facventa, :codprop, :agente)")
@@ -898,9 +900,18 @@ class Conexion:
             query.bindValue(":codprop", registro[1])
             query.bindValue(":agente", str(registro[2]))
             if query.exec():
-                return True
+                update_query = QtSql.QSqlQuery()
+                update_query.prepare(
+                    "UPDATE propiedades SET estado = 'Vendido', baja = :fechaBaja WHERE codigo = :codigo")
+                update_query.bindValue(":fechaBaja", QtCore.QVariant(datetime.now().strftime("%d/%m/%Y")))
+                update_query.bindValue(":codigo", registro[1])
+                if update_query.exec():
+                    return True
+                else:
+                    print("Error en la ejecución de la consulta de actualización:", update_query.lastError().text())
+                    return False
             else:
-                print("Error en la ejecución de la consulta:", query.lastError().text())
+                print("Error en la ejecución de la consulta de inserción:", query.lastError().text())
                 return False
         except Exception as e:
             print("Error al dar de alta factura en conexion:", e)
@@ -1083,6 +1094,7 @@ class Conexion:
             Procedimiento:
             1. Prepara y ejecuta una consulta SQL para insertar un nuevo contrato de alquiler con los datos proporcionados.
             2. Si la inserción es exitosa, llama al método `altaMensualidades` para generar las mensualidades correspondientes.
+            3. Actualiza el estado de la propiedad a 'Alquilado' y establece la fecha de inicio del alquiler.
 
             Excepciones:
             - Captura y muestra cualquier excepción que ocurra durante el proceso de inserción del contrato de alquiler.
@@ -1094,7 +1106,7 @@ class Conexion:
             @type nuevoAlquiler: list
             @return: Éxito de la inserción del contrato de alquiler.
             @rtype: bool
-            """
+        """
         try:
             query = QtSql.QSqlQuery()
             query.prepare(
@@ -1109,8 +1121,19 @@ class Conexion:
             query.bindValue(":precioAlquiler", str(nuevoAlquiler[5]))
 
             if query.exec():
-                Conexion.altaMensualidades(nuevoAlquiler[0], nuevoAlquiler[3], nuevoAlquiler[4] ,nuevoAlquiler[5])
-                return True
+                Conexion.altaMensualidades(nuevoAlquiler[0], nuevoAlquiler[3], nuevoAlquiler[4], nuevoAlquiler[5])
+
+                update_query = QtSql.QSqlQuery()
+                update_query.prepare(
+                    "UPDATE propiedades SET estado = 'Alquilado', baja = :fechaBaja WHERE codigo = :codigo"
+                )
+                update_query.bindValue(":fechaBaja", QtCore.QVariant(datetime.now().strftime("%d/%m/%Y")))
+                update_query.bindValue(":codigo", str(nuevoAlquiler[0]))
+                if update_query.exec():
+                    return True
+                else:
+                    print("Error en la ejecución de la consulta de actualización:", update_query.lastError().text())
+                    return False
             else:
                 print("Error en la ejecución de la consulta:", query.lastError().text())
                 return False
@@ -1298,68 +1321,104 @@ class Conexion:
     @staticmethod
     def borrarContrato(id_contrato):
         """
-                    Elimina un contrato de alquiler de la base de datos.
+            Borra un contrato de alquiler de la base de datos.
 
-                    Procedimiento:
-                    1. Verifica si existen mensualidades pagadas para el contrato.
-                    2. Si existen mensualidades pagadas, muestra un mensaje de error y no elimina el contrato.
-                    3. Si no existen mensualidades pagadas, elimina las mensualidades asociadas al contrato.
-                    4. Elimina el contrato de alquiler de la base de datos.
-                    5. Recarga las tablas de contratos y mensualidades.
-                    6. Ajusta el tamaño de las tablas de gestión y visualización de alquileres.
+            Procedimiento:
+            1. Obtiene el `propiedad_id` del contrato antes de borrarlo.
+            2. Verifica si existen mensualidades pagadas para el contrato.
+            3. Si existen mensualidades pagadas, muestra un mensaje de error y no borra el contrato.
+            4. Borra las mensualidades asociadas al contrato.
+            5. Borra el contrato de alquiler.
+            6. Actualiza el estado de la propiedad a 'Disponible'.
 
-                    Excepciones:
-                    - Captura y muestra cualquier excepción que ocurra durante el proceso de eliminación del contrato.
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de eliminación del contrato.
 
-                    @param id_contrato: ID del contrato a eliminar.
-                    @type id_contrato: int
-                    @return: Éxito de la eliminación del contrato.
-                    @rtype: bool
-                """
+            @param id_contrato: ID del contrato de alquiler a eliminar.
+            @type id_contrato: int
+            @return: Éxito de la eliminación del contrato.
+            @rtype: bool
+        """
         try:
-            # Verificar si existen mensualidades pagadas para el contrato
+            # Obtener propiedad_id antes de borrar el contrato
             query = QtSql.QSqlQuery()
-            query.prepare(
-                "SELECT COUNT(*) FROM mensualidades WHERE propiedad IN (SELECT propiedad_id FROM alquileres WHERE id = :id_contrato) AND pagado = 1")
+            query.prepare("SELECT propiedad_id FROM alquileres WHERE id = :id_contrato")
             query.bindValue(":id_contrato", id_contrato)
 
-            if query.exec() and query.next():
-                if query.value(0) > 0:
-                    eventos.Eventos.crearMensajeError("Mensualidades", "No se puede borrar el contrato porque tiene mensualidades pagadas.")
-                    print("No se puede borrar el contrato porque tiene mensualidades pagadas.")
-                    return False
-                else:
-                    # Borrar mensualidades asociadas al contrato
-                    query.prepare(
-                        "DELETE FROM mensualidades WHERE propiedad IN (SELECT propiedad_id FROM alquileres WHERE id = :id_contrato)")
-                    query.bindValue(":id_contrato", id_contrato)
-                    if not query.exec():
-                        print("Error al borrar mensualidades:", query.lastError().text())
-                        return False
-
-                    # Borrar el contrato
-                    query.prepare("DELETE FROM alquileres WHERE id = :id_contrato")
-                    query.bindValue(":id_contrato", id_contrato)
-                    if query.exec():
-                        print(f"Contrato {id_contrato} borrado correctamente.")
-                        alquileres.Alquileres.cargaTablaContratos()
-                        alquileres.Alquileres.cargaTablaMensualidades()
-
-                        eventos.Eventos.resizeTablaAlquileresGestion()
-                        eventos.Eventos.pnlVisualizacionAlquileres()
-                        return True
-                    else:
-                        print("Error al borrar el contrato:", query.lastError().text())
-                        return False
-            else:
-                print("Error al verificar mensualidades pagadas:", query.lastError().text())
+            if not query.exec() or not query.next():
+                print("Error al obtener propiedad_id:", query.lastError().text())
                 return False
+
+            propiedad_id = query.value(0)  # Guardar el ID de la propiedad
+
+            # Verificar si existen mensualidades pagadas para el contrato
+            query.prepare(
+                "SELECT COUNT(*) FROM mensualidades WHERE propiedad = :propiedad_id AND pagado = 1"
+            )
+            query.bindValue(":propiedad_id", propiedad_id)
+
+            if query.exec() and query.next() and query.value(0) > 0:
+                eventos.Eventos.crearMensajeError(
+                    "Mensualidades", "No se puede borrar el contrato porque tiene mensualidades pagadas."
+                )
+                print("No se puede borrar el contrato porque tiene mensualidades pagadas.")
+                return False
+
+            # Borrar mensualidades asociadas al contrato
+            query.prepare("DELETE FROM mensualidades WHERE propiedad = :propiedad_id")
+            query.bindValue(":propiedad_id", propiedad_id)
+            if not query.exec():
+                print("Error al borrar mensualidades:", query.lastError().text())
+                return False
+
+            # Borrar el contrato
+            query.prepare("DELETE FROM alquileres WHERE id = :id_contrato")
+            query.bindValue(":id_contrato", id_contrato)
+            if not query.exec():
+                print("Error al borrar el contrato:", query.lastError().text())
+                return False
+
+            # Actualizar la propiedad a 'Disponible'
+            update_query = QtSql.QSqlQuery()
+            update_query.prepare(
+                "UPDATE propiedades SET estado = 'Disponible', baja = NULL WHERE codigo = :propiedad_id"
+            )
+            update_query.bindValue(":propiedad_id", propiedad_id)
+            if not update_query.exec():
+                print("Error al actualizar la propiedad:", update_query.lastError().text())
+                return False
+
+            print(f"Contrato {id_contrato} borrado correctamente.")
+            alquileres.Alquileres.cargaTablaContratos()
+            alquileres.Alquileres.cargaTablaMensualidades()
+
+            eventos.Eventos.resizeTablaAlquileresGestion()
+            eventos.Eventos.pnlVisualizacionAlquileres()
+
+            propiedades.Propiedades.cargarTablaPropiedades()
+            return True
+
         except Exception as e:
             print(f"Error en borrarContrato: {e}")
             return False
 
     @staticmethod
     def cargaMensualidades(numero_contrato):
+        """
+                Carga las mensualidades de un contrato de alquiler específico.
+
+                Procedimiento:
+                1. Prepara y ejecuta una consulta SQL para obtener las mensualidades del contrato.
+                2. Recorre los resultados de la consulta y los añade a una lista.
+
+                Excepciones:
+                - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+                @param numero_contrato: Número del contrato de alquiler.
+                @type numero_contrato: int
+                @return: Lista de mensualidades del contrato de alquiler.
+                @rtype: list
+        """
         try:
             listado = []
             base_query = "SELECT * FROM mensualidades WHERE propiedad IN (SELECT propiedad_id FROM alquileres WHERE id = :numero_contrato)"
