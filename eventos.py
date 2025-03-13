@@ -847,8 +847,6 @@ class Eventos():
         # Recargar Provincias
         eventos.Eventos.cargarProv()
 
-
-
     @staticmethod
     def abrirTipoprop():
         """

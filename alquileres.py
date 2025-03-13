@@ -280,6 +280,15 @@ class Alquileres:
 
     @staticmethod
     def guardarFactura():
+        """
+           Guarda el recibo de una mensualidad seleccionada y genera un informe.
+
+           La función verifica si hay un recibo y un contrato de alquiler seleccionados.
+           Si no hay ninguno seleccionado, muestra un mensaje de error y termina la ejecución.
+           Si hay un recibo y un contrato seleccionados, genera un informe del recibo de la mensualidad.
+
+           @return: None
+           """
         if not var.ui.txtNumRecibo.text() or not var.ui.txtNumAlquiler.text():
             eventos.Eventos.crearMensajeError("Error", "No hay ninguna alquiler o contrato seleccionado")
             print("txtNumRecibo no tiene valor o txtNumAlquiler no tiene valor")

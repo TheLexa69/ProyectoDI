@@ -1468,6 +1468,21 @@ class Conexion:
 
     @staticmethod
     def datosOneAlquiler(idContrato):
+        """
+            Obtiene los datos de un contrato de alquiler específico.
+
+            Procedimiento:
+            1. Prepara y ejecuta una consulta SQL para obtener los datos del contrato de alquiler.
+            2. Recorre los resultados de la consulta y los añade a una lista.
+
+            Excepciones:
+            - Captura y muestra cualquier excepción que ocurra durante el proceso de obtención de datos.
+
+            @param idContrato: ID del contrato de alquiler.
+            @type idContrato: int
+            @return: Lista con los datos del contrato de alquiler.
+            @rtype: list
+            """
         try:
             registro = []
             query = QtSql.QSqlQuery()
@@ -1487,6 +1502,14 @@ class Conexion:
 
     @staticmethod
     def datosOneMensualidad(idMensualidad):
+        """
+            Obtiene los datos de una mensualidad específica.
+
+            @param idMensualidad: ID de la mensualidad a buscar.
+            @type idMensualidad: int
+            @return: Lista con los datos de la mensualidad.
+            @rtype: list
+            """
         try:
             registro = []
             query = QtSql.QSqlQuery()

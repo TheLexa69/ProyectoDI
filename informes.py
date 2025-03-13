@@ -213,6 +213,14 @@ class Informes:
 
     @staticmethod
     def reportFact(idFactura):
+        """
+            Genera un informe en formato PDF para una factura de venta específica.
+
+            @param idFactura: ID de la factura para la cual se generará el informe.
+            @type idFactura: str
+
+            @return: None
+            """
         xidventa = 55
         xidpropiedad = xidventa + 35
         xdireccion = xidpropiedad + 50
@@ -272,6 +280,16 @@ class Informes:
 
     @staticmethod
     def reportReciboMensualidad(idAlquiler, idMensualidad):
+        """
+            Genera un informe en formato PDF para un recibo de mensualidad de alquiler específico.
+
+            @param idAlquiler: ID del alquiler para el cual se generará el informe.
+            @type idAlquiler: int
+            @param idMensualidad: ID de la mensualidad para la cual se generará el informe.
+            @type idMensualidad: int
+
+            @return: None
+            """
         try:
             rootPath = '.\\informes'
             if not os.path.exists(rootPath):
@@ -419,7 +437,7 @@ class Informes:
 
     def topInformeAlquiler(titulo, municipio=None):
         """
-            Dibuja la cabecera del informe PDF.
+            Dibuja la cabecera del informe de recibos para los alquileres PDF.
 
             Args:
                 titulo (str): Título del informe.
@@ -493,6 +511,16 @@ class Informes:
 
     @staticmethod
     def topDatosCliente(cliente, fecha):
+        """
+            Dibuja los datos del cliente en la cabecera del informe PDF.
+
+            @param cliente: Lista con los datos del cliente.
+            @type cliente: list
+            @param fecha: Fecha de la factura.
+            @type fecha: str
+
+            @return: None
+            """
         try:
             var.report.setFont('Helvetica-Bold', size=8)
             var.report.drawString(300, 710, 'DNI Cliente:')

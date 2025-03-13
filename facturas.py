@@ -358,6 +358,15 @@ class Facturas:
 
     @staticmethod
     def guardarFactura():
+        """
+            Guarda la factura seleccionada y genera un informe.
+
+            La función verifica si hay una factura seleccionada. Si no hay ninguna factura seleccionada,
+            muestra un mensaje de error y termina la ejecución. Si hay una factura seleccionada, genera
+            un informe de la factura.
+
+            @return: None
+            """
         if not var.ui.lblNumFactura.text():
             eventos.Eventos.crearMensajeError("Error", "No hay ninguna factura seleccionada")
             print("lblNumFactura no tiene valor")
